@@ -260,7 +260,7 @@ exportModule("PersonalityChartImpl", function () {
     if (this.redrawTimer) {
       clearTimeout(this.redrawTimer);
     }
-    this.redrawTimer = setTimeout(this._redrawAfterResize.bind(this), 150);
+    this.redrawTimer = setTimeout(_redrawAfterResize.bind(this), 150);
   }
 
   function _redrawAfterResize() {
@@ -276,8 +276,8 @@ exportModule("PersonalityChartImpl", function () {
       }
     });
 
-    this._nukeChart();
-    this.renderChart();
+    _nukeChart.apply(this);
+    renderChart.apply(this);
 
     // Show the previously selected sectors.
     this.d3vis.selectAll("g.sector")[0].forEach(function (d) {
@@ -301,30 +301,6 @@ exportModule("PersonalityChartImpl", function () {
      this.touchScale = this.touchScale - 0.5;
      this._redraw();
    }
-  }
-
-  function _redrawAfterResize() {
-    if (!this.data) {
-      return;
-    }
-
-    // Grab the displayed sectors.
-    var displayed = [];
-    this.d3vis.selectAll("g.sector")[0].forEach(function(d) {
-      if(d.getAttribute("visibility") == "visible") {
-        displayed.push(d.__data__.id);
-      }
-    });
-
-    this._nukeChart();
-    this.renderChart();
-
-    // Show the previously selected sectors.
-    this.d3vis.selectAll("g.sector")[0].forEach(function(d) {
-      if(displayed.indexOf(d.__data__.id) != -1) {
-        d.setAttribute("visibility", "visible");
-      }
-    });
   }
 
   function _nukeChart() {
@@ -448,7 +424,7 @@ exportModule("PersonalityChartImpl", function () {
 
   function initialize() {
     setUpTouch(this);
-    $(window).resize(resize.bind(this));
+    //$(window).resize(resize.bind(this));
     logger.debug("Initialized");
     this._redraw = _redraw;
   }
