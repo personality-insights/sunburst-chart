@@ -136,10 +136,14 @@ exportModule("PersonalitySunburstChart", function () {
       ].join(' '));
     };
 
+    self.clean = function () {
+      self.container.empty();
+    };
+
     self.showVizualization = function (profile, personImageUrl) {
       console.log('showVizualization()');
 
-      self.container.empty();
+      self.clean();
       self.container.append(self.buildTouchDiv());
       self.touchDiv = self.container.find('#touchDiv').get(0);
       self.d3vis = self.d3Container.append('svg:svg');
