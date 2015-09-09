@@ -144,6 +144,7 @@ exportModule("PersonalitySunburstChart", function () {
       console.log('showVizualization()');
 
       self.clean();
+      self.container.hide();
       self.container.append(self.buildTouchDiv());
       self.touchDiv = self.container.find('#touchDiv').get(0);
       self.d3vis = self.d3Container.append('svg:svg');
@@ -156,6 +157,7 @@ exportModule("PersonalitySunburstChart", function () {
       if (personImageUrl) {
         self.addPersonImage(personImageUrl);
       }
+      self.container.show();
     };
 
     self.show = self.showVizualization;
