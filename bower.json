@@ -1,0 +1,22 @@
+{
+  "name": "personality-sunburst-chart",
+  "main": "personality-sunburst-chart.js",
+  "version": "0.1.0",
+  "authors": [
+    "Ary Pablo Batista <batarypa@ar.ibm.com>"
+  ],
+  "description": "A widget to display personality trait values in a sunburst chart.",
+  "keywords": [
+    "personality",
+    "sunburst",
+    "chart"
+  ],
+  "license": "Apache License, Version 2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
