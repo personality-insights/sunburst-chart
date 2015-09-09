@@ -59,10 +59,6 @@ exportModule("PersonalityChartImpl", function () {
       console.error('Cannot render: Profile data not supplied to Personality Sunburst Chart');
       return;
     }
-    if (this.vis) {
-      console.error('Cannot render: Already rendered (this.vis)');
-      return;
-    }
 
     var _this = this;
     var dummyData = false;
