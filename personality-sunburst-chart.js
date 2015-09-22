@@ -42,125 +42,102 @@ exportModule("PersonalitySunburstChart", function () {
       loadingDiv: 'dummy',
     };
 
-    self.switchState = function () {
-      console.log('[switchState]');
-    };
+    /**
+     * Renders the sunburst visualization. The parameter is the tree as returned
+     * from the Personality Insights JSON API.
+     * It uses the arguments widgetId, widgetWidth, widgetHeight and personImageUrl
+     * declared on top of this script.
+     */
+    function showVizualization(theProfile, personImageUrl) {
+      console.log('showVizualization()');
 
-    self._layout = function () {
-      console.log('[_layout]');
-      /*var cbox = dojo.contentBox(this.chartDiv);
+      var widgetId = self.containerId;
 
-      var fixedHeight = 0, svgDiv = this.svgDiv;
-      var newSVGH = cbox.h - fixedHeight;
-      var w = cbox.w, h = newSVGH;
+      $('#' + widgetId).empty();
+      var d3vis = d3.select('#' + widgetId).append('svg:svg');
+      var widget = {
+        d3vis: d3vis,
+        data: theProfile,
+        loadingDiv: 'dummy',
+        switchState: function() {
+          console.log('[switchState]');
+        },
+        _layout: function() {
+          console.log('[_layout]');
+        },
+        showTooltip: function() {
+          console.log('[showTooltip]');
+        },
+        id: 'SystemUWidget',
+        COLOR_PALLETTE: ['#1b6ba2', '#488436', '#d52829', '#F53B0C', '#972a6b', '#8c564b', '#dddddd'],
+        expandAll: function() {
+          this.vis.selectAll('g').each(function() {
+            var g = d3.select(this);
+            if (g.datum().parent && // Isn't the root g object.
+              g.datum().parent.parent && // Isn't the feature trait.
+              g.datum().parent.parent.parent) { // Isn't the feature dominant trait.
+              g.attr('visibility', 'visible');
+            }
+          });
+        },
+        collapseAll: function() {
+          this.vis.selectAll('g').each(function() {
+            var g = d3.select(this);
+            if (g.datum().parent !== null && // Isn't the root g object.
+              g.datum().parent.parent !== null && // Isn't the feature trait.
+              g.datum().parent.parent.parent !== null) { // Isn't the feature dominant trait.
+              g.attr('visibility', 'hidden');
+            }
+          });
+        },
+        addPersonImage: function(url) {
+          if (!this.vis || !url) {
+            return;
+          }
+          var icon_defs = this.vis.append('defs');
+          var width = this.dimW,
+            height = this.dimH;
 
-      this.dimW = w; // Also needed in render()
-      this.dimH = h; // Also needed in render()
-      this.d3vis.attr("width", w).attr("height", h);*/
-    };
+          // The flower had a radius of 640 / 1.9 = 336.84 in the original, now is 3.2.
+          var radius = Math.min(width, height) / 16.58; // For 640 / 1.9 -> r = 65
+          var scaled_w = radius * 2.46; // r = 65 -> w = 160
 
-    self.showTooltip = function () {
-      console.log('[showTooltip]');
-    };
+          var id = 'user_icon_' + this.id;
+          icon_defs.append('pattern')
+            .attr('id', id)
+            .attr('height', 1)
+            .attr('width', 1)
+            .attr('patternUnits', 'objectBoundingBox')
+            .append('image')
+            .attr('width', scaled_w)
+            .attr('height', scaled_w)
+            .attr('x', radius - scaled_w / 2) // r = 65 -> x = -25
+            .attr('y', radius - scaled_w / 2)
+            .attr('xlink:href', url)
+            .attr('opacity', 1.0)
+            .on('dblclick.zoom', null);
+          this.vis.append('circle')
+            .attr('r', radius)
+            .attr('stroke-width', 0)
+            .attr('fill', 'url(#' + id + ')');
+        }
+      };
 
-    self.showTooltipTouch = function () {
-      console.log('[showTooltipTouch]');
+      widget.dimH = self.height;
+      widget.dimW = self.width;
+      widget.d3vis.attr('width', self.visualizationWidth).attr('height', self.visualizationHeight);
+      widget.d3vis.attr('viewBox', '0 -30 ' + widget.dimW + ', ' + widget.dimH);
+      renderChart.call(widget);
+      widget.expandAll.call(widget);
+      if (personImageUrl)
+        widget.addPersonImage.call(widget, personImageUrl);
     }
-
-    self.expandAll = function () {
-      this.vis.selectAll('g').each(function () {
-        var g = d3.select(this);
-        if (g.datum().parent && // Isn't the root g object.
-            g.datum().parent.parent && // Isn't the feature trait.
-            g.datum().parent.parent.parent) { // Isn't the feature dominant trait.
-          g.attr('visibility', 'visible');
-        }
-      });
-    };
-
-    self.collapseAll = function () {
-      this.vis.selectAll('g').each(function () {
-        var g = d3.select(this);
-        if (g.datum().parent !== null && // Isn't the root g object.
-            g.datum().parent.parent !== null && // Isn't the feature trait.
-            g.datum().parent.parent.parent !== null) { // Isn't the feature dominant trait.
-          g.attr('visibility', 'hidden');
-        }
-      });
-    };
-
-    self.addPersonImage = function (url) {
-      if (!this.vis || !url) {
-        return;
-      }
-      var
-        icon_defs = this.vis.append('defs'),
-        width_ = this.dimW,
-        height_ = this.dimH,
-        // The flower had a radius of 640 / 1.9 = 336.84 in the original, now is 3.2.
-        radius = Math.min(width_, height_) / 16.58, // For 640 / 1.9 -> r = 65
-        scaled_w = radius * 2.46, // r = 65 -> w = 160
-        id = 'user_icon_' + this.id;
-
-      icon_defs.append('pattern')
-        .attr('id', id)
-        .attr('height', 1)
-        .attr('width', 1)
-        .attr('patternUnits', 'objectBoundingBox')
-        .append('image')
-        .attr('width', scaled_w)
-        .attr('height', scaled_w)
-        .attr('x', radius - scaled_w / 2) // r = 65 -> x = -25
-        .attr('y', radius - scaled_w / 2)
-        .attr('xlink:href', url)
-        .attr('opacity', 1.0)
-        .on('dblclick.zoom', null);
-      this.vis.append('circle')
-        .attr('r', radius)
-        .attr('stroke-width', 0)
-        .attr('fill', 'url(#' + id + ')');
-    };
-
-    self.buildTouchDiv = function () {
-      return $([
-        '<div id="touchDiv" style="', [
-          'width: 80%',
-          'height: 80%',
-          'overflow: auto',
-          'position: absolute',
-          'top: 10%',
-          'left: 10%',
-          'z-index:99'
-        ].join(';')
-        ,'"/>'
-      ].join(' '));
-    };
 
     self.clean = function () {
       self.container.empty();
     };
 
-    self.showVizualization = function (profile, personImageUrl) {
-      console.log('showVizualization()');
-
-      self.clean();
-      self.container.hide();
-      self.container.append(self.buildTouchDiv());
-      self.touchDiv = self.container.find('#touchDiv').get(0);
-      self.d3vis = self.d3Container.append('svg:svg');
-      self.data = profile;
-      self.d3vis.attr('width', self.visualizationWidth).attr('height', self.visualizationHeight);
-      self.d3vis.attr('viewBox', "0 -30 " + self.dimW + ", " + self.dimH);
-      PersonalityChartImpl.initialize.apply(self);
-      PersonalityChartImpl.renderChart.apply(self);
-      self.expandAll();
-      if (personImageUrl) {
-        self.addPersonImage(personImageUrl);
-      }
-      self.container.show();
-    };
-
-    self.show = self.showVizualization;
+    self.show = showVizualization;
 
     return self;
   };
