@@ -1,19 +1,10 @@
 {
   "name": "nodejs-demo-component",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The base component files",
   "main": "src/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "preinstall": "mkdir -p build",
-    "build-js": "browserify src/main.js -o build/main.js",
-    "build-sass": "node-sass src/sass/main.scss build/main.css",
-    "build-min-js": "browserify src/main.js | uglifyjs -o build/main.min.js",
-    "build-min-sass": "node-sass src/sass/main.scss | cleancss -o build/main.min.css",
-    "watch-js": "nodemon -e js -w src -x 'npm run build-js'",
-    "watch-sass": "nodemon -e scss -w src/sass -x 'npm run build-sass'",
-    "build": "npm run build-js & npm run build-sass",
-    "watch": "npm run watch-js & npm run watch-sass"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -45,15 +36,36 @@
     "respawn": "^1.0.1"
   },
   "devDependencies": {
-    "browserify": "^9.0.7",
-    "clean-css": "^3.1.9",
-    "node-sass": "^2.1.1",
-    "uglifyjs": "^2.4.10"
+    "gulp": "~3.9.0",
+    "gulp-debug": "~2.1.0",
+    "gulp-clean": "~0.3.1",
+    "gulp-concat": "~2.6.0",
+    "gulp-flatten": "~0.2.0",
+    "gulp-if": "~1.2.5",
+    "gulp-jade": "~1.1.0",
+    "gulp-jslint": "~0.2.2",
+    "gulp-jsonminify": "~1.0.0",
+    "gulp-minify-css": "~1.2.1",
+    "gulp-nodemon": "~2.0.4",
+    "gulp-run-sequence": "~0.3.2",
+    "gulp-uglify": "~1.4.0",
+    "gulp-util": "~3.0.6",
+    "gulp-filter": "~3.0.1",
+    "gulp-rename": "~1.2.2",
+    "through2": "~2.0.0",
+    "coffee-script": "~1.10.0",
+    "gulp-sass": "~2.0.4",
+    "run-sequence": "~1.1.4",
+    "gulp-browserify": "~0.5.1",
+    "gulp-coffee": "~2.3.1",
+    "coffee": "~2.0.0",
+    "event-stream": "~3.3.2"
   },
   "browserify": {
     "transform": [
       "babelify",
       "envify"
     ]
-  }
+  },
+  "private": true
 }
