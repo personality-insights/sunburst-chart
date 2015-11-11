@@ -1,8 +1,8 @@
 # NodeJS Demo Component
 
-This is a template for demo components. Provides some basic behavior
-to build deployment-ready components and supports optional coffee
-scripting.
+Base files for any component used by the [NodeJS Demo Core](https://github.rtp.raleigh.ibm.com/people-insights-commons/nodejs-demo-core).
+Provides some basic behavior to build deployment-ready components and supports
+optional coffee scripting.
 
 ## Build your component
 
