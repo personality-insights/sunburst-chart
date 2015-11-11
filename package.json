@@ -2,7 +2,7 @@
   "name": "nodejs-demo-component",
   "version": "0.3.0",
   "description": "The base component files",
-  "main": "src/main.js",
+  "main": "bin/nodejs-demo-component.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
