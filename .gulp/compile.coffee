@@ -43,6 +43,11 @@ gulp.task 'release', ->
     .pipe(debug(title: '[release][scripts]'))
     .pipe(browserify(
       debug : true
+      transform : [
+        "babelify"
+        "envify"
+      ]
+      standalone : component.exportName
     ))
     .pipe(rename(versionName + '.js'))     .pipe(gulp.dest(dirs.release))
     .pipe(rename(component.name + '.js'))  .pipe(gulp.dest(dirs.release))
