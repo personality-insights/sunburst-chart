@@ -18,3 +18,14 @@ deployed to `bin` folder and the build output in `.build` folder.
 
 Gulp scripts are stored in `.gulp` directory. You can customize your
 build scripts as you wish.
+
+## Keep The Template Updated
+
+Add the base project as a remote repository.
+```sh
+git remote add upstream git@github.rtp.raleigh.ibm.com:people-insights-commons/nodejs-demo-component.git
+```
+And pull updates!
+```sh
+git pull upstream master
+```
