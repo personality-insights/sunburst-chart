@@ -4,6 +4,13 @@ Base files for any component used by the [NodeJS Demo Core](https://github.rtp.r
 Provides some basic behavior to build deployment-ready components and supports
 optional coffee scripting.
 
+## Setting your component
+
+You will need to modify the `package.json` in order to provide
+information relevant to your component.
+
+The exported component name will be defined by the field `exportName` present in the `package.json` or by the field `name` if the first one is missing.
+
 ## Build your component
 
 You can run `gulp` command to build your component. Binaries will be

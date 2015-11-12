@@ -1,15 +1,15 @@
 {
-  "name": "nodejs-demo-component",
+  "name": "your-component-name",
   "version": "0.3.0",
-  "description": "The base component files",
-  "main": "bin/nodejs-demo-component.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "exportName": "YourExportedComponentName",
+  "main": "bin/your-component-name.js",
+  "description": "Your component description",
   "repository": {
     "type": "git",
     "url": "git@github.rtp.raleigh.ibm.com:people-insights-commons/nodejs-demo-component.git"
   },
+  "author": "Ary Pablo Batista <batarypa@ar.ibm.com>",
+  "license": "Apache License Version 2.0",
   "keywords": [
     "people",
     "insights",
@@ -18,8 +18,9 @@
     "demo",
     "component"
   ],
-  "author": "Ary Pablo Batista <batarypa@ar.ibm.com>",
-  "license": "Apache License Version 2.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
     "async": "^0.9.0",
     "babelify": "^5.0.4",
