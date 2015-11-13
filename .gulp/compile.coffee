@@ -21,6 +21,7 @@ clean       = require('gulp-clean')
 rename      = require('gulp-rename')
 gutil       = require('gulp-util')
 uglify      = require('gulp-uglify')
+gulpif      = require('gulp-if')
 minifyCss   = require('gulp-minify-css')
 browserify  = require('gulp-browserify')
 sequence    = require 'run-sequence'
@@ -31,6 +32,7 @@ require('./scripts')
 
 # Local
 config    = require('./config')
+compilation = config.compilation
 component = config.component
 dirs      = config.directories
 
@@ -41,14 +43,11 @@ gulp.task 'release', ->
   # Deploy JavaScript
   gulp.src(dirs.build + '/main.js')
     .pipe(debug(title: '[release][scripts]'))
-    .pipe(browserify(
-      debug : true
-      transform : [
-        "babelify"
-        "envify"
-      ]
-      standalone : component.exportName
-    ))
+    .pipe(gulpif(compilation.browserify.enabled, browserify(
+      debug : config.debug
+      transform : compilation.browserify.transform
+      standalone : component.exportName if compilation.standalone
+    )))
     .pipe(rename(versionName + '.js'))     .pipe(gulp.dest(dirs.release))
     .pipe(rename(component.name + '.js'))  .pipe(gulp.dest(dirs.release))
     .pipe(uglify())
