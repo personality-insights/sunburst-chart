@@ -14,6 +14,10 @@
 # the License.
 ###
 
+extend = require('util')._extend
+optional = require('optional')
+
+userConfig = optional('../config')
 packageInfo = require('../package.json')
 
 config =
@@ -42,4 +46,4 @@ config =
 
     debug : true
 
-module.exports = config
+module.exports = extend(config, userConfig)

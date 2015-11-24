@@ -43,11 +43,21 @@ gulp.task 'release', ->
   # Deploy JavaScript
   gulp.src(dirs.build + '/main.js')
     .pipe(debug(title: '[release][scripts]'))
-    .pipe(gulpif(compilation.browserify.enabled, browserify(
-      debug : config.debug
-      transform : compilation.browserify.transform
-      standalone : component.exportName if compilation.standalone
-    )))
+
+  if compilation.browserify.enabled?
+    gulp.src(dirs.build + '/main.js')
+      .pipe(browserify(
+        debug : config.debug
+        transform : compilation.browserify.transform
+        standalone : component.exportName if compilation.standalone
+      ))
+      .pipe(rename(versionName + '.standalone.js'))     .pipe(gulp.dest(dirs.release))
+      .pipe(rename(component.name + '.standalone.js'))  .pipe(gulp.dest(dirs.release))
+      .pipe(uglify())
+      .pipe(rename(versionName + '.standalone.min.js'))     .pipe(gulp.dest(dirs.release))
+      .pipe(rename(component.name + '.standalone.min.js'))  .pipe(gulp.dest(dirs.release))
+
+  gulp.src(dirs.build + '/main.js')
     .pipe(rename(versionName + '.js'))     .pipe(gulp.dest(dirs.release))
     .pipe(rename(component.name + '.js'))  .pipe(gulp.dest(dirs.release))
     .pipe(uglify())
