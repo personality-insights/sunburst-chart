@@ -51,27 +51,27 @@ gulp.task 'release', ->
         transform : compilation.browserify.transform
         standalone : component.exportName if compilation.standalone
       ))
-      .pipe(rename(versionName + '.standalone.js'))     .pipe(gulp.dest(dirs.release))
-      .pipe(rename(component.name + '.standalone.js'))  .pipe(gulp.dest(dirs.release))
+      .pipe(gulpif(component.versioned, rename(versionName + '.standalone.js')))  .pipe(gulp.dest(dirs.release))
+      .pipe(rename(component.name + '.standalone.js'))                   .pipe(gulp.dest(dirs.release))
       .pipe(uglify())
-      .pipe(rename(versionName + '.standalone.min.js'))     .pipe(gulp.dest(dirs.release))
-      .pipe(rename(component.name + '.standalone.min.js'))  .pipe(gulp.dest(dirs.release))
+      .pipe(gulpif(component.versioned, rename(versionName + '.standalone.min.js'))) .pipe(gulp.dest(dirs.release))
+      .pipe(rename(component.name + '.standalone.min.js'))               .pipe(gulp.dest(dirs.release))
 
   gulp.src(dirs.build + '/main.js')
-    .pipe(rename(versionName + '.js'))     .pipe(gulp.dest(dirs.release))
-    .pipe(rename(component.name + '.js'))  .pipe(gulp.dest(dirs.release))
+    .pipe(gulpif(component.versioned, rename(versionName + '.js')))      .pipe(gulp.dest(dirs.release))
+    .pipe(rename(component.name + '.js'))                                .pipe(gulp.dest(dirs.release))
     .pipe(uglify())
-    .pipe(rename(versionName + '.min.js'))     .pipe(gulp.dest(dirs.release))
-    .pipe(rename(component.name + '.min.js'))  .pipe(gulp.dest(dirs.release))
+    .pipe(gulpif(component.versioned, rename(versionName + '.min.js')))  .pipe(gulp.dest(dirs.release))
+    .pipe(rename(component.name + '.min.js'))                            .pipe(gulp.dest(dirs.release))
 
   # Deploy CSS
   gulp.src(dirs.build + '/main.css')
     .pipe(debug(title: '[release][styles]'))
-    .pipe(rename(component.name + '.css')).pipe(gulp.dest(dirs.release))
-    .pipe(rename(versionName + '.css')).pipe(gulp.dest(dirs.release))
+    .pipe(rename(component.name + '.css'))                               .pipe(gulp.dest(dirs.release))
+    .pipe(gulpif(component.versioned, rename(versionName + '.css')))     .pipe(gulp.dest(dirs.release))
     .pipe(minifyCss())
-    .pipe(rename(versionName + '.min.css')).pipe(gulp.dest(dirs.release))
-    .pipe(rename(component.name + '.min.css')).pipe(gulp.dest(dirs.release))
+    .pipe(gulpif(component.versioned, rename(versionName + '.min.css'))) .pipe(gulp.dest(dirs.release))
+    .pipe(rename(component.name + '.min.css'))                           .pipe(gulp.dest(dirs.release))
 
 
 gulp.task 'compile', ->

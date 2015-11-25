@@ -26,6 +26,7 @@ config =
     name: packageInfo.name
     exportName: packageInfo.exportName || packageInfo.name.split('-').map((part) -> part[0].toUpperCase() + part.slice(1)).join('')
     version : packageInfo.version
+    versioned: false
 
   directories :
     release : 'bin'
