@@ -2,6 +2,8 @@
 
 A visualization for IBM Watson Personality Insights service output. This widget displays personality trait values in a sunburst chart.
 
+![Personality Sunburst Chart](./docs/personality-sunburst-chart.png)
+
 ## Getting Started
 
 1. **Include the script** in your page
