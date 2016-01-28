@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 IBM Corp. All Rights Reserved.
+ * Copyright 2014-2015 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,15 +14,40 @@
  * the License.
  */
 
+ /**
+  * Renders the sunburst visualization. The parameter is the tree as returned
+  * from the Personality Insights JSON API.
+  */
 
-/**
- * Renders the sunburst visualization. The parameter is the tree as returned
- * from the Personality Insights JSON API.
- */
-exportModule("PersonalitySunburstChart", function () {
+var chartRenderer = require('./personality-chart-renderer');
+
+
+// Dependencies check
+
+var dependencies = {
+  'd3' : 'D3js',
+  '$'  : 'JQuery'
+};
+
+Object.keys(dependencies).forEach(function(dependency) {
+  if (typeof window[dependency] === 'undefined') {
+    throw new Error(dependencies[dependency] + ' is not present. Personality Sunburst Chart can\'t render without it.');
+  }
+});
+
+
+// Module
+
+module.exports=(function () {
   'use strict';
 
-  var klass = function (containerId, width, height, visualizationWidth, visualizationHeight) {
+  var PersonalitySunburstChart = function (containerId, options) {
+
+    options = options || {};
+    var visualizationWidth  = options.width  || '100%';
+    var visualizationHeight = options.height || '100%';
+    var width  = ((1/options.scale || 1) * 45) * 16.58;
+    var height = ((1/options.scale || 1) * 45) * 16.58;
 
     var self = {
       containerId : containerId,
@@ -32,7 +57,7 @@ exportModule("PersonalitySunburstChart", function () {
       width : width, dimW : width,
       height : height, dimH : height,
 
-      visualizationWidth : visualizationWidth || "100%",
+      visualizationWidth  : visualizationWidth || "100%",
       visualizationHeight : visualizationHeight || "100%",
       d3vis : undefined,
       touchDiv : undefined,
@@ -49,7 +74,7 @@ exportModule("PersonalitySunburstChart", function () {
      * declared on top of this script.
      */
     function showVizualization(theProfile, personImageUrl) {
-      console.log('showVizualization()');
+      console.debug('showVizualization()');
 
       var widgetId = self.containerId;
 
@@ -60,13 +85,13 @@ exportModule("PersonalitySunburstChart", function () {
         data: theProfile,
         loadingDiv: 'dummy',
         switchState: function() {
-          console.log('[switchState]');
+          console.debug('[switchState]');
         },
         _layout: function() {
-          console.log('[_layout]');
+          console.debug('[_layout]');
         },
         showTooltip: function() {
-          console.log('[showTooltip]');
+          console.debug('[showTooltip]');
         },
         id: 'SystemUWidget',
         COLOR_PALLETTE: ['#1b6ba2', '#488436', '#d52829', '#F53B0C', '#972a6b', '#8c564b', '#dddddd'],
@@ -127,7 +152,7 @@ exportModule("PersonalitySunburstChart", function () {
       widget.dimW = self.width;
       widget.d3vis.attr('width', self.visualizationWidth).attr('height', self.visualizationHeight);
       widget.d3vis.attr('viewBox', '0 -30 ' + widget.dimW + ', ' + widget.dimH);
-      renderChart.call(widget);
+      chartRenderer.render.call(widget);
       widget.expandAll.call(widget);
       if (personImageUrl)
         widget.addPersonImage.call(widget, personImageUrl);
@@ -142,5 +167,5 @@ exportModule("PersonalitySunburstChart", function () {
     return self;
   };
 
-  return klass;
-});
+  return PersonalitySunburstChart;
+}());

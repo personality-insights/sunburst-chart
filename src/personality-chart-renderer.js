@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 IBM Corp. All Rights Reserved.
+ * Copyright 2014-2015 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 'use strict';
 
-d3.svg.singleArc = function() {
+var d3SvgSingleArc = function() {
   var radius = d3_svg_singleArcRadius,
     startAngle = d3_svg_singleArcStartAngle,
     endAngle = d3_svg_singleArcEndAngle,
@@ -197,10 +197,10 @@ var renderChart = function() {
           } else {
             if (percentage >= 1) {
               percentage = 0.99;
-              console.log('Percentage is over 1!' + d.name);
+              console.debug('Percentage is over 1!' + d.name);
             } else if (percentage <= -1) {
               percentage = -0.99;
-              console.log('Percentage is below -1!' + d.name);
+              console.debug('Percentage is below -1!' + d.name);
             }
             label = d.name + ((percentage * 100).toFixed(0) === 'NaN' || isNaN(percentage) ? '' : ' (' + (percentage * 100).toFixed(0) + '%)');
 
@@ -357,7 +357,7 @@ var renderChart = function() {
                 if (d.parent.parent.parent.id === 'personality') bar_length_factor = 1;
 
             } else {
-              console.log(d.name + ': Parent is null!');
+              console.debug(d.name + ': Parent is null!');
             }
 
 
@@ -589,4 +589,17 @@ var renderChart = function() {
 
   // Shift the text pieces clockwise (to somewhat center them).
   updateLabelLayout();
+};
+
+function setupD3() {
+  d3.svg.singleArc = d3SvgSingleArc;
+}
+
+function setupAndRender() {
+  setupD3();
+  renderChart.call(this);
+}
+
+module.exports = {
+  render  : setupAndRender
 };
