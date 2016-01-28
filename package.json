@@ -1,0 +1,56 @@
+{
+  "name": "your-component-name",
+  "version": "0.4.0",
+  "exportName": "YourExportedComponentName",
+  "main": "bin/your-component-name.js",
+  "description": "Your component description",
+  "repository": {
+    "type": "git",
+    "url": "git@github.rtp.raleigh.ibm.com:people-insights-commons/nodejs-demo-component.git"
+  },
+  "author": "Ary Pablo Batista <batarypa@ar.ibm.com>",
+  "license": "Apache License Version 2.0",
+  "keywords": [
+    "people",
+    "insights",
+    "base",
+    "nodejs",
+    "demo",
+    "component"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "gulp": "~3.9.0",
+    "gulp-debug": "~2.1.0",
+    "gulp-clean": "~0.3.1",
+    "gulp-concat": "~2.6.0",
+    "gulp-flatten": "~0.2.0",
+    "gulp-if": "~1.2.5",
+    "gulp-jade": "~1.1.0",
+    "gulp-jslint": "~0.2.2",
+    "gulp-jsonminify": "~1.0.0",
+    "gulp-minify-css": "~1.2.1",
+    "gulp-nodemon": "~2.0.4",
+    "gulp-run-sequence": "~0.3.2",
+    "gulp-uglify": "~1.4.0",
+    "gulp-util": "~3.0.6",
+    "gulp-filter": "~3.0.1",
+    "gulp-rename": "~1.2.2",
+    "through2": "~2.0.0",
+    "coffee-script": "~1.10.0",
+    "gulp-sass": "~2.0.4",
+    "run-sequence": "~1.1.4",
+    "gulp-browserify": "~0.5.1",
+    "gulp-coffee": "~2.3.1",
+    "coffee": "~2.0.0",
+    "event-stream": "~3.3.2",
+    "envify": "~3.4.0",
+    "babelify": "~7.2.0",
+    "optional": "~0.1.3"
+  },
+  "private": true
+}
