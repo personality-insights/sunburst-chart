@@ -24,7 +24,7 @@ var chart = new PersonalitySunburstChart('sunburstChartContainer');
 chart.show(profile, 'path/to/profile_photo.jpg');
 ```
 
-See the complete [example](./examples/example.html).
+See the complete [example code](./examples/example.html) or try it [live](https://rawgit.com/ibm-silvergate/personality-sunburst-chart/master/examples/example.html).
 
 ## API Method
 
