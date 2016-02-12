@@ -1,6 +1,6 @@
 {
   "name": "personality-sunburst-chart",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "exportName": "PersonalitySunburstChart",
   "main": "bin/personality-sunburst-chart.js",
   "description": "A visualization for IBM Watson Personality Insights service output.",

@@ -1,7 +1,7 @@
 {
   "name": "personality-sunburst-chart",
   "main": "./bin/personality-sunburst-chart.standalone.js",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "authors": [
     "Ary Pablo Batista <batarypa@ar.ibm.com>"
   ],
