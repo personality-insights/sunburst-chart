@@ -1,6 +1,6 @@
 # Personality Sunburst Chart
 
-![last-release](https://img.shields.io/github/tag/ibm-silvergate/personality-sunburst-chart.svg)
+![last-release](https://img.shields.io/github/tag/personality-insights/sunburst-chart.svg)
 [![npm-version](https://img.shields.io/npm/v/personality-sunburst-chart.svg)](https://www.npmjs.com/package/personality-sunburst-chart)
 [![npm-license](https://img.shields.io/npm/l/personality-sunburst-chart.svg)](https://www.npmjs.com/package/personality-sunburst-chart)
 [![npm-downloads](https://img.shields.io/npm/dm/personality-sunburst-chart.svg)](https://www.npmjs.com/package/personality-sunburst-chart)
