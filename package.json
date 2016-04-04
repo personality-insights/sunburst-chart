@@ -6,7 +6,7 @@
   "description": "A visualization for IBM Watson Personality Insights service output.",
   "repository": {
     "type": "git",
-    "url": "git@github.com:ibm-silvergate/personality-sunburst-chart.git"
+    "url": "git@github.com:personality-insights/sunburst-chart.git"
   },
   "author": "Ary Pablo Batista <batarypa@ar.ibm.com>",
   "license": "Apache-2.0",
