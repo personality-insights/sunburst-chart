@@ -25,8 +25,7 @@ var chartRenderer = require('./personality-chart-renderer');
 // Dependencies check
 
 var dependencies = {
-  'd3' : 'D3js',
-  '$'  : 'JQuery'
+  'd3' : 'D3js'
 };
 
 Object.keys(dependencies).forEach(function(dependency) {
@@ -51,7 +50,7 @@ module.exports=(function () {
 
     var self = {
       containerId : containerId,
-      container   : $('#' + containerId),
+      container   : document.getElementById(containerId),
       d3Container : d3.select('#' + containerId),
 
       width : width, dimW : width,
@@ -78,7 +77,7 @@ module.exports=(function () {
 
       var widgetId = self.containerId;
 
-      $('#' + widgetId).empty();
+      document.getElementById(widgetId).innerHTML = null;
       var d3vis = d3.select('#' + widgetId).append('svg:svg');
       var widget = {
         d3vis: d3vis,
@@ -159,7 +158,7 @@ module.exports=(function () {
     }
 
     self.clean = function () {
-      self.container.empty();
+      self.container.innerHTML = null;
     };
 
     self.show = showVizualization;
