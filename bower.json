@@ -22,7 +22,9 @@
     "tests"
   ],
   "dependencies": {
-    "d3": "~3.5.14",
+    "d3": "~3.5.14"
+  },
+  "devDependencies": {
     "jquery": "~2.2.0"
   }
 }
