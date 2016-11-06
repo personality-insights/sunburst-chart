@@ -570,6 +570,14 @@ var renderChart = function() {
 
   var profile = tree;
 
+  // exclude specified sectors
+  var exclude = this.exclude;
+  profile.children = profile.children.filter(function (child) {
+    return -1 === exclude.findIndex(function (id) {
+      return id === child.id;
+    });
+  });
+
   var g = vis.data([profile]).selectAll('g')
     .data(partition.nodes)
     .enter().append('g')
