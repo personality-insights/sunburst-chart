@@ -568,7 +568,9 @@ var renderChart = function() {
       return d.size;
     });
 
-  var profile = tree;
+  var profile = {
+    children: tree.children
+  };
 
   // exclude specified sectors
   var exclude = this.exclude;
