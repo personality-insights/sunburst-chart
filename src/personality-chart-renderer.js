@@ -573,9 +573,7 @@ var renderChart = function() {
   // exclude specified sectors
   var exclude = this.exclude;
   profile.children = profile.children.filter(function (child) {
-    return -1 === exclude.indexOf(function (id) {
-      return id === child.id;
-    });
+    return exclude.indexOf(child.id) === -1;
   });
 
   var g = vis.data([profile]).selectAll('g')
