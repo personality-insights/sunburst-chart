@@ -47,6 +47,7 @@ module.exports=(function () {
     var visualizationHeight = options.height || '100%';
     var width  = ((1/options.scale || 1) * 45) * 16.58;
     var height = ((1/options.scale || 1) * 45) * 16.58;
+    var exclude = options.exclude || [];
 
     var self = {
       containerId : containerId,
@@ -55,6 +56,7 @@ module.exports=(function () {
 
       width : width, dimW : width,
       height : height, dimH : height,
+      exclude: exclude,
 
       visualizationWidth  : visualizationWidth || "100%",
       visualizationHeight : visualizationHeight || "100%",
@@ -149,6 +151,7 @@ module.exports=(function () {
 
       widget.dimH = self.height;
       widget.dimW = self.width;
+      widget.exclude = self.exclude;
       widget.d3vis.attr('width', self.visualizationWidth).attr('height', self.visualizationHeight);
       widget.d3vis.attr('viewBox', '0 -30 ' + widget.dimW + ', ' + widget.dimH);
       chartRenderer.render.call(widget);
