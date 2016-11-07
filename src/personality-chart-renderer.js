@@ -573,7 +573,7 @@ var renderChart = function() {
   // exclude specified sectors
   var exclude = this.exclude;
   profile.children = profile.children.filter(function (child) {
-    return -1 === exclude.findIndex(function (id) {
+    return -1 === exclude.indexOf(function (id) {
       return id === child.id;
     });
   });
