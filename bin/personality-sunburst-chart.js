@@ -25,8 +25,7 @@ var chartRenderer = require('./personality-chart-renderer');
 // Dependencies check
 
 var dependencies = {
-  'd3' : 'D3js',
-  '$'  : 'JQuery'
+  'd3' : 'D3js'
 };
 
 Object.keys(dependencies).forEach(function(dependency) {
@@ -48,14 +47,16 @@ module.exports=(function () {
     var visualizationHeight = options.height || '100%';
     var width  = ((1/options.scale || 1) * 45) * 16.58;
     var height = ((1/options.scale || 1) * 45) * 16.58;
+    var exclude = options.exclude || [];
 
     var self = {
       containerId : containerId,
-      container   : $('#' + containerId),
+      container   : document.getElementById(containerId),
       d3Container : d3.select('#' + containerId),
 
       width : width, dimW : width,
       height : height, dimH : height,
+      exclude: exclude,
 
       visualizationWidth  : visualizationWidth || "100%",
       visualizationHeight : visualizationHeight || "100%",
@@ -78,7 +79,7 @@ module.exports=(function () {
 
       var widgetId = self.containerId;
 
-      $('#' + widgetId).empty();
+      document.getElementById(widgetId).innerHTML = null;
       var d3vis = d3.select('#' + widgetId).append('svg:svg');
       var widget = {
         d3vis: d3vis,
@@ -150,6 +151,7 @@ module.exports=(function () {
 
       widget.dimH = self.height;
       widget.dimW = self.width;
+      widget.exclude = self.exclude;
       widget.d3vis.attr('width', self.visualizationWidth).attr('height', self.visualizationHeight);
       widget.d3vis.attr('viewBox', '0 -30 ' + widget.dimW + ', ' + widget.dimH);
       chartRenderer.render.call(widget);
@@ -159,7 +161,7 @@ module.exports=(function () {
     }
 
     self.clean = function () {
-      self.container.empty();
+      self.container.innerHTML = null;
     };
 
     self.show = showVizualization;

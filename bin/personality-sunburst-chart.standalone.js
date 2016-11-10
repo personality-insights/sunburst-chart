@@ -25,8 +25,7 @@ var chartRenderer = _dereq_('./personality-chart-renderer');
 // Dependencies check
 
 var dependencies = {
-  'd3': 'D3js',
-  '$': 'JQuery'
+  'd3': 'D3js'
 };
 
 Object.keys(dependencies).forEach(function (dependency) {
@@ -47,14 +46,16 @@ module.exports = function () {
     var visualizationHeight = options.height || '100%';
     var width = (1 / options.scale || 1) * 45 * 16.58;
     var height = (1 / options.scale || 1) * 45 * 16.58;
+    var exclude = options.exclude || [];
 
     var self = {
       containerId: containerId,
-      container: $('#' + containerId),
+      container: document.getElementById(containerId),
       d3Container: d3.select('#' + containerId),
 
       width: width, dimW: width,
       height: height, dimH: height,
+      exclude: exclude,
 
       visualizationWidth: visualizationWidth || "100%",
       visualizationHeight: visualizationHeight || "100%",
@@ -77,7 +78,7 @@ module.exports = function () {
 
       var widgetId = self.containerId;
 
-      $('#' + widgetId).empty();
+      document.getElementById(widgetId).innerHTML = null;
       var d3vis = d3.select('#' + widgetId).append('svg:svg');
       var widget = {
         d3vis: d3vis,
@@ -137,6 +138,7 @@ module.exports = function () {
 
       widget.dimH = self.height;
       widget.dimW = self.width;
+      widget.exclude = self.exclude;
       widget.d3vis.attr('width', self.visualizationWidth).attr('height', self.visualizationHeight);
       widget.d3vis.attr('viewBox', '0 -30 ' + widget.dimW + ', ' + widget.dimH);
       chartRenderer.render.call(widget);
@@ -145,7 +147,7 @@ module.exports = function () {
     }
 
     self.clean = function () {
-      self.container.empty();
+      self.container.innerHTML = null;
     };
 
     self.show = showVizualization;
@@ -497,6 +499,7 @@ var renderChart = function () {
 
           var _bar = d3.svg.arc().startAngle(d.x).endAngle(d.x + d.dx).innerRadius(inner_r).outerRadius(out_r); // Draw leaf arcs
 
+
           g.append('path').attr('class', '_bar').attr('d', _bar).style('stroke', '#EEE').style('fill', function (d) {
             return d3.rgb(arc1color).darker(0.5);
           });
@@ -635,7 +638,15 @@ var renderChart = function () {
     return d.size;
   });
 
-  var profile = tree;
+  var profile = {
+    children: tree.children
+  };
+
+  // exclude specified sectors
+  var exclude = this.exclude;
+  profile.children = profile.children.filter(function (child) {
+    return exclude.indexOf(child.id) === -1;
+  });
 
   var g = vis.data([profile]).selectAll('g').data(partition.nodes).enter().append('g').attr('class', 'sector').attr('visibility', function (d) {
     return d.depth === 2 || d.forceVisible ? 'visible' : 'hidden';
