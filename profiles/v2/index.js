@@ -19,64 +19,139 @@
 class PersonalityProfile {
 
   constructor(profile) {
-    this._traits = profile.tree.children[0].children[0].children;
-    this._needs = profile.tree.children[1].children[0].children;
-    this._values = profile.tree.children[2].children[0].children;
-    this._behaviors = profile.tree.children[3].children[0].children;
+    this._tree = profile.tree;
+    this._traits = profile.tree.children[0].children[0];
+    this._needs = profile.tree.children[1].children[0];
+    this._values = profile.tree.children[2].children[0];
+    this._behaviors = profile.tree.children[3] ? profile.tree.children[3].children[0] : {};
   }
 
-  traits(){
-    return this._traits.map(function(t) {
+  /**
+  * Creates a tree object matching the format used by D3 tree visualizations:
+  *   each node in the tree must have a 'name' and 'children' attribute except leaf nodes
+  *   which only require a 'name' attribute
+  **/
+  d3Json(){
+    return JSON.stringify({
+      name: 'profile',
+      children: [
+        {
+          name: 'traits',
+          children: this.traitsTree()
+        },
+        {
+          name: 'values',
+          children: this.valuesTree()
+        },
+        {
+          name: 'needs',
+          children: this.needsTree()
+        },
+        {
+          name: 'behaviors',
+          children: this.behaviorsTree()
+        }
+      ]
+    },2,null);
+  }
+
+  traitsTree(){
+    return {
+      name: this.traitWithHighestScore().name,
+      id: this.traitWithHighestScore().id,
+      category: this.traitWithHighestScore().category,
+      score: this.traitWithHighestScore().percentage,
+      children: this._traits.children.map(function(t) {
+        return {
+          name: t.name,
+          id: t.id,
+          category: t.category,
+          score: t.percentage,
+          children: t.children.map(function(f) {
+            return {
+              name: f.name,
+              id: f.id,
+              category: f.category,
+              score: f.percentage
+            };
+          })
+        };
+      })
+    };
+  }
+
+
+  needsTree(){
+    return {
+      name: this.needWithHighestScore().name,
+      id: this.needWithHighestScore().id,
+      category: this.needWithHighestScore().category,
+      score: this.needWithHighestScore().percentage,
+      children: this._needs.children.map(function(n) {
+        return {
+          name: n.name,
+          id: n.id,
+          category: n.category,
+          score: n.percentage
+        };
+      })
+    };
+  }
+
+  valuesTree(){
+    return {
+      name: this.valueWithHighestScore().name,
+      id: this.valueWithHighestScore().id,
+      category: this.valueWithHighestScore().category,
+      score: this.valueWithHighestScore().percentage,
+      children: this._values.children.map(function(v) {
+        return {
+          name: v.name,
+          id: v.id,
+          category: v.category,
+          score: v.percentage
+        };
+      })
+    };
+  }
+
+  behaviorsTree(){
+    if (this._behaviors.children){
       return {
-        id: t.id,
-        name: t.name,
-        category: t.category,
-        score: t.percentage,
-        facets: t.children.map(function(f) {
+        name: this.behaviorWithHighestScore().name,
+        id: this.behaviorWithHighestScore().id,
+        category: this.behaviorWithHighestScore().category,
+        score: this.behaviorWithHighestScore().percentage,
+        children: this._behaviors.children.map(function(b) {
           return {
-            //id: f.id,
-            id: f.id.replace('_', '-').replace(' ', '-'),
-            name: f.name,
-            category: f.category,
-            score: f.percentage
+            name: b.name,
+            id: b.id,
+            category: b.category,
+            score: b.percentage
           };
         })
       };
-    });
+    } else {
+      return {};
+    }
   }
 
-  needs() {
-    return this._needs.map(function(n) {
-      return {
-        id: n.id,
-        name: n.name,
-        category: n.category,
-        score: n.percentage
-      };
-    });
+  traitWithHighestScore(){
+    return this._traits;
   }
 
-  values() {
-    return this._values.map(function(v) {
-      return {
-        id: v.id.replace('_', '-').replace(' ', '-'),
-        name: v.name,
-        category: v.category,
-        score: v.percentage
-      };
-    });
+  needWithHighestScore(){
+    return this._needs;
   }
 
-  behaviors() {
-    return this._values.map(function(b) {
-      return {
-        id: b.id,
-        name: b.name,
-        category: b.category,
-        score: b.percentage
-      };
-    });
+  valueWithHighestScore(){
+    return this._values;
   }
+
+  behaviorWithHighestScore(){
+    return this._behaviors;
+  }
+
 
 }
 

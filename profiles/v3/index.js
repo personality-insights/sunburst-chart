@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint-disable no-console */
 
 'use strict';
 
@@ -22,48 +23,160 @@ class PersonalityProfile {
     this._traits = profile.personality;
     this._needs = profile.needs;
     this._values = profile.values;
+    this._behaviors = profile.behavior ? profile.behavior : {};
   }
 
-  traits(){
-    return this._traits.map(function(t) {
+  /**
+  * Creates a tree object matching the format used by D3 tree visualizations:
+  *   each node in the tree must have a 'name' and 'children' attribute except leaf nodes
+  *   which only require a 'name' attribute
+  **/
+  d3Json(){
+    console.log('BEHAVIORS');
+    console.log(this._behaviors);
+
+    return JSON.stringify({
+      name: 'profile',
+      children: [
+        {
+          name: 'traits',
+          children: this.traitsTree()
+        },
+        {
+          name: 'values',
+          children: this.valuesTree()
+        },
+        {
+          name: 'needs',
+          children: this.needsTree()
+        },
+        {
+          name: 'behaviors',
+          children: this.behaviorsTree()
+        }
+      ]
+    },2,null);
+  }
+
+  traitsTree(){
+    var traitWithHighestScore = this.childWithHighestScore(this._traits);
+    return {
+      name: traitWithHighestScore.name,
+      id: traitWithHighestScore.trait_id,
+      category: traitWithHighestScore.category,
+      score: traitWithHighestScore.percentile,
+      children: this._traits.map(function(t) {
+        return {
+          name: t.name,
+          id: t.trait_id,
+          category: t.category,
+          score: t.percentile,
+          children: t.children.map(function(f) {
+            return {
+              name: f.name,
+              id: f.trait_id,
+              category: f.category,
+              score: f.percentile
+            };
+          })
+        };
+      })
+    };
+  }
+
+
+  needsTree(){
+    var needWithHighestScore = this.childWithHighestScore(this._needs);
+    return {
+      name: needWithHighestScore.name,
+      id: needWithHighestScore.trait_id,
+      category: needWithHighestScore.category,
+      score: needWithHighestScore.percentile,
+      children: this._needs.map(function(n) {
+        return {
+          name: n.name,
+          id: n.trait_id,
+          category: n.category,
+          score: n.percentile
+        };
+      })
+    };
+  }
+
+  valuesTree(){
+    var valueWithHighestScore = this.childWithHighestScore(this._values);
+    return {
+      name: valueWithHighestScore.name,
+      id: valueWithHighestScore.trait_id,
+      category: valueWithHighestScore.category,
+      score: valueWithHighestScore.percentile,
+      children: this._values.map(function(v) {
+        return {
+          name: v.name,
+          id: v.trait_id,
+          category: v.category,
+          score: v.percentile
+        };
+      })
+    };
+  }
+
+  behaviorsTree(){
+    var behaviorWithHighestScore = this.behaviorWithHighestScore(this._behaviors);
+    console.log(behaviorWithHighestScore);
+    if (this._behaviors){
       return {
-        id: t.trait_id,
-        name: t.name,
-        category: t.category,
-        score: t.percentile,
-        facets: t.children.map(function(f) {
+        name: behaviorWithHighestScore.name,
+        id: behaviorWithHighestScore.trait_id,
+        category: behaviorWithHighestScore.category,
+        score: behaviorWithHighestScore.percentage,
+        children: this._behaviors.map(function(b) {
           return {
-            id: f.trait_id,
-            name: f.name,
-            category: f.category,
-            score: f.percentile
+            name: b.name,
+            id: b.trait_id,
+            category: b.category,
+            score: b.percentage
           };
         })
       };
-    });
+    } else {
+      return {};
+    }
   }
 
-  needs() {
-    return this._needs.map(function(n) {
-      return {
-        id: n.trait_id,
-        name: n.name,
-        category: n.category,
-        score: n.percentile
-      };
-    });
+  childWithHighestScore(children){
+
+    const score_threshold = 0.5;
+    const highest_score = score_threshold;
+    var child_with_highest_score = {};
+
+    for (var i = 0; i < children.length; i++) {
+      if(children[i].percentile >= highest_score){
+        child_with_highest_score = children[i];
+      }
+    }
+
+    return child_with_highest_score;
   }
 
-  values() {
-    return this._values.map(function(v) {
-      return {
-        id: v.trait_id,
-        name: v.name,
-        category: v.category,
-        score: v.percentile
-      };
-    });
+  /**
+  *   behaviors use 'percentage' instead of 'percentile' for score
+  */
+  behaviorWithHighestScore(children){
+
+    const score_threshold = 0.5;
+    const highest_score = score_threshold;
+    var child_with_highest_score = {};
+
+    for (var i = 0; i < children.length; i++) {
+      if(children[i].percentage >= highest_score){
+        child_with_highest_score = children[i];
+      }
+    }
+
+    return child_with_highest_score;
   }
+
 
 }
 
