@@ -22,6 +22,7 @@ class PersonalityProfile {
     this._traits = profile.tree.children[0].children[0].children;
     this._needs = profile.tree.children[1].children[0].children;
     this._values = profile.tree.children[2].children[0].children;
+    this._behaviors = profile.tree.children[3].children[0].children;
   }
 
   traits(){
@@ -58,11 +59,21 @@ class PersonalityProfile {
   values() {
     return this._values.map(function(v) {
       return {
-        //id: v.id,
         id: v.id.replace('_', '-').replace(' ', '-'),
         name: v.name,
         category: v.category,
         score: v.percentage
+      };
+    });
+  }
+
+  behaviors() {
+    return this._values.map(function(b) {
+      return {
+        id: b.id,
+        name: b.name,
+        category: b.category,
+        score: b.percentage
       };
     });
   }
