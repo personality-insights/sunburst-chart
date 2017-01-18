@@ -32,7 +32,7 @@ class PersonalityProfile {
   *   which only require a 'name' attribute
   **/
   d3Json(){
-    return JSON.stringify({
+    return {
       tree: {
         children: [
           {
@@ -57,7 +57,7 @@ class PersonalityProfile {
           }
         ]
       }
-    },2,null);
+    };
   }
 
   traitsTree(){
