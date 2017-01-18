@@ -19,7 +19,7 @@
 class PersonalityProfile {
 
   constructor(profile) {
-    this._tree = profile.tree;
+    this.profile = profile.tree;
     this._traits = profile.tree.children[0].children[0];
     this._needs = profile.tree.children[1].children[0];
     this._values = profile.tree.children[2].children[0];
@@ -33,46 +33,51 @@ class PersonalityProfile {
   **/
   d3Json(){
     return JSON.stringify({
-      name: 'profile',
-      children: [
-        {
-          name: 'traits',
-          children: this.traitsTree()
-        },
-        {
-          name: 'values',
-          children: this.valuesTree()
-        },
-        {
-          name: 'needs',
-          children: this.needsTree()
-        },
-        {
-          name: 'behaviors',
-          children: this.behaviorsTree()
-        }
-      ]
+      tree: {
+        children: [
+          {
+            name: 'Big 5',
+            id: 'personality',
+            children: [this.traitsTree()]
+          },
+          {
+            name: 'Values',
+            id: 'values',
+            children: [this.valuesTree()]
+          },
+          {
+            name: 'Needs',
+            id: 'needs',
+            children: [this.needsTree()]
+          },
+          {
+            name: 'Social Behavior',
+            id: 'sbh',
+            children: [this.behaviorsTree()]
+          }
+        ]
+      }
     },2,null);
   }
 
   traitsTree(){
     return {
-      name: this.traitWithHighestScore().name,
-      id: this.traitWithHighestScore().id,
-      category: this.traitWithHighestScore().category,
-      score: this.traitWithHighestScore().percentage,
+      name: this.traitWithHighestpercentage().name,
+      id: this.traitWithHighestpercentage().id,
+      category: this.traitWithHighestpercentage().category,
+      percentage: this.traitWithHighestpercentage().percentage,
       children: this._traits.children.map(function(t) {
         return {
           name: t.name,
           id: t.id,
           category: t.category,
-          score: t.percentage,
+          percentage: t.percentage,
           children: t.children.map(function(f) {
             return {
               name: f.name,
               id: f.id,
               category: f.category,
-              score: f.percentage
+              percentage: f.percentage
             };
           })
         };
@@ -83,16 +88,16 @@ class PersonalityProfile {
 
   needsTree(){
     return {
-      name: this.needWithHighestScore().name,
-      id: this.needWithHighestScore().id,
-      category: this.needWithHighestScore().category,
-      score: this.needWithHighestScore().percentage,
+      name: this.needWithHighestpercentage().name,
+      id: this.needWithHighestpercentage().id,
+      category: this.needWithHighestpercentage().category,
+      percentage: this.needWithHighestpercentage().percentage,
       children: this._needs.children.map(function(n) {
         return {
           name: n.name,
           id: n.id,
           category: n.category,
-          score: n.percentage
+          percentage: n.percentage
         };
       })
     };
@@ -100,16 +105,16 @@ class PersonalityProfile {
 
   valuesTree(){
     return {
-      name: this.valueWithHighestScore().name,
-      id: this.valueWithHighestScore().id,
-      category: this.valueWithHighestScore().category,
-      score: this.valueWithHighestScore().percentage,
+      name: this.valueWithHighestpercentage().name,
+      id: this.valueWithHighestpercentage().id,
+      category: this.valueWithHighestpercentage().category,
+      percentage: this.valueWithHighestpercentage().percentage,
       children: this._values.children.map(function(v) {
         return {
           name: v.name,
           id: v.id,
           category: v.category,
-          score: v.percentage
+          percentage: v.percentage
         };
       })
     };
@@ -118,16 +123,16 @@ class PersonalityProfile {
   behaviorsTree(){
     if (this._behaviors.children){
       return {
-        name: this.behaviorWithHighestScore().name,
-        id: this.behaviorWithHighestScore().id,
-        category: this.behaviorWithHighestScore().category,
-        score: this.behaviorWithHighestScore().percentage,
+        name: this.behaviorWithHighestpercentage().name,
+        id: this.behaviorWithHighestpercentage().id,
+        category: this.behaviorWithHighestpercentage().category,
+        percentage: this.behaviorWithHighestpercentage().percentage,
         children: this._behaviors.children.map(function(b) {
           return {
             name: b.name,
             id: b.id,
             category: b.category,
-            score: b.percentage
+            percentage: b.percentage
           };
         })
       };
@@ -136,19 +141,19 @@ class PersonalityProfile {
     }
   }
 
-  traitWithHighestScore(){
+  traitWithHighestpercentage(){
     return this._traits;
   }
 
-  needWithHighestScore(){
+  needWithHighestpercentage(){
     return this._needs;
   }
 
-  valueWithHighestScore(){
+  valueWithHighestpercentage(){
     return this._values;
   }
 
-  behaviorWithHighestScore(){
+  behaviorWithHighestpercentage(){
     return this._behaviors;
   }
 
