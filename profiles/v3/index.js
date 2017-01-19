@@ -66,19 +66,19 @@ class PersonalityProfile {
       name: traitWithHighestScore.name,
       id: traitWithHighestScore.trait_id,
       category: traitWithHighestScore.category,
-      percentage: traitWithHighestScore.percentile,
+      score: traitWithHighestScore.percentile,
       children: this._traits.map(function(t) {
         return {
           name: t.name,
           id: t.trait_id,
           category: t.category,
-          percentage: t.percentile,
+          score: t.percentile,
           children: t.children.map(function(f) {
             return {
               name: f.name,
               id: f.trait_id,
               category: f.category,
-              percentage: f.percentile
+              score: f.percentile
             };
           })
         };
@@ -93,13 +93,13 @@ class PersonalityProfile {
       name: needWithHighestScore.name,
       id: needWithHighestScore.trait_id,
       category: needWithHighestScore.category,
-      percentage: needWithHighestScore.percentile,
+      score: needWithHighestScore.percentile,
       children: this._needs.map(function(n) {
         return {
           name: n.name,
           id: n.trait_id,
           category: n.category,
-          percentage: n.percentile
+          score: n.percentile
         };
       })
     };
@@ -111,13 +111,13 @@ class PersonalityProfile {
       name: valueWithHighestScore.name,
       id: valueWithHighestScore.trait_id,
       category: valueWithHighestScore.category,
-      percentage: valueWithHighestScore.percentile,
+      score: valueWithHighestScore.percentile,
       children: this._values.map(function(v) {
         return {
           name: v.name,
           id: v.trait_id,
           category: v.category,
-          percentage: v.percentile
+          score: v.percentile
         };
       })
     };
@@ -131,13 +131,13 @@ class PersonalityProfile {
         name: behaviorWithHighestScore.name,
         id: behaviorWithHighestScore.trait_id,
         category: behaviorWithHighestScore.category,
-        percentage: behaviorWithHighestScore.percentage,
+        score: behaviorWithHighestScore.percentage,
         children: this._behaviors.map(function(b) {
           return {
             name: b.name,
             id: b.trait_id,
             category: b.category,
-            percentage: b.percentage
+            score: b.percentage
           };
         })
       };
