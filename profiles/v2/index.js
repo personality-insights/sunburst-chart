@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint-disable no-console */
 
 'use strict';
+const _ = require('underscore');
 
 class PersonalityProfile {
 
@@ -31,7 +33,7 @@ class PersonalityProfile {
   *   which only require a 'name' attribute
   **/
   d3Json(){
-    return {
+    var d3Tree = {
       tree: {
         children: [
           {
@@ -48,15 +50,18 @@ class PersonalityProfile {
             name: 'Needs',
             id: 'needs',
             children: [this.needsTree()]
-          },
-          {
-            name: 'Social Behavior',
-            id: 'sbh',
-            children: [this.behaviorsTree()]
           }
         ]
       }
     };
+    if( !_.isEmpty(this._behaviors) ){
+      d3Tree.tree.children.push({
+        name: 'Social Behavior',
+        id: 'sbh',
+        children: [this.behaviorsTree()]
+      });
+    }
+    return d3Tree;
   }
 
   traitsTree(){

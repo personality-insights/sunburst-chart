@@ -16,6 +16,7 @@
 /* eslint-disable no-console */
 
 'use strict';
+const _ = require('underscore');
 
 class PersonalityProfile {
 
@@ -32,7 +33,7 @@ class PersonalityProfile {
   *   which only require a 'name' attribute
   **/
   d3Json(){
-    return {
+    var d3Tree = {
       tree: {
         children: [
           {
@@ -49,15 +50,20 @@ class PersonalityProfile {
             name: 'Needs',
             id: 'needs',
             children: [this.needsTree()]
-          },
-          {
-            name: 'Social Behavior',
-            id: 'sbh',
-            children: [this.behaviorsTree()]
           }
         ]
       }
     };
+
+    if( !_.isEmpty(this._behaviors) ){
+      d3Tree.tree.children.push({
+        name: 'Social Behavior',
+        id: 'sbh',
+        children: [this.behaviorsTree()]
+      });
+    }
+    return d3Tree;
+
   }
 
   traitsTree(){
@@ -147,7 +153,6 @@ class PersonalityProfile {
   }
 
   childWithHighestScore(children){
-
     const score_threshold = 0.5;
     const highest_score = score_threshold;
     var child_with_highest_score = {};
@@ -165,7 +170,6 @@ class PersonalityProfile {
   *   behaviors use 'percentage' instead of 'percentile' for score
   */
   behaviorWithHighestScore(children){
-
     const score_threshold = 0.5;
     const highest_score = score_threshold;
     var child_with_highest_score = {};
@@ -175,10 +179,8 @@ class PersonalityProfile {
         child_with_highest_score = children[i];
       }
     }
-
     return child_with_highest_score;
   }
-
 
 }
 
