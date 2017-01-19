@@ -19,7 +19,6 @@
 class PersonalityProfile {
 
   constructor(profile) {
-    this.profile = profile.tree;
     this._traits = profile.tree.children[0].children[0];
     this._needs = profile.tree.children[1].children[0];
     this._values = profile.tree.children[2].children[0];
