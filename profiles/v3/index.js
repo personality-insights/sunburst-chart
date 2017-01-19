@@ -67,12 +67,12 @@ class PersonalityProfile {
   }
 
   traitsTree(){
-    var traitWithHighestScore = this.childWithHighestScore(this._traits);
+    var mostSignificantTrait = this.mostSignificantChild(this._traits);
     return {
-      name: traitWithHighestScore.name,
-      id: traitWithHighestScore.trait_id,
-      category: traitWithHighestScore.category,
-      score: traitWithHighestScore.percentile,
+      name: mostSignificantTrait.name,
+      id: mostSignificantTrait.trait_id,
+      category: mostSignificantTrait.category,
+      score: mostSignificantTrait.percentile,
       children: this._traits.map(function(t) {
         return {
           name: t.name,
@@ -94,12 +94,12 @@ class PersonalityProfile {
 
 
   needsTree(){
-    var needWithHighestScore = this.childWithHighestScore(this._needs);
+    var mostSignificantNeed = this.mostSignificantChild(this._needs);
     return {
-      name: needWithHighestScore.name,
-      id: needWithHighestScore.trait_id,
-      category: needWithHighestScore.category,
-      score: needWithHighestScore.percentile,
+      name: mostSignificantNeed.name,
+      id: mostSignificantNeed.trait_id,
+      category: mostSignificantNeed.category,
+      score: mostSignificantNeed.percentile,
       children: this._needs.map(function(n) {
         return {
           name: n.name,
@@ -112,12 +112,12 @@ class PersonalityProfile {
   }
 
   valuesTree(){
-    var valueWithHighestScore = this.childWithHighestScore(this._values);
+    var mostSignificantValue = this.mostSignificantChild(this._values);
     return {
-      name: valueWithHighestScore.name,
-      id: valueWithHighestScore.trait_id,
-      category: valueWithHighestScore.category,
-      score: valueWithHighestScore.percentile,
+      name: mostSignificantValue.name,
+      id: mostSignificantValue.trait_id,
+      category: mostSignificantValue.category,
+      score: mostSignificantValue.percentile,
       children: this._values.map(function(v) {
         return {
           name: v.name,
@@ -130,14 +130,13 @@ class PersonalityProfile {
   }
 
   behaviorsTree(){
-    var behaviorWithHighestScore = this.behaviorWithHighestScore(this._behaviors);
-    console.log(behaviorWithHighestScore);
+    var mostSignificantBehavior = this.mostSignificantBehavior(this._behaviors);
     if (this._behaviors){
       return {
-        name: behaviorWithHighestScore.name,
-        id: behaviorWithHighestScore.trait_id,
-        category: behaviorWithHighestScore.category,
-        score: behaviorWithHighestScore.percentage,
+        name: mostSignificantBehavior.name,
+        id: mostSignificantBehavior.trait_id,
+        category: mostSignificantBehavior.category,
+        score: mostSignificantBehavior.percentage,
         children: this._behaviors.map(function(b) {
           return {
             name: b.name,
@@ -152,34 +151,33 @@ class PersonalityProfile {
     }
   }
 
-  childWithHighestScore(children){
-    const score_threshold = 0.5;
-    const highest_score = score_threshold;
-    var child_with_highest_score = {};
+  mostSignificantChild(children){
+    const threshold = 0.5;
+    const farthestDistance = 0;
+    var childWithScoreFarthestFromThreshold = {};
 
     for (var i = 0; i < children.length; i++) {
-      if(children[i].percentile >= highest_score){
-        child_with_highest_score = children[i];
+      if(Math.abs(children[i].percentile - threshold) >= farthestDistance){
+        childWithScoreFarthestFromThreshold = children[i];
       }
     }
-
-    return child_with_highest_score;
+    return childWithScoreFarthestFromThreshold;
   }
 
   /**
   *   behaviors use 'percentage' instead of 'percentile' for score
   */
-  behaviorWithHighestScore(children){
-    const score_threshold = 0.5;
-    const highest_score = score_threshold;
-    var child_with_highest_score = {};
+  mostSignificantBehavior(children){
+    const threshold = 0.5;
+    const farthestDistance = 0;
+    var childWithScoreFarthestFromThreshold = {};
 
     for (var i = 0; i < children.length; i++) {
-      if(children[i].percentage >= highest_score){
-        child_with_highest_score = children[i];
+      if(Math.abs(children[i].percentage - threshold) >= farthestDistance){
+        childWithScoreFarthestFromThreshold = children[i];
       }
     }
-    return child_with_highest_score;
+    return childWithScoreFarthestFromThreshold;
   }
 
 }
