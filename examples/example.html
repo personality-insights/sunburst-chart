@@ -40,13 +40,20 @@
     </div>
 
     <script>
+      // v2 personality profile - version can be specified in the constructor for PersonalitySunburstChart
+      // but it is not necessary as the default version is currently v2
+      /*
       $.getJSON('./resources/profile_with_behaviors_v2.json', '', function ( profile ) {
-
         $('#profile').append('<pre>' + JSON.stringify(profile, null, 2) + '</pre>');
-
         var chart = new PersonalitySunburstChart('sunburstChart');
         chart.show(profile, './resources/profile_photo.jpg');
+      */
 
+      // v3 personality profile - version MUST be specified in the constructor for PersonalitySunburstChart
+      $.getJSON('./resources/profile_with_behaviors_v3.json', '', function ( profile ) {
+        $('#profile').append('<pre>' + JSON.stringify(profile, null, 2) + '</pre>');
+        var chart = new PersonalitySunburstChart('sunburstChart', {'version': 'v3'});
+        chart.show(profile, './resources/profile_photo.jpg');
 
       });
     </script>
