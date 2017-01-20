@@ -16,7 +16,6 @@
 /* eslint-disable no-console */
 
 'use strict';
-const _ = require('underscore');
 
 class PersonalityProfile {
 
@@ -24,7 +23,6 @@ class PersonalityProfile {
     this._traits = profile.personality;
     this._needs = profile.needs;
     this._values = profile.values;
-    this._behaviors = profile.behavior ? profile.behavior : {};
   }
 
   /**
@@ -33,7 +31,7 @@ class PersonalityProfile {
   *   which only require a 'name' attribute
   **/
   d3Json(){
-    var d3Tree = {
+    return {
       tree: {
         children: [
           {
@@ -54,23 +52,13 @@ class PersonalityProfile {
         ]
       }
     };
-
-    if( !_.isEmpty(this._behaviors) ){
-      d3Tree.tree.children.push({
-        name: 'Social Behavior',
-        id: 'sbh',
-        children: [this.behaviorsTree()]
-      });
-    }
-    return d3Tree;
-
   }
 
   traitsTree(){
     var mostSignificantTrait = this.mostSignificantChild(this._traits);
     return {
       name: mostSignificantTrait.name,
-      id: mostSignificantTrait.trait_id,
+      id: mostSignificantTrait.trait_id + '_parent',
       category: mostSignificantTrait.category,
       score: mostSignificantTrait.percentile,
       children: this._traits.map(function(t) {
@@ -97,7 +85,7 @@ class PersonalityProfile {
     var mostSignificantNeed = this.mostSignificantChild(this._needs);
     return {
       name: mostSignificantNeed.name,
-      id: mostSignificantNeed.trait_id,
+      id: mostSignificantNeed.trait_id + '_parent',
       category: mostSignificantNeed.category,
       score: mostSignificantNeed.percentile,
       children: this._needs.map(function(n) {
@@ -115,7 +103,7 @@ class PersonalityProfile {
     var mostSignificantValue = this.mostSignificantChild(this._values);
     return {
       name: mostSignificantValue.name,
-      id: mostSignificantValue.trait_id,
+      id: mostSignificantValue.trait_id + '_parent',
       category: mostSignificantValue.category,
       score: mostSignificantValue.percentile,
       children: this._values.map(function(v) {
@@ -129,52 +117,16 @@ class PersonalityProfile {
     };
   }
 
-  behaviorsTree(){
-    var mostSignificantBehavior = this.mostSignificantBehavior(this._behaviors);
-    if (this._behaviors){
-      return {
-        name: mostSignificantBehavior.name,
-        id: mostSignificantBehavior.trait_id,
-        category: mostSignificantBehavior.category,
-        score: mostSignificantBehavior.percentage,
-        children: this._behaviors.map(function(b) {
-          return {
-            name: b.name,
-            id: b.trait_id,
-            category: b.category,
-            score: b.percentage
-          };
-        })
-      };
-    } else {
-      return {};
-    }
-  }
-
   mostSignificantChild(children){
     const threshold = 0.5;
-    const farthestDistance = 0;
+    var farthestDistance = 0;
     var childWithScoreFarthestFromThreshold = {};
 
     for (var i = 0; i < children.length; i++) {
-      if(Math.abs(children[i].percentile - threshold) >= farthestDistance){
+      var distance = Math.abs(children[i].percentile - threshold);
+      if(distance >= farthestDistance){
         childWithScoreFarthestFromThreshold = children[i];
-      }
-    }
-    return childWithScoreFarthestFromThreshold;
-  }
-
-  /**
-  *   behaviors use 'percentage' instead of 'percentile' for score
-  */
-  mostSignificantBehavior(children){
-    const threshold = 0.5;
-    const farthestDistance = 0;
-    var childWithScoreFarthestFromThreshold = {};
-
-    for (var i = 0; i < children.length; i++) {
-      if(Math.abs(children[i].percentage - threshold) >= farthestDistance){
-        childWithScoreFarthestFromThreshold = children[i];
+        farthestDistance = distance;
       }
     }
     return childWithScoreFarthestFromThreshold;

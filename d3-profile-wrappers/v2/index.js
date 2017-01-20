@@ -16,7 +16,6 @@
 /* eslint-disable no-console */
 
 'use strict';
-const _ = require('underscore');
 
 class PersonalityProfile {
 
@@ -24,7 +23,6 @@ class PersonalityProfile {
     this._traits = profile.tree.children[0].children[0];
     this._needs = profile.tree.children[1].children[0];
     this._values = profile.tree.children[2].children[0];
-    this._behaviors = profile.tree.children[3] ? profile.tree.children[3].children[0] : {};
   }
 
   /**
@@ -33,7 +31,7 @@ class PersonalityProfile {
   *   which only require a 'name' attribute
   **/
   d3Json(){
-    var d3Tree = {
+    return {
       tree: {
         children: [
           {
@@ -54,14 +52,6 @@ class PersonalityProfile {
         ]
       }
     };
-    if( !_.isEmpty(this._behaviors) ){
-      d3Tree.tree.children.push({
-        name: 'Social Behavior',
-        id: 'sbh',
-        children: [this.behaviorsTree()]
-      });
-    }
-    return d3Tree;
   }
 
   traitsTree(){
@@ -88,7 +78,6 @@ class PersonalityProfile {
       })
     };
   }
-
 
   needsTree(){
     return {
@@ -124,27 +113,6 @@ class PersonalityProfile {
     };
   }
 
-  behaviorsTree(){
-    if (this._behaviors.children){
-      return {
-        name: this.behaviorWithHighestScore().name,
-        id: this.behaviorWithHighestScore().id,
-        category: this.behaviorWithHighestScore().category,
-        score: this.behaviorWithHighestScore().percentage,
-        children: this._behaviors.children.map(function(b) {
-          return {
-            name: b.name,
-            id: b.id,
-            category: b.category,
-            score: b.percentage
-          };
-        })
-      };
-    } else {
-      return {};
-    }
-  }
-
   traitWithHighestScore(){
     return this._traits;
   }
@@ -156,11 +124,6 @@ class PersonalityProfile {
   valueWithHighestScore(){
     return this._values;
   }
-
-  behaviorWithHighestScore(){
-    return this._behaviors;
-  }
-
 
 }
 
