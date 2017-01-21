@@ -32,7 +32,7 @@ Generate the visualization for a personality profile.
   var PersonalityTraitDescriptions = require('personality-trait-descriptions');
 
   // version refers to the version of Watson Personality Insights to use, v2 or v3
-  var chart = new PersonalitySunburstChart({ containerID: 'id', version: 'v3' });
+  var chart = new PersonalitySunburstChart('sunburstChart', {'version': 'v3'});
 
   // render the profile image for a personality profile (version as specified in creating the chart)
   // and a profile photo - the photo will be inserted into the center of the sunburst visualization
@@ -40,7 +40,7 @@ Generate the visualization for a personality profile.
 
   ```
 
-  See the complete [example code](./examples/example.html).
+  See the complete [example code](./examples/example_v3.html).
 
 ## License
 
@@ -50,4 +50,5 @@ available in [LICENSE](LICENSE).
 ## Changelog
 
 __15-01-2017__
- * Added v3 descriptions
+ * Added support for v3 profiles - d3 tree json wrapper provided for v2 and v3 personality profiles to generate the input required by the d3 sunburst-chart created in lib/personality-chart-renderer.js
+ * Only traits, needs and values will be displayed by the sunburst-chart.
