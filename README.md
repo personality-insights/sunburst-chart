@@ -18,7 +18,7 @@ $ npm install personality-sunburst-chart
 ## Usage
 
 Include the personality-sunburst-chart script, JQuery and D3 in your HTML page.
-```
+```html
 <script src="path/to/personality-sunburst-chart.standalone.js"></script>
 <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.14/d3.min.js"></script>
@@ -29,8 +29,6 @@ Create an element to contain the chart in your HTML page.
 
 Generate the visualization for a personality profile.
 ```JavaScript
-  var PersonalityTraitDescriptions = require('personality-trait-descriptions');
-
   // version refers to the version of Watson Personality Insights to use, v2 or v3
   var chart = new PersonalitySunburstChart('sunburstChart', {'version': 'v3'});
 
