@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.PersonalitySunburstChart = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/germana/workspace/sunburst-chart/d3-profile-wrappers/v2/index.js":[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.PersonalitySunburstChart = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/germana/workspace/sunburst-chart/lib/d3-profile-wrappers/v2/index.js":[function(require,module,exports){
 /**
  * Copyright 2016 IBM Corp. All Rights Reserved.
  *
@@ -143,7 +143,7 @@ var PersonalityProfile = function () {
 
 module.exports = PersonalityProfile;
 
-},{}],"/Users/germana/workspace/sunburst-chart/d3-profile-wrappers/v3/index.js":[function(require,module,exports){
+},{}],"/Users/germana/workspace/sunburst-chart/lib/d3-profile-wrappers/v3/index.js":[function(require,module,exports){
 /**
  * Copyright 2016 IBM Corp. All Rights Reserved.
  *
@@ -324,8 +324,8 @@ var extend = require('extend');
 var pick = require('object.pick');
 
 var ChartRenderer = require('./personality-chart-renderer');
-var D3PersonalityProfileV2 = require('../d3-profile-wrappers/v2/index');
-var D3PersonalityProfileV3 = require('../d3-profile-wrappers/v3/index');
+var D3PersonalityProfileV2 = require('./d3-profile-wrappers/v2/index');
+var D3PersonalityProfileV3 = require('./d3-profile-wrappers/v3/index');
 var colors = require('./utilities/colors');
 
 // Dependencies check
@@ -452,7 +452,7 @@ var PersonalitySunburstChart = function () {
 
 module.exports = PersonalitySunburstChart;
 
-},{"../d3-profile-wrappers/v2/index":"/Users/germana/workspace/sunburst-chart/d3-profile-wrappers/v2/index.js","../d3-profile-wrappers/v3/index":"/Users/germana/workspace/sunburst-chart/d3-profile-wrappers/v3/index.js","./personality-chart-renderer":"/Users/germana/workspace/sunburst-chart/lib/personality-chart-renderer.js","./utilities/colors":"/Users/germana/workspace/sunburst-chart/lib/utilities/colors.js","extend":"/Users/germana/workspace/sunburst-chart/node_modules/extend/index.js","object.pick":"/Users/germana/workspace/sunburst-chart/node_modules/object.pick/index.js"}],"/Users/germana/workspace/sunburst-chart/lib/personality-chart-renderer.js":[function(require,module,exports){
+},{"./d3-profile-wrappers/v2/index":"/Users/germana/workspace/sunburst-chart/lib/d3-profile-wrappers/v2/index.js","./d3-profile-wrappers/v3/index":"/Users/germana/workspace/sunburst-chart/lib/d3-profile-wrappers/v3/index.js","./personality-chart-renderer":"/Users/germana/workspace/sunburst-chart/lib/personality-chart-renderer.js","./utilities/colors":"/Users/germana/workspace/sunburst-chart/lib/utilities/colors.js","extend":"/Users/germana/workspace/sunburst-chart/node_modules/extend/index.js","object.pick":"/Users/germana/workspace/sunburst-chart/node_modules/object.pick/index.js"}],"/Users/germana/workspace/sunburst-chart/lib/personality-chart-renderer.js":[function(require,module,exports){
 /**
  * Copyright 2014-2015 IBM Corp. All Rights Reserved.
  *
