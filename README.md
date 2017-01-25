@@ -37,7 +37,8 @@ Generate the visualization for a personality profile.
   // and the version of Watson Personality Insights profile to use, v2 or v3.  Default is v2.
   var chart = new PersonalitySunburstChart({'selector': 'sunburstChart', 'version': 'v3'});
 
-  // Render the sunburst chart for a personality profile (version as specified in creating the chart) // and optionally a profile photo.  The photo will be inserted into the center of the sunburst chart.
+  // Render the sunburst chart for a personality profile (version as specified in creating the chart)
+  // and optionally a profile photo.  The photo will be inserted into the center of the sunburst chart.
   chart.show('path/to/profile.json', 'path/to/profile_photo.jpg');
 
   ```
