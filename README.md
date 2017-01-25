@@ -9,6 +9,8 @@
 
 Obtain a sunburst chart visualization for a personality profile.  For use in an HTML page.
 
+![Personality Sunburst Chart](./examples/personality-sunburst-chart-small.png)
+
 ## Installation
 
 ```sh
