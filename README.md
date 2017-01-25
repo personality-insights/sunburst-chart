@@ -27,16 +27,18 @@ Include the personality-sunburst-chart script, JQuery and D3 in your HTML page.
 ```
 
 Create an element to contain the chart in your HTML page.
-<div id='sunburstChartContainer'></div>
+```html
+<div id='sunburstChart'></div>
+```
 
 Generate the visualization for a personality profile.
 ```JavaScript
   // version refers to the version of Watson Personality Insights to use, v2 or v3
-  var chart = new PersonalitySunburstChart('sunburstChart', {'version': 'v3'});
+  var chart = new PersonalitySunburstChart({'selector': 'sunburstChart', 'version': 'v3'});
 
   // render the profile image for a personality profile (version as specified in creating the chart)
   // and a profile photo - the photo will be inserted into the center of the sunburst visualization
-  chart.show(profile, 'path/to/profile_photo.jpg');
+  chart.show('path/to/profile.json', 'path/to/profile_photo.jpg');
 
   ```
 
