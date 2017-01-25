@@ -33,7 +33,8 @@ Create an element to contain the chart in your HTML page.
 
 Generate the visualization for a personality profile.
 ```JavaScript
-  // version refers to the version of Watson Personality Insights to use, v2 or v3
+  // Create the chart specifying the css selector that identifies the element to contain the chart
+  // version refers to the version of Watson Personality Insights to use, v2 or v3.  Default is v2.
   var chart = new PersonalitySunburstChart({'selector': 'sunburstChart', 'version': 'v3'});
 
   // render the profile image for a personality profile (version as specified in creating the chart)
