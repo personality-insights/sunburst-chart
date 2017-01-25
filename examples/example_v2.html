@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <title>Personality Insights Sunburst Chart</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.14/d3.min.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://rawgit.com/personality-insights/sunburst-chart/master/dist/index.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+      #profile pre {
+        max-height: 400px;
+      }
+
+      #textSummary {
+        font-size: 1.2em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="container">
+      <h1>Personality Insights Sunburst Chart</h1>
+      <p class="lead">Use it to generate a sunburst chart visualization for your personality.</p>
+      <div class="row">
+        <div class="col-sm-6 col-xs-12">
+          <h2>Personality Profile</h2>
+          <div id="profile" class=""></div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+          <h2>Personality Sunburst Chart</h2>
+          <div id="sunburstChart"></div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <script>
+      // v2 personality profile - version can be specified in the constructor for PersonalitySunburstChart
+      // but it is not necessary as the default version is currently v2
+      $.getJSON('./profiles/en_v2.json', '', function ( profile ) {
+        $('#profile').append('<pre>' + JSON.stringify(profile, null, 2) + '</pre>');
+        var chart = new PersonalitySunburstChart({'selector': 'sunburstChart'});
+        chart.show(profile, './profile_photo.jpg');
+        //chart.show(profile);
+      });
+    </script>
+
+  </body>
+</html>

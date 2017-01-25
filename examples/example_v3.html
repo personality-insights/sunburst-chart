@@ -3,9 +3,11 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
     <title>Personality Insights Sunburst Chart</title>
+
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.14/d3.min.js"></script>
-    <script src="https://rawgit.com/ibm-silvergate/personality-sunburst-chart/master/bin/personality-sunburst-chart.standalone.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://rawgit.com/personality-insights/sunburst-chart/master/dist/index.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
@@ -37,14 +39,11 @@
     </div>
 
     <script>
-      $.getJSON('./resources/profile.json', '', function ( profile ) {
-
+      // v3 personality profile - version MUST be specified in the constructor for PersonalitySunburstChart
+      $.getJSON('./profiles/en_v3.json', '', function ( profile ) {
         $('#profile').append('<pre>' + JSON.stringify(profile, null, 2) + '</pre>');
-
-        var chart = new PersonalitySunburstChart('sunburstChart');
-        chart.show(profile, './resources/profile_photo.jpg');
-
-
+        var chart = new PersonalitySunburstChart({'selector':'sunburstChart', 'version': 'v3'});
+        chart.show(profile, './profile_photo.jpg');
       });
     </script>
 
