@@ -308,7 +308,7 @@ module.exports = PersonalityProfile;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/* global window */
+/* global window, document */
 /**
  * Renders the sunburst visualization. The parameter is the tree as returned
  * from the Personality Insights JSON API.
@@ -346,13 +346,12 @@ var PersonalitySunburstChart = function () {
     this._options = extend({}, this.defaultOptions(), pick(options, ['selector', 'version']));
     this._version = this._options.version;
     this._selector = this._options.selector;
-    this.containerId = this._selector;
     this.visualizationWidth = this._options.width || '100%';
     this.visualizationHeight = this._options.height || '100%';
     this.width = (1 / this._options.scale || 1) * 45 * 16.58;
     this.height = (1 / this._options.scale || 1) * 45 * 16.58;
     this.exclude = this._options.exclude || [];
-    this.container = $(this.containerId), this.d3Container = d3.select('#' + this.containerId), this.dimW = this.width, this.dimH = this.height, this.d3vis = undefined, this.touchDiv = undefined, this.data = undefined, this.id = 'SystemUWidget', this.COLOR_PALLETTE = colors, this.loadingDiv = 'dummy';
+    this.d3Container = d3.select(this._selector), this.dimW = this.width, this.dimH = this.height, this.d3vis = undefined, this.touchDiv = undefined, this.data = undefined, this.id = 'SystemUWidget', this.COLOR_PALLETTE = colors, this.loadingDiv = 'dummy';
   }
 
   _createClass(PersonalitySunburstChart, [{
@@ -375,14 +374,14 @@ var PersonalitySunburstChart = function () {
     value: function show(theProfile, personImageUrl) {
       var self = this;
       var d3Profile = self._version === 'v3' ? new D3PersonalityProfileV3(theProfile) : new D3PersonalityProfileV2(theProfile);
-      var widgetId = self.containerId;
+      var widgetId = self._selector;
 
       // Clear DOM element that will display the sunburst chart
-      $(self.containerId).innerHTML = null;
+      document.querySelector(widgetId).innerHTML = null;
 
       // Create widget
       var widget = {
-        d3vis: d3.select('#' + widgetId).append('svg:svg').attr('width', self.visualizationWidth).attr('height', self.visualizationHeight).attr('viewBox', '0 -30 ' + self.height + ', ' + self.width),
+        d3vis: d3.select(widgetId).append('svg:svg').attr('width', self.visualizationWidth).attr('height', self.visualizationHeight).attr('viewBox', '0 -30 ' + self.height + ', ' + self.width),
         data: d3Profile.d3Json(),
         dimH: self.height,
         dimW: self.width,

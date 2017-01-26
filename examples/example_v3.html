@@ -42,7 +42,7 @@
       // v3 personality profile - version MUST be specified in the constructor for PersonalitySunburstChart
       $.getJSON('./profiles/en_v3.json', '', function ( profile ) {
         $('#profile').append('<pre>' + JSON.stringify(profile, null, 2) + '</pre>');
-        var chart = new PersonalitySunburstChart({'selector':'sunburstChart', 'version': 'v3'});
+        var chart = new PersonalitySunburstChart({'selector':'#sunburstChart', 'version': 'v3'});
         chart.show(profile, './profile_photo.jpg');
       });
     </script>

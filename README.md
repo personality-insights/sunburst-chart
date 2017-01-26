@@ -12,10 +12,8 @@ Obtain a sunburst chart visualization for a personality profile.  For use in an 
 
 ## Usage
 
-Include the personality-sunburst-chart script, JQuery and D3 in your HTML page.
+Include the personality-sunburst-chart script and D3 in your HTML page.
 ```html
-
-<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.14/d3.min.js"></script>
 <script src="path/to/personality-sunburst-chart.standalone.js"></script>
 ```
@@ -47,6 +45,10 @@ This library is licensed under Apache 2.0. Full license text is
 available in [LICENSE](LICENSE).
 
 ## CHANGELOG
+
+__26-01-2017__
+ * Removed jQuery
+ * Add support for selectors and DOM nodes
 
 __15-01-2017__
  * Added support for v3 profiles - d3 tree json wrapper provided for v2 and v3 personality profiles to generate the input required by the d3 sunburst-chart created in lib/personality-chart-renderer.js

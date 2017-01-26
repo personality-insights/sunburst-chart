@@ -42,7 +42,7 @@
       // but it is not necessary as the default version is currently v2
       $.getJSON('./profiles/en_v2.json', '', function ( profile ) {
         $('#profile').append('<pre>' + JSON.stringify(profile, null, 2) + '</pre>');
-        var chart = new PersonalitySunburstChart({'selector': 'sunburstChart'});
+        var chart = new PersonalitySunburstChart({'selector': '#sunburstChart'});
         chart.show(profile, './profile_photo.jpg');
         //chart.show(profile);
       });
