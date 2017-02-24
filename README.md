@@ -16,7 +16,7 @@ Include the library index.js script from the /dist folder and D3 in your HTML pa
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.14/d3.min.js"></script>
 <script src="https://d3js.org/d3-color.v1.min.js"></script>
-<script src="index.js"></script>
+<script src="path/to/index.js"></script> <!-- This is the file in the /dist folder. -->
 ```
 
 Create an element to contain the chart in your HTML page.
