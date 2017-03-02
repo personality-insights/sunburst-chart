@@ -12,10 +12,11 @@ Obtain a sunburst chart visualization for a personality profile.  For use in an 
 
 ## Usage
 
-Include the personality-sunburst-chart script and D3 in your HTML page.
+Include the library index.js script from the /dist folder and D3 in your HTML page.
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.14/d3.min.js"></script>
-<script src="path/to/personality-sunburst-chart.standalone.js"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="path/to/index.js"></script> <!-- This is the file in the /dist folder. -->
 ```
 
 Create an element to contain the chart in your HTML page.
@@ -28,12 +29,12 @@ Generate the visualization for a personality profile.
   // Create the chart, specifying the css selector that identifies the element to contain the chart
   // and the version of Watson Personality Insights profile to use, v2 or v3.  Default is v2.
   var chart = new PersonalitySunburstChart({
-    'selector': 'sunburstChart', 'version': 'v3'
+    'selector':'#sunburstChart', 'version': 'v3'
   });
 
   // Render the sunburst chart for a personality profile (version as specified in creating the chart)
   // and optionally a profile photo.  The photo will be inserted into the center of the sunburst chart.
-  chart.show('path/to/profile.json', 'path/to/profile_photo.jpg');
+  chart.show('jsonObject', 'path/to/profile_photo.jpg');
 
   ```
 
