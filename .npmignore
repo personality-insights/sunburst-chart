@@ -3,3 +3,4 @@ test
 .eslint*
 docs
 examples
+src
