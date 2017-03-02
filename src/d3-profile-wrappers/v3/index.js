@@ -55,7 +55,7 @@ class PersonalityProfile {
   }
 
   traitsTree(){
-    var mostSignificantTrait = this.mostSignificantChild(this._traits);
+    const mostSignificantTrait = this.mostSignificantChild(this._traits);
     return {
       name: mostSignificantTrait.name,
       id: mostSignificantTrait.trait_id + '_parent',
@@ -82,7 +82,7 @@ class PersonalityProfile {
 
 
   needsTree(){
-    var mostSignificantNeed = this.mostSignificantChild(this._needs);
+    const mostSignificantNeed = this.mostSignificantChild(this._needs);
     return {
       name: mostSignificantNeed.name,
       id: mostSignificantNeed.trait_id + '_parent',
@@ -100,7 +100,7 @@ class PersonalityProfile {
   }
 
   valuesTree(){
-    var mostSignificantValue = this.mostSignificantChild(this._values);
+    const mostSignificantValue = this.mostSignificantChild(this._values);
     return {
       name: mostSignificantValue.name,
       id: mostSignificantValue.trait_id + '_parent',
@@ -119,11 +119,11 @@ class PersonalityProfile {
 
   mostSignificantChild(children){
     const threshold = 0.5;
-    var farthestDistance = 0;
-    var childWithScoreFarthestFromThreshold = {};
+    let farthestDistance = 0;
+    let childWithScoreFarthestFromThreshold = {};
 
-    for (var i = 0; i < children.length; i++) {
-      var distance = Math.abs(children[i].percentile - threshold);
+    for (let i = 0; i < children.length; i++) {
+      const distance = Math.abs(children[i].percentile - threshold);
       if(distance >= farthestDistance){
         childWithScoreFarthestFromThreshold = children[i];
         farthestDistance = distance;

@@ -1,6 +1,8 @@
 coverage
 dist/*
 !dist/.gitkeep
+lib/*
+!lib/.gitkeep
 node_modules
 npm-debug.log
 .project

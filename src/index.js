@@ -30,7 +30,7 @@ const D3PersonalityProfileV3 = require('./d3-profile-wrappers/v3/index');
 const colors = require('./utilities/colors');
 
 // Dependencies check
-var dependencies = {
+const dependencies = {
   'd3' : 'D3js'
 };
 
@@ -85,7 +85,7 @@ class PersonalitySunburstChart {
     document.querySelector(widgetId).innerHTML = null;
 
     // Create widget
-    var widget = {
+    const widget = {
       d3vis: d3.select(widgetId)
         .append('svg:svg')
         .attr('width', self.visualizationWidth)
