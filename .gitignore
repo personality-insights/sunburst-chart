@@ -1,3 +1,8 @@
+coverage
+dist/*
+!dist/.gitkeep
+lib/*
+!lib/.gitkeep
 node_modules
-.build
-bower_components
+npm-debug.log
+.project

@@ -1,54 +1,56 @@
 # Personality Sunburst Chart
 
-![last-release](https://img.shields.io/github/tag/personality-insights/sunburst-chart.svg)
 [![npm-version](https://img.shields.io/npm/v/personality-sunburst-chart.svg)](https://www.npmjs.com/package/personality-sunburst-chart)
 [![npm-license](https://img.shields.io/npm/l/personality-sunburst-chart.svg)](https://www.npmjs.com/package/personality-sunburst-chart)
-[![npm-downloads](https://img.shields.io/npm/dm/personality-sunburst-chart.svg)](https://www.npmjs.com/package/personality-sunburst-chart)
+[![Build Status](https://travis-ci.org/personality-insights/sunburst-chart.svg?branch=master)](https://travis-ci.org/personality-insights/sunburst-chart)
+[![codecov.io](https://codecov.io/github/personality-insights/sunburst-chart/coverage.svg?branch=master)](https://codecov.io/github/personality-insights/sunburst-chart?branch=master)
+
+Obtain a sunburst chart visualization for a personality profile.  For use in an HTML page.
+
+![Personality Sunburst Chart](./examples/personality-sunburst-chart-small.png)
 
 
-A visualization for IBM Watson Personality Insights service output. This widget displays personality trait values in a sunburst chart.
+## Usage
 
-![Personality Sunburst Chart](./docs/personality-sunburst-chart.png)
-
-## Getting Started
-
-1. **Include the script** in your page
-```
-<script src="path/to/personality-sunburst-chart.standalone.js"></script>
-```
-Also, be sure to include the `JQuery` and `D3js` script files.
-
-2. **Add a container** element in your HTML
-
-```
-<div id='sunburstChartContainer'></div>
+Include the library index.js script from the /dist folder and D3 in your HTML page.
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.14/d3.min.js"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="path/to/index.js"></script> <!-- This is the file in the /dist folder. -->
 ```
 
-3. **Generate the visualization** for a profile.
+Create an element to contain the chart in your HTML page.
+```html
+<div id='sunburstChart'></div>
 ```
-var chart = new PersonalitySunburstChart('sunburstChartContainer');
-chart.show(profile, 'path/to/profile_photo.jpg');
-```
 
-See the complete [example code](./examples/example.html) or try it [live](https://rawgit.com/ibm-silvergate/personality-sunburst-chart/master/examples/example.html).
+Generate the visualization for a personality profile.
+```JavaScript
+  // Create the chart, specifying the css selector that identifies the element to contain the chart
+  // and the version of Watson Personality Insights profile to use, v2 or v3.  Default is v2.
+  var chart = new PersonalitySunburstChart({
+    'selector':'#sunburstChart', 'version': 'v3'
+  });
 
-## API Method
+  // Render the sunburst chart for a personality profile (version as specified in creating the chart)
+  // and optionally a profile photo.  The photo will be inserted into the center of the sunburst chart.
+  chart.show('jsonObject', 'path/to/profile_photo.jpg');
 
-Public methods:
-  - `constructor :: (ContainerId[, Options])` - Creates the `PersonalitySunburstChart` object.
-  - `show :: (PIProfile[, ImageURL])` - Renders the visualization for the given profile, optionally including the image in the center.
+  ```
 
-Where:
-  - `ContainerID` is a `String` and refers to the `id` attribute of a HTML component.
-  - `Options` is an `Object` with may contain the following attributes:
-    - `Options.scale` : The scale of the visualization. Default is `1`.
-    - `Options.width` : The width of the visualization container. Default is `100%`.
-    - `Options.height`: The height of the visualization container. Default is `100%`.
-  - `PIProfile` is a IBM Watson Personality Insights profile which is basically the service JSON output, parsed into a JavaScript `Object`.
-  - `ImageURL` is a `String` containing the URL for the image to display in the center of the visualization. Supported formats are PNG, JPEG or SVG.
+  See the complete [example code](./examples/example_v3.html).
 
+## License
 
-## Build from source
+This library is licensed under Apache 2.0. Full license text is
+available in [LICENSE](LICENSE).
 
-You can run `gulp` command to build the component. Binaries will be
-deployed to `bin`.
+## CHANGELOG
+
+__26-01-2017__
+ * Removed jQuery
+ * Add support for selectors and DOM nodes
+
+__15-01-2017__
+ * Added support for v3 profiles - d3 tree json wrapper provided for v2 and v3 personality profiles to generate the input required by the d3 sunburst-chart created in lib/personality-chart-renderer.js
+ * Only traits, needs and values will be displayed by the sunburst-chart.

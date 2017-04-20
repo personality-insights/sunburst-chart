@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <title>Personality Insights Sunburst Chart</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/personality-sunburst-chart@2.0.4/dist/index.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+      #profile pre {
+        max-height: 400px;
+      }
+
+      #textSummary {
+        font-size: 1.2em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="container">
+      <h1>Personality Insights Sunburst Chart</h1>
+      <p class="lead">Use it to generate a sunburst chart visualization for your personality.</p>
+      <div class="row">
+        <div class="col-sm-6 col-xs-12">
+          <h2>Personality Profile</h2>
+          <div id="profile" class=""></div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+          <h2>Personality Sunburst Chart</h2>
+          <div id="sunburstChart"></div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <script>
+      // v3 personality profile - version MUST be specified in the constructor for PersonalitySunburstChart
+      $.getJSON('./profiles/en_v3.json', '', function ( profile ) {
+        $('#profile').append('<pre>' + JSON.stringify(profile, null, 2) + '</pre>');
+        var chart = new PersonalitySunburstChart({'selector':'#sunburstChart', 'version': 'v3'});
+        chart.show(profile, './profile_photo.jpg');
+      });
+    </script>
+
+  </body>
+</html>
