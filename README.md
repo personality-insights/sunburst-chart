@@ -14,8 +14,6 @@ Obtain a sunburst chart visualization for a personality profile.  For use in an 
 
 Include the library index.js script from the /dist folder and D3 in your HTML page.
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.14/d3.min.js"></script>
-<script src="https://d3js.org/d3-color.v1.min.js"></script>
 <script src="path/to/index.js"></script> <!-- This is the file in the /dist folder. -->
 ```
 
@@ -56,6 +54,12 @@ This library is licensed under Apache 2.0. Full license text is
 available in [LICENSE](LICENSE).
 
 ## CHANGELOG
+
+__10-05-2017__
+ * Removed d3 from `window`
+ * Added to package.json:
+   * `"d3":"v3.5.14"`
+   * `"d3-color":"^1.0.3"`
 
 __26-01-2017__
  * Removed jQuery

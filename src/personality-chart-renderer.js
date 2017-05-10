@@ -15,6 +15,9 @@
  */
 /* global alert */
 'use strict';
+const d3 = require('d3');
+const d3Color = require('d3-color');
+Object.assign(d3, d3Color);
 
 var d3SvgSingleArc = function() {
   var radius = d3_svg_singleArcRadius,
