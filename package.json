@@ -32,6 +32,8 @@
     "watson"
   ],
   "dependencies": {
+    "d3": "^3.5.14",
+    "d3-color": "^1.0.3",
     "extend": "^3.0.0",
     "object.pick": "^1.2.0"
   },
