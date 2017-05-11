@@ -7,12 +7,4 @@ cache:
   directories:
   - node_modules
 notifications:
-  email: false
-deploy:
-  provider: npm
-  email: germanattanasio@gmail.com
-  api_key:
-    secure: ZrezWFmS84bEaJaqwXtwFxIilIMpDuDqVutbT62euvsaG5N3N1XNoIPib5yO+/yrWuUVWJnuj8FtWUy6AZZJKcOX0Id107ONDT9XbEJEcUQ4+PMUlf0zeUSg55AgjrZMP0W7O4xV8Q0UtVQpuMuMnzniEF8NI8toERRtRIY3FAEbSS1bOg23PwDS9okQzaGR9TjI99kQ0wTMW46Y7GrIw/FOPEWeKlInvgAsqj9vizZkmkus1BswwGc8uYbDaIzZqinPkeAxaLtqVFumR9Ez2ln/rRO69fIjZwiSjEEfUFMByQh41P/ySba9tpP7RGZE3kqPclhIuPo+/NGRRWFpFxCuvDdz1hbr9zbVrZYLUiT0aywnLs0Mp1jygvjYgDsUF/xpWdY7cn/jjENmK2ywVYzOKqcn48c/HJJIMGcxmBtIUKWW7iPeGo6/XeW+nGFu46hLyQvKZN1miHIMMar8Yl4eLUz0wn6lVdIMpg2NSLlDhV8cookp+IaAsqpT4OyQu4xg8roCaxe2tuaL+i0yJj+7wsbaLvwCy/T4mXlrDOLM4tDQ0Rru2zAu3OmFRqn1qy/4BPS7pLHUaM8WSyzpB/KdUBJezNtBhR+uqca1X02sYI/9eoM3OFXyeyf9Ofz/xas3tbmCo9s4fF/5d5OHlyVag4wvBMvi7/JjLRU4Y6U=
-  on:
-    tags: true
-    repo: personality-insights/sunburst-chart
+  email: true
