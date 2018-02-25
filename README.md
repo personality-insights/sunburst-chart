@@ -12,7 +12,7 @@ Obtain a sunburst chart visualization for a personality profile.  For use in an 
 
 ## Usage
 
-Include the library index.js script from the /dist folder and D3 in your HTML page.
+Include the library index.js script from the /dist folder and D3 (**v3**) in your HTML page.
 ```html
 <script src="path/to/index.js"></script> <!-- This is the file in the /dist folder. -->
 ```
@@ -47,6 +47,8 @@ Also works with DOM element input
 ```
 
 See the complete [example code](./examples/example_v3.html).
+
+**Note:** This library doesn't work with D3 V4
 
 ## License
 

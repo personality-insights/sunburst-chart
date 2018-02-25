@@ -21,7 +21,6 @@
 
 'use strict';
 
-const extend = require('extend');
 const pick = require('object.pick');
 
 const ChartRenderer = require('./personality-chart-renderer');
@@ -35,7 +34,7 @@ Object.assign(d3, d3Color);
 class PersonalitySunburstChart {
 
   constructor(options) {
-    this._options = extend({}, this.defaultOptions(), pick(options, ['element', 'selector', 'version']));
+    this._options = Object.assign({}, this.defaultOptions(), pick(options, ['element', 'selector', 'version']));
     this._version = this._options.version;
     this._selector = this._options.selector;
     this._element = this._options.element;
