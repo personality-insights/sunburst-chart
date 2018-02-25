@@ -1,6 +1,6 @@
 {
   "name": "personality-sunburst-chart",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "Generate Sunburst Chart for Personality Insights Profile",
   "main": "lib/index.js",
   "exportName": "PersonalitySunburstChart",
