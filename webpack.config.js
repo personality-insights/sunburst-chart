@@ -1,7 +1,7 @@
 const MinifyPlugin = require('babel-minify-webpack-plugin');
 
 module.exports = {
-  entry: './lib/index.js',
+  entry: './src/index.js',
   output: {
     filename: 'dist/index.js',
     library: 'PersonalitySunburstChart',
