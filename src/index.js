@@ -13,41 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/* global window, document */
- /**
+/* global document */
+/**
   * Renders the sunburst visualization. The parameter is the tree as returned
   * from the Personality Insights JSON API.
   */
 
 'use strict';
 
-const extend = require('extend');
 const pick = require('object.pick');
 
 const ChartRenderer = require('./personality-chart-renderer');
 const D3PersonalityProfileV2 = require('./d3-profile-wrappers/v2/index');
 const D3PersonalityProfileV3 = require('./d3-profile-wrappers/v3/index');
 const colors = require('./utilities/colors');
-
-// Dependencies check
-const dependencies = {
-  'd3' : 'D3js'
-};
-
-Object.keys(dependencies).forEach(function(dependency) {
-  if (typeof window[dependency] === 'undefined') {
-    throw new Error(dependencies[dependency] + ' is not present. Personality Sunburst Chart can\'t render without it.');
-  }
-});
-
-
+const d3 = require('d3');
+const d3Color = require('d3-color');
+Object.assign(d3, d3Color);
 
 class PersonalitySunburstChart {
 
   constructor(options) {
-    this._options = extend({}, this.defaultOptions(), pick(options, ['selector', 'version']));
+    this._options = Object.assign({}, this.defaultOptions(), pick(options, ['element', 'selector', 'version']));
     this._version = this._options.version;
     this._selector = this._options.selector;
+    this._element = this._options.element;
     this.visualizationWidth  = this._options.width  || '100%';
     this.visualizationHeight = this._options.height || '100%';
     this.width  = ((1/this._options.scale || 1) * 45) * 16.58;
@@ -79,14 +69,14 @@ class PersonalitySunburstChart {
   show(theProfile, personImageUrl) {
     const self = this;
     const d3Profile = self._version === 'v3' ? new D3PersonalityProfileV3(theProfile) : new D3PersonalityProfileV2(theProfile);
-    const widgetId = self._selector;
+    const element = self._element || document.querySelector(self._selector);
 
     // Clear DOM element that will display the sunburst chart
-    document.querySelector(widgetId).innerHTML = null;
+    element.innerHTML = null;
 
     // Create widget
     const widget = {
-      d3vis: d3.select(widgetId)
+      d3vis: d3.select(element)
         .append('svg:svg')
         .attr('width', self.visualizationWidth)
         .attr('height', self.visualizationHeight)

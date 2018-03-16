@@ -12,10 +12,8 @@ Obtain a sunburst chart visualization for a personality profile.  For use in an 
 
 ## Usage
 
-Include the library index.js script from the /dist folder and D3 in your HTML page.
+Include the library index.js script from the /dist folder and D3 (**v3**) in your HTML page.
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.14/d3.min.js"></script>
-<script src="https://d3js.org/d3-color.v1.min.js"></script>
 <script src="path/to/index.js"></script> <!-- This is the file in the /dist folder. -->
 ```
 
@@ -29,16 +27,28 @@ Generate the visualization for a personality profile.
   // Create the chart, specifying the css selector that identifies the element to contain the chart
   // and the version of Watson Personality Insights profile to use, v2 or v3.  Default is v2.
   var chart = new PersonalitySunburstChart({
-    'selector':'#sunburstChart', 'version': 'v3'
+    'selector':'#sunburstChart',
+    'version': 'v3'
   });
 
   // Render the sunburst chart for a personality profile (version as specified in creating the chart)
   // and optionally a profile photo.  The photo will be inserted into the center of the sunburst chart.
   chart.show('jsonObject', 'path/to/profile_photo.jpg');
+```
 
-  ```
+Also works with DOM element input
+```JavaScript
+  var element = document.querySelector('#sunburstChart');
+  var chart = new PersonalitySunburstChart({
+    'element': element,
+    'version': 'v3'
+  });
+  chart.show('jsonObject', 'path/to/profile_photo.jpg');
+```
 
-  See the complete [example code](./examples/example_v3.html).
+See the complete [example code](./examples/example_v3.html).
+
+**Note:** This library doesn't work with D3 V4
 
 ## License
 
@@ -46,6 +56,12 @@ This library is licensed under Apache 2.0. Full license text is
 available in [LICENSE](LICENSE).
 
 ## CHANGELOG
+
+__10-05-2017__
+ * Removed d3 from `window`
+ * Added to package.json:
+   * `"d3":"v3.5.14"`
+   * `"d3-color":"^1.0.3"`
 
 __26-01-2017__
  * Removed jQuery
