@@ -34,7 +34,7 @@
   "dependencies": {
     "d3": "^3.5.14",
     "d3-color": "^1.0.3",
-    "object.pick": "^1.2.0"
+    "lodash.pick": "^4.4.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

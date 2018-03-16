@@ -21,7 +21,7 @@
 
 'use strict';
 
-const pick = require('object.pick');
+const pick = require('lodash.pick');
 
 const ChartRenderer = require('./personality-chart-renderer');
 const D3PersonalityProfileV2 = require('./d3-profile-wrappers/v2/index');
