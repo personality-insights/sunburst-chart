@@ -28,4 +28,5 @@ module.exports = {
   plugins: [
     new MinifyPlugin({}, {}),
   ],
+  devtool: 'eval-cheap-module-source-map'
 };

@@ -27,9 +27,9 @@ const ChartRenderer = require('./personality-chart-renderer');
 const D3PersonalityProfileV2 = require('./d3-profile-wrappers/v2/index');
 const D3PersonalityProfileV3 = require('./d3-profile-wrappers/v3/index');
 const colors = require('./utilities/colors');
-const d3 = require('d3');
-const d3Color = require('d3-color');
-Object.assign(d3, d3Color);
+const d3 = Object.assign({},
+  require('d3-selection')
+);
 
 class PersonalitySunburstChart {
 

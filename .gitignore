@@ -6,3 +6,5 @@ lib/*
 node_modules
 npm-debug.log
 .project
+test/d3/dist
+test/d3/profiles

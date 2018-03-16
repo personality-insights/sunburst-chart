@@ -15,9 +15,12 @@
  */
 /* global alert */
 'use strict';
-const d3 = require('d3');
-const d3Color = require('d3-color');
-Object.assign(d3, d3Color);
+const d3 = Object.assign({},
+  require('d3-color'),
+  require('d3-hierarchy'),
+  require('d3-selection'),
+  require('d3-shape')
+);
 
 var d3SvgSingleArc = function() {
   var radius = d3_svg_singleArcRadius,
@@ -41,19 +44,19 @@ var d3SvgSingleArc = function() {
 
   arc.radius = function(v) {
     if (!arguments.length) return radius;
-    radius = d3.functor(v);
+    radius = functor(v);
     return arc;
   };
 
   arc.startAngle = function(v) {
     if (!arguments.length) return startAngle;
-    startAngle = d3.functor(v);
+    startAngle = functor(v);
     return arc;
   };
 
   arc.endAngle = function(v) {
     if (!arguments.length) return endAngle;
-    endAngle = d3.functor(v);
+    endAngle = functor(v);
     return arc;
   };
 
@@ -66,6 +69,10 @@ var d3SvgSingleArc = function() {
 
   return arc;
 };
+
+function functor(v) {
+  return typeof v === 'function' ? v : function() { return v; };
+}
 
 function d3_svg_singleArcRadius(d) {
   return d.radius;
@@ -81,8 +88,8 @@ function d3_svg_singleArcEndAngle(d) {
 
 var visutil = {
   isLocatedBottom: function(d) {
-    // Before fixing #128: return (d.x>Math.PI/2&&(d.x+d.dx)<Math.PI*5/3);
-    var bottom = (d.x > Math.PI / 2 && (d.x + d.dx) < 5.0);
+    // Before fixing #128: return (d.x0>Math.PI/2&&(d.x0 +(d.x1 - d.x0))<Math.PI*5/3);
+    var bottom = (d.x0> Math.PI / 2 && (d.x1) < 5.0);
     return bottom;
   },
 
@@ -221,96 +228,96 @@ var renderChart = function() {
         }
 
         //special render perception sector
-        if (d.perc_neu !== null && ((d.score + d.perc_neu) * d.dx < d.dx - sector_right_pad / (3 * d.depth))) {
+        if (d.perc_neu !== null && ((d.score + d.perc_neu) * (d.x1 - d.x0) < (d.x1 - d.x0) - sector_right_pad / (3 * d.depth))) {
           score2 = d.score + d.perc_neu;
 
-          d3.svg.arc()
+          d3.arc()
             .startAngle(function(d) {
-              return d.x + Math.abs(score2) * d.dx;
+              return d.x0 + Math.abs(score2) * (d.x1 - d.x0);
             }) //x:startangle,
             .endAngle(function(d) {
-              return d.x + d.dx - sector_right_pad / (3 * d.depth);
+              return d.x1 - sector_right_pad / (3 * d.depth);
             }) //dx: endangle,
             .innerRadius(function(d) {
-              return sector_bottom_pad + d.y;
+              return sector_bottom_pad + d.y0;
             })
             .outerRadius(function(d) {
-              return d.y + d.dy;
+              return d.y1;
             });
 
           right_pad = 0;
         }
 
 
-        var arc1_extend = (Math.abs(score) * d.dx - right_pad) > 0 ? (Math.abs(score) * d.dx - right_pad) : 0;
+        var arc1_extend = (Math.abs(score) * (d.x1 - d.x0) - right_pad) > 0 ? (Math.abs(score) * (d.x1 - d.x0) - right_pad) : 0;
         //Regular renders
-        var arc1 = d3.svg.arc()
+        var arc1 = d3.arc()
           .startAngle(function(d) {
-            return d.x;
+            return d.x0;
           }) //x:startangle,
           .endAngle(function(d) {
-            return d.x + arc1_extend;
+            return d.x0 + arc1_extend;
           }) //dx: endangle,
           .innerRadius(function(d) {
-            return sector_bottom_pad + d.y;
+            return sector_bottom_pad + d.y0;
           })
           .outerRadius(function(d) {
-            return d.y + d.dy;
+            return d.y1;
           });
 
-        var arc2 = d3.svg.arc()
+        var arc2 = d3.arc()
           .startAngle(function(d) {
-            return d.x + arc1_extend;
+            return d.x0 + arc1_extend;
           }) //x:startangle,
           .endAngle(function(d) {
-            return d.x + Math.abs(score2) * d.dx - right_pad;
+            return d.x0 + Math.abs(score2) * (d.x1 - d.x0) - right_pad;
           }) //dx: endangle,
           .innerRadius(function(d) {
-            return sector_bottom_pad + d.y;
+            return sector_bottom_pad + d.y0;
           })
           .outerRadius(function(d) {
-            return d.y + d.dy;
+            return d.y1;
           });
 
         //used for label path
         var arc_for_label, arc_for_label_number;
         var arc_label_radius, arc_label_number_radius;
         if (d.depth === 1 && visutil.isLocatedBottom(d)) {
-          arc_label_radius = d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 6;
-          arc_label_number_radius = d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 8;
+          arc_label_radius = d.y1 - (d.y1 - sector_bottom_pad - d.y0) / 6;
+          arc_label_number_radius = d.y1 - (d.y1 - sector_bottom_pad - d.y0) / 8;
         } else {
-          arc_label_radius = sector_bottom_pad + d.y + (d.y + d.dy - sector_bottom_pad - d.y) * 5 / 12;
-          arc_label_number_radius = d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 7;
+          arc_label_radius = sector_bottom_pad + d.y0 + (d.y1 - sector_bottom_pad - d.y0) * 5 / 12;
+          arc_label_number_radius = d.y1 - (d.y1 - sector_bottom_pad - d.y0) / 7;
         }
 
 
         var bottom = visutil.isLocatedBottom(d);
         if (bottom) {
           //special reversed label for bottom data
-          arc_for_label = visutil.arc(d.x + d.dx - right_pad - Math.PI / 2, d.x - Math.PI / 2, arc_label_radius);
-          arc_for_label_number = visutil.arc(d.x + d.dx - right_pad - Math.PI / 2, d.x - Math.PI / 2, arc_label_number_radius);
+          arc_for_label = visutil.arc(d.x1 - right_pad - Math.PI / 2, d.x0- Math.PI / 2, arc_label_radius);
+          arc_for_label_number = visutil.arc(d.x1 - right_pad - Math.PI / 2, d.x0- Math.PI / 2, arc_label_number_radius);
         } else {
 
-          arc_for_label = d3.svg.singleArc()
+          arc_for_label = d3SvgSingleArc()
             .startAngle(function(d) {
-              return d.x;
+              return d.x0;
             })
             .endAngle(function(d) {
-              return d.x + d.dx - right_pad;
+              return d.x1 - right_pad;
             })
             .radius(function(d) {
-              return d.depth === 1 ? d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 3 : sector_bottom_pad + d.y + (d.y + d.dy - sector_bottom_pad - d.y) * 3 / 5;
+              return d.depth === 1 ? d.y1 - (d.y1 - sector_bottom_pad - d.y0) / 3 : sector_bottom_pad + d.y0 + (d.y1 - sector_bottom_pad - d.y0) * 3 / 5;
             });
 
-          arc_for_label_number = d3.svg.singleArc()
+          arc_for_label_number = d3SvgSingleArc()
             .startAngle(function(d) {
-              return d.x;
+              return d.x0;
             })
             .endAngle(function(d) {
-              return d.x + d.dx - right_pad;
+              return d.x1 - right_pad;
             })
             .radius(function(d) {
-              return d.depth === 1 ? d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 3 : sector_bottom_pad + d.y + (d.y + d.dy - sector_bottom_pad - d.y) / 5;
+              return d.depth === 1 ? d.y1 - (d.y1 - sector_bottom_pad - d.y0) / 3 : sector_bottom_pad + d.y0 + (d.y1 - sector_bottom_pad - d.y0) / 5;
             });
 
         }
@@ -360,13 +367,13 @@ var renderChart = function() {
 
 
 
-          var inner_r = sector_bottom_pad + d.y;
-          var out_r = sector_bottom_pad + d.y + bar_length_factor * Math.abs(score) * d.dy;
-          if (d.score_lbl === 'Low') out_r = sector_bottom_pad + d.y + bar_length_factor * 0.2 * d.dy;
+          var inner_r = sector_bottom_pad + d.y0;
+          var out_r = sector_bottom_pad + d.y0 + bar_length_factor * Math.abs(score) * (d.y1 - d.y0);
+          if (d.score_lbl === 'Low') out_r = sector_bottom_pad + d.y0 + bar_length_factor * 0.2 * (d.y1 - d.y0);
 
-          var _bar = d3.svg.arc()
-            .startAngle(d.x)
-            .endAngle(d.x + d.dx)
+          var _bar = d3.arc()
+            .startAngle(d.x0)
+            .endAngle(d.x1)
             .innerRadius(inner_r)
             .outerRadius(out_r); // Draw leaf arcs
 
@@ -388,20 +395,20 @@ var renderChart = function() {
 
           label = d.name;
 
-          if (d.x > Math.PI) {
-            rotate = d.x * 180 / Math.PI + 90;
+          if (d.x0> Math.PI) {
+            rotate = d.x0* 180 / Math.PI + 90;
             lbl_anchor = 'end';
-            dy_init = -d.dx * 20 * Math.PI;
+            dy_init = -(d.x1 - d.x0) * 20 * Math.PI;
           } else {
-            rotate = d.x * 180 / Math.PI - 90;
+            rotate = d.x0* 180 / Math.PI - 90;
             lbl_anchor = 'start';
-            dy_init = 5 + d.dx * 20 * Math.PI;
+            dy_init = 5 + (d.x1 - d.x0) * 20 * Math.PI;
           }
 
           var max_label_size = 13,
             lable_size = 10;
 
-          if ((7.5 + 15 * Math.PI * d.dx) > max_label_size) {
+          if ((7.5 + 15 * Math.PI * (d.x1 - d.x0)) > max_label_size) {
             lable_size = max_label_size;
           }
 
@@ -413,7 +420,7 @@ var renderChart = function() {
             .attr('class', 'sector_leaf_text')
             .attr('font-size', lable_size)
             .attr('text-anchor', lbl_anchor)
-            .attr('transform', 'translate(' + (out_r + 5) * Math.sin(d.x) + ',' + (-(out_r + 5) * Math.cos(d.x)) + ') ' + 'rotate(' + rotate + ')')
+            .attr('transform', 'translate(' + (out_r + 5) * Math.sin(d.x0) + ',' + (-(out_r + 5) * Math.cos(d.x0)) + ') ' + 'rotate(' + rotate + ')')
             .text(label);
 
         } else {
@@ -484,9 +491,7 @@ var renderChart = function() {
               .attr('visibility', function(d) {
                 return d.depth === 1 ? 'visible' : null;
               })
-              //.attr('font-family','sans-serif')
               .attr('class', 'sector_nonleaf_text')
-              //.attr('fill', d3.rgb(arc1color).darker(2))
               .append('textPath')
               .attr('class', 'sector_label_number_path')
               .attr('position-in-sector', bottom ? 'outer' : 'inner') // Since both text lines share the same 'd', this class annotation tells where is the text, helping to determine the real arc length
@@ -524,7 +529,7 @@ var renderChart = function() {
       if (text && text.length > 0) {
         var position = d3.select(this).attr('position-in-sector'); // 'inner' or 'outer'
         var frac = position === 'center' ? 0.5 : position === 'outer' ? 2 / 3 : 1 / 3;
-        var sector_length = (d.y + d.dy * frac) * d.dx;
+        var sector_length = (d.y1 * frac) * (d.x1 - d.x0);
         var text_length = curNd.getComputedTextLength(); //+margin;
         var cur_font_size = d3.select(this).attr('font-size');
         var new_font_size = cur_font_size * sector_length / text_length;
@@ -552,14 +557,6 @@ var renderChart = function() {
     .append('g');
   this.vis = vis;
 
-  var partition = d3.layout.partition()
-    .sort(null)
-    .size([2 * Math.PI, radius])
-    .value(function(d) {
-      if (!d.hasOwnProperty('size') && !d.hasOwnProperty('children')) return 1;
-      return d.size;
-    });
-
   var profile = {
     children: tree.children
   };
@@ -570,8 +567,18 @@ var renderChart = function() {
     return exclude.indexOf(child.id) === -1;
   });
 
-  var g = vis.data([profile]).selectAll('g')
-    .data(partition.nodes)
+  var root = d3.hierarchy([profile])
+    .sum(function(d) {
+      if (!d.hasOwnProperty('size') && !d.hasOwnProperty('children')) return 1;
+      return d.size;
+    })
+    .sort(null);
+
+  var partition = d3.partition()
+    .size([2 * Math.PI, radius]);
+
+  var g = vis.selectAll('g')
+    .data(partition(root).descendants())
     .enter().append('g')
     .attr('class', 'sector')
     .attr('visibility', function(d) {
@@ -591,12 +598,7 @@ var renderChart = function() {
   updateLabelLayout();
 };
 
-function setupD3() {
-  d3.svg.singleArc = d3SvgSingleArc;
-}
-
 function setupAndRender() {
-  setupD3();
   renderChart.call(this);
 }
 

@@ -16,11 +16,11 @@
 
 'use strict';
 
-const D3PersonalityProfileWrapperV2 = require('../src/d3-profile-wrappers/v2/index');
-const D3PersonalityProfileWrapperV3 = require('../src/d3-profile-wrappers/v3/index');
+const D3PersonalityProfileWrapperV2 = require('../../src/d3-profile-wrappers/v2/index');
+const D3PersonalityProfileWrapperV3 = require('../../src/d3-profile-wrappers/v3/index');
 
-const v2Profile = require('../examples/profiles/en_v2');
-const v3Profile = require('../examples/profiles/en_v3');
+const v2Profile = require('../profiles/en_v2');
+const v3Profile = require('../profiles/en_v3');
 
 describe('Text Summary Tests', () => {
 
