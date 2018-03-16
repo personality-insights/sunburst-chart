@@ -526,7 +526,7 @@ var renderChart = function() {
       if (text && text.length > 0) {
         var position = d3.select(this).attr('position-in-sector'); // 'inner' or 'outer'
         var frac = position === 'center' ? 0.5 : position === 'outer' ? 2 / 3 : 1 / 3;
-        var sector_length = (d.y1 * frac) * (d.x1 - d.x0);
+        var sector_length = (d.y0 + (d.y1 - d.y0) * frac) * (d.x1 - d.x0);
         var text_length = curNd.getComputedTextLength(); //+margin;
         var cur_font_size = d3.select(this).attr('font-size');
         var new_font_size = cur_font_size * sector_length / text_length;
