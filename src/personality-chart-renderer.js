@@ -88,8 +88,7 @@ function d3_svg_singleArcEndAngle(d) {
 
 var visutil = {
   isLocatedBottom: function(d) {
-    // Before fixing #128: return (d.x0>Math.PI/2&&(d.x0 +(d.x1 - d.x0))<Math.PI*5/3);
-    var bottom = (d.x0> Math.PI / 2 && (d.x1) < 5.0);
+    var bottom = ((d.x0 > Math.PI / 2) && (d.x1 < 5.0));
     return bottom;
   },
 
@@ -130,8 +129,6 @@ var renderChart = function() {
   this._layout();
 
   function stash(d) {
-    d.x0 = d.x;
-    d.dx0 = d.dx;
     if (!d.hasOwnProperty('size') && !d.hasOwnProperty('children')) d.size0 = 1;
     else d.size0 = d.size;
     if (d.depth === 0 || d.depth === 1) {
@@ -228,7 +225,7 @@ var renderChart = function() {
         }
 
         //special render perception sector
-        if (d.perc_neu !== null && ((d.score + d.perc_neu) * (d.x1 - d.x0) < (d.x1 - d.x0) - sector_right_pad / (3 * d.depth))) {
+        if (d.perc_neu !== null && (((d.score + d.perc_neu) * (d.x1 - d.x0)) < ((d.x1 - d.x0) - sector_right_pad / (3 * d.depth)))) {
           score2 = d.score + d.perc_neu;
 
           d3.arc()
@@ -249,7 +246,7 @@ var renderChart = function() {
         }
 
 
-        var arc1_extend = (Math.abs(score) * (d.x1 - d.x0) - right_pad) > 0 ? (Math.abs(score) * (d.x1 - d.x0) - right_pad) : 0;
+        var arc1_extend = Math.max(Math.abs(score) * (d.x1 - d.x0) - right_pad, 0);
         //Regular renders
         var arc1 = d3.arc()
           .startAngle(function(d) {
@@ -395,12 +392,12 @@ var renderChart = function() {
 
           label = d.name;
 
-          if (d.x0> Math.PI) {
-            rotate = d.x0* 180 / Math.PI + 90;
+          if (d.x0 > Math.PI) {
+            rotate = d.x0 * 180 / Math.PI + 90;
             lbl_anchor = 'end';
             dy_init = -(d.x1 - d.x0) * 20 * Math.PI;
           } else {
-            rotate = d.x0* 180 / Math.PI - 90;
+            rotate = d.x0 * 180 / Math.PI - 90;
             lbl_anchor = 'start';
             dy_init = 5 + (d.x1 - d.x0) * 20 * Math.PI;
           }
