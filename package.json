@@ -7,12 +7,13 @@
   "scripts": {
     "prepublish": "npm run compile && npm run build",
     "compile": "node_modules/.bin/webpack",
+    "compile-test": "node_modules/.bin/webpack --devtool 'eval-cheap-module-source-map' --output-path test/d3",
     "build": "./node_modules/.bin/babel src --presets env --out-dir lib",
     "test": "npm run lint && npm run codecov",
     "lint": "eslint .",
     "autofix": "eslint . --fix",
     "codecov": "istanbul cover mocha test/unit && codecov",
-    "pretest-d3": "npm run compile && npm run build && cp -r dist test/d3 && cp -r test/profiles test/d3/profiles",
+    "pretest-d3": "(rm -r test/d3/dist || true) && (rm -r test/d3/profiles || true) && npm run compile-test && npm run build && cp -r test/profiles test/d3",
     "test-d3": "http-server test/d3 -o -c-1"
   },
   "repository": {
