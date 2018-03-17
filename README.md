@@ -46,7 +46,7 @@ Also works with DOM element input
   chart.show('jsonObject', 'path/to/profile_photo.jpg');
 ```
 
-See the complete [example code](./examples/example_v3.html).
+See the complete [example code](./examples/example-v3-d3v3-en.html).
 
 **Note:** This library doesn't work with D3 V4
 
