@@ -16,7 +16,7 @@
     "test": "npm run lint && npm run codecov",
     "lint": "eslint .",
     "autofix": "eslint . --fix",
-    "codecov": "istanbul cover mocha test/unit && codecov"
+    "codecov": "istanbul cover mocha test && codecov"
   },
   "repository": {
     "type": "git",
