@@ -16,9 +16,8 @@
 
 'use strict';
 const expect = require('chai').expect;
-
-const ChartRendererV3 = require('../../src/d3-renderers/v3/personality-chart-renderer');
-const ChartRendererV4 = require('../../src/d3-renderers/v4/personality-chart-renderer');
+const ChartRendererV3 = require('../src/d3-renderers/v3/personality-chart-renderer');
+const ChartRendererV4 = require('../src/d3-renderers/v4/personality-chart-renderer');
 
 describe('D3 Renderers', () => {
 

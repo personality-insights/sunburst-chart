@@ -22,6 +22,7 @@
 'use strict';
 
 const pick = require('lodash.pick');
+const PersonalityTraitNames = require('personality-trait-names');
 
 const ChartRendererV3 = require('./d3-renderers/v3/personality-chart-renderer');
 const ChartRendererV4 = require('./d3-renderers/v4/personality-chart-renderer');
@@ -32,11 +33,12 @@ const colors = require('./utilities/colors');
 class PersonalitySunburstChart {
 
   constructor(options) {
-    this._options = Object.assign({}, this.defaultOptions(), pick(options, ['element', 'selector', 'version', 'd3version']));
+    this._options = Object.assign({}, this.defaultOptions(), pick(options, ['element', 'selector', 'version', 'd3version', 'locale']));
     this._version = this._options.version;
     this._d3version = this._options.d3version;
     this._selector = this._options.selector;
     this._element = this._options.element;
+    this._locale = this._options.locale;
     this.visualizationWidth  = this._options.width  || '100%';
     this.visualizationHeight = this._options.height || '100%';
     this.width  = ((1/this._options.scale || 1) * 45) * 16.58;
@@ -52,13 +54,20 @@ class PersonalitySunburstChart {
     this.id = 'SystemUWidget';
     this.COLOR_PALLETTE = colors;
     this.loadingDiv = 'dummy';
+    this.traitNames = new PersonalityTraitNames({ locale: this._locale, version: this._version });
   }
 
   defaultOptions() {
     return {
+      locale: 'en',
       version: 'v2',
       d3version: 'v3'
     };
+  }
+
+  setLocale(locale) {
+    this._locale = locale;
+    this.traitNames = new PersonalityTraitNames({ locale: this._locale, version: this._version });
   }
 
   /**
@@ -69,7 +78,7 @@ class PersonalitySunburstChart {
    */
   show(theProfile, personImageUrl) {
     const self = this;
-    const d3Profile = self._version === 'v3' ? new D3PersonalityProfileV3(theProfile) : new D3PersonalityProfileV2(theProfile);
+    const d3Profile = self._version === 'v3' ? new D3PersonalityProfileV3(theProfile, this.traitNames) : new D3PersonalityProfileV2(theProfile, this.traitNames);
     const d3Renderer = self._d3version === 'v3' ? ChartRendererV3 : ChartRendererV4;
     const element = self._element || document.querySelector(self._selector);
 
@@ -95,6 +104,9 @@ class PersonalitySunburstChart {
       _layout: function() {
       },
       showTooltip: function() {
+      },
+      getTraitName: function(traitId) {
+        return this.traitNames.name(traitId);
       },
       expandAll: function() {
         this.vis.selectAll('g').each(function() {

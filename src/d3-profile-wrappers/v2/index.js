@@ -19,7 +19,8 @@
 
 class PersonalityProfile {
 
-  constructor(profile) {
+  constructor(profile, traitNames) {
+    this._traitNames = traitNames;
     this._traits = profile.tree.children[0].children[0];
     this._needs = profile.tree.children[1].children[0];
     this._values = profile.tree.children[2].children[0];
@@ -55,20 +56,21 @@ class PersonalityProfile {
   }
 
   traitsTree(){
+    var self = this;
     return {
-      name: this.traitWithHighestScore().name,
+      name: self._traitNames.name(this.traitWithHighestScore().id),
       id: this.traitWithHighestScore().id,
       category: this.traitWithHighestScore().category,
       score: this.traitWithHighestScore().percentage,
       children: this._traits.children.map(function(t) {
         return {
-          name: t.name,
+          name: self._traitNames.name(t.id),
           id: t.id,
           category: t.category,
           score: t.percentage,
           children: t.children.map(function(f) {
             return {
-              name: f.name,
+              name: self._traitNames.name(f.id),
               id: f.id,
               category: f.category,
               score: f.percentage
@@ -80,14 +82,15 @@ class PersonalityProfile {
   }
 
   needsTree(){
+    var self = this;
     return {
-      name: this.needWithHighestScore().name,
+      name: self._traitNames.name(this.needWithHighestScore().id),
       id: this.needWithHighestScore().id,
       category: this.needWithHighestScore().category,
       score: this.needWithHighestScore().percentage,
       children: this._needs.children.map(function(n) {
         return {
-          name: n.name,
+          name: self._traitNames.name(n.id),
           id: n.id,
           category: n.category,
           score: n.percentage
@@ -97,14 +100,15 @@ class PersonalityProfile {
   }
 
   valuesTree(){
+    var self = this;
     return {
-      name: this.valueWithHighestScore().name,
+      name: self._traitNames.name(this.valueWithHighestScore().id),
       id: this.valueWithHighestScore().id,
       category: this.valueWithHighestScore().category,
       score: this.valueWithHighestScore().percentage,
       children: this._values.children.map(function(v) {
         return {
-          name: v.name,
+          name: self._traitNames.name(v.id),
           id: v.id,
           category: v.category,
           score: v.percentage

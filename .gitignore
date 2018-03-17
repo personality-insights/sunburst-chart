@@ -6,5 +6,6 @@ lib/*
 node_modules
 npm-debug.log
 .project
-test/d3/dist
-test/d3/profiles
+dev/dist
+dev/profiles
+dev/profile_photo.jpg

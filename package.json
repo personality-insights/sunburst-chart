@@ -5,16 +5,18 @@
   "main": "lib/index.js",
   "exportName": "PersonalitySunburstChart",
   "scripts": {
+    "start": "npm run watch & npm run serve",
+    "preserve": "cp -r examples/profiles dev/profiles && cp examples/profile_photo.jpg dev/profile_photo.jpg",
+    "serve": "autoreload-server -w \"**/**.{html,css,js}\" -d ./dev -b 'http://localhost:8080/index-v2-d3v3-en.html'",
+    "watch": "nodemon --watch src -x \"npm run compile-dev\"",
     "prepublish": "npm run compile && npm run build",
     "compile": "node_modules/.bin/webpack",
-    "compile-test": "node_modules/.bin/webpack --devtool 'eval-cheap-module-source-map' --output-path test/d3",
+    "compile-dev": "node_modules/.bin/webpack --devtool 'eval-cheap-module-source-map' --output-path dev",
     "build": "./node_modules/.bin/babel src --presets env --out-dir lib",
     "test": "npm run lint && npm run codecov",
     "lint": "eslint .",
     "autofix": "eslint . --fix",
-    "codecov": "istanbul cover mocha test/unit && codecov",
-    "pretest-d3": "(rm -r test/d3/dist || true) && (rm -r test/d3/profiles || true) && npm run compile-test && npm run build && cp -r test/profiles test/d3",
-    "test-d3": "http-server test/d3 -o -c-1"
+    "codecov": "istanbul cover mocha test/unit && codecov"
   },
   "repository": {
     "type": "git",
@@ -39,7 +41,8 @@
     "d3-hierarchy": "^1.1.5",
     "d3-selection": "^1.3.0",
     "d3-shape": "^1.2.0",
-    "lodash.pick": "^4.4.0"
+    "lodash.pick": "^4.4.0",
+    "personality-trait-names": "^2.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -53,6 +56,8 @@
     "eslint": "^4.18.1",
     "istanbul": "^0.4.3",
     "mocha": "^5.0.1",
+    "nodemon": "^1.17.2",
+    "simple-autoreload-server": "^0.2.7",
     "webpack": "^3.11.0"
   }
 }
