@@ -22,7 +22,7 @@ const D3PersonalityProfileWrapperV3 = require('../../src/d3-profile-wrappers/v3/
 const v2Profile = require('../profiles/en_v2');
 const v3Profile = require('../profiles/en_v3');
 
-describe('Text Summary Tests', () => {
+describe('D3 Profile Wrappers', () => {
 
   it('Default (V2, English) profile summary', () => {
     new D3PersonalityProfileWrapperV2(v2Profile);
