@@ -23,7 +23,8 @@
 
 const pick = require('lodash.pick');
 
-const ChartRenderer = require('./personality-chart-renderer');
+const ChartRendererV3 = require('./d3-renderers/v3/personality-chart-renderer');
+const ChartRendererV4 = require('./d3-renderers/v4/personality-chart-renderer');
 const D3PersonalityProfileV2 = require('./d3-profile-wrappers/v2/index');
 const D3PersonalityProfileV3 = require('./d3-profile-wrappers/v3/index');
 const colors = require('./utilities/colors');
@@ -34,8 +35,9 @@ const d3 = Object.assign({},
 class PersonalitySunburstChart {
 
   constructor(options) {
-    this._options = Object.assign({}, this.defaultOptions(), pick(options, ['element', 'selector', 'version']));
+    this._options = Object.assign({}, this.defaultOptions(), pick(options, ['element', 'selector', 'version', 'd3version']));
     this._version = this._options.version;
+    this._d3version = this._options.d3version;
     this._selector = this._options.selector;
     this._element = this._options.element;
     this.visualizationWidth  = this._options.width  || '100%';
@@ -56,7 +58,8 @@ class PersonalitySunburstChart {
 
   defaultOptions() {
     return {
-      version: 'v2'
+      version: 'v2',
+      d3version: 'v3'
     };
   }
 
@@ -69,6 +72,7 @@ class PersonalitySunburstChart {
   show(theProfile, personImageUrl) {
     const self = this;
     const d3Profile = self._version === 'v3' ? new D3PersonalityProfileV3(theProfile) : new D3PersonalityProfileV2(theProfile);
+    const d3Renderer = self._d3version === 'v3' ? ChartRendererV3 : ChartRendererV4;
     const element = self._element || document.querySelector(self._selector);
 
     // Clear DOM element that will display the sunburst chart
@@ -148,7 +152,7 @@ class PersonalitySunburstChart {
     };
 
     // Render widget
-    ChartRenderer.render.call(widget);
+    d3Renderer.render.call(widget);
 
     // Expand all sectors of the sunburst chart - sectors at each level can be hidden
     widget.expandAll.call(widget);
