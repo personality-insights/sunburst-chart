@@ -42,7 +42,7 @@ class PersonalitySunburstChart {
     this.width  = ((1/this._options.scale || 1) * 45) * 16.58;
     this.height = ((1/this._options.scale || 1) * 45) * 16.58;
     this.exclude = this._options.exclude || [];
-    this._renderer = self._d3version === 'v3' ? ChartRendererV3 : ChartRendererV4;
+    this._renderer = this._d3version === 'v3' ? ChartRendererV3 : ChartRendererV4;
     this.d3Container = this._renderer.d3.select(this._selector);
     this.dimW = this.width;
     this.dimH = this.height;
