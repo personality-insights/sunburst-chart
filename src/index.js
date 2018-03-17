@@ -28,9 +28,6 @@ const ChartRendererV4 = require('./d3-renderers/v4/personality-chart-renderer');
 const D3PersonalityProfileV2 = require('./d3-profile-wrappers/v2/index');
 const D3PersonalityProfileV3 = require('./d3-profile-wrappers/v3/index');
 const colors = require('./utilities/colors');
-const d3 = Object.assign({},
-  require('d3-selection')
-);
 
 class PersonalitySunburstChart {
 
@@ -45,14 +42,15 @@ class PersonalitySunburstChart {
     this.width  = ((1/this._options.scale || 1) * 45) * 16.58;
     this.height = ((1/this._options.scale || 1) * 45) * 16.58;
     this.exclude = this._options.exclude || [];
-    this.d3Container = d3.select(this._selector),
-    this.dimW = this.width,
-    this.dimH = this.height,
-    this.d3vis = undefined,
-    this.touchDiv = undefined,
-    this.data = undefined,
-    this.id = 'SystemUWidget',
-    this.COLOR_PALLETTE = colors,
+    this._renderer = self._d3version === 'v3' ? ChartRendererV3 : ChartRendererV4;
+    this.d3Container = this._renderer.d3.select(this._selector);
+    this.dimW = this.width;
+    this.dimH = this.height;
+    this.d3vis = undefined;
+    this.touchDiv = undefined;
+    this.data = undefined;
+    this.id = 'SystemUWidget';
+    this.COLOR_PALLETTE = colors;
     this.loadingDiv = 'dummy';
   }
 
@@ -80,7 +78,7 @@ class PersonalitySunburstChart {
 
     // Create widget
     const widget = {
-      d3vis: d3.select(element)
+      d3vis: self._renderer.d3.select(element)
         .append('svg:svg')
         .attr('width', self.visualizationWidth)
         .attr('height', self.visualizationHeight)
@@ -100,7 +98,7 @@ class PersonalitySunburstChart {
       },
       expandAll: function() {
         this.vis.selectAll('g').each(function() {
-          var g = d3.select(this);
+          var g = self._renderer.d3.select(this);
           if (g.datum().parent && // Isn't the root g object.
             g.datum().parent.parent && // Isn't the feature trait.
             g.datum().parent.parent.parent) { // Isn't the feature dominant trait.
@@ -110,7 +108,7 @@ class PersonalitySunburstChart {
       },
       collapseAll: function() {
         this.vis.selectAll('g').each(function() {
-          var g = d3.select(this);
+          var g = self._renderer.d3.select(this);
           if (g.datum().parent !== null && // Isn't the root g object.
             g.datum().parent.parent !== null && // Isn't the feature trait.
             g.datum().parent.parent.parent !== null) { // Isn't the feature dominant trait.

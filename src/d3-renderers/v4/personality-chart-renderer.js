@@ -600,5 +600,6 @@ function setupAndRender() {
 }
 
 module.exports = {
-  render  : setupAndRender
+  render: setupAndRender,
+  d3: d3
 };
