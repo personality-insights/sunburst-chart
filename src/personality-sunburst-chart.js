@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
- 
+
 /* global document */
 'use strict';
 
@@ -37,36 +37,42 @@ class PersonalitySunburstChartImpl {
   }
 
   setLocale(locale) {
-    this._locale = locale;
-    if (this._widget) {
-      this.render(this._profile);
+    if (this._locale !== locale) {
+      this._locale = locale;
+      if (this._widget) {
+        this.render(this._profile);
+      }
     }
   }
 
   setImage(url) {
-    this._imageUrl = url;
-    if (this._widget) {
-      this._widget.changeImage(url);
+    if (this._imageUrl !== url) {
+      this._imageUrl = url;
+      if (this._widget) {
+        this._widget.changeImage(url);
+      }
     }
   }
 
   setProfile(profile) {
-    this._profile = profile;
+    if (this._profile !== profile) {
+      this._profile = profile;
 
-    if (this._widget) {
-      if (this._profile) {
-        const traitNames = new PersonalityTraitNames({ locale: this._locale, version: this._version });
-        const d3Profile = new this.D3PersonalityProfile(this._profile, traitNames);
-        this._widget.setData(d3Profile.d3Json());
+      if (this._widget) {
+        if (this._profile) {
+          const traitNames = new PersonalityTraitNames({ locale: this._locale, version: this._version });
+          const d3Profile = new this.D3PersonalityProfile(this._profile, traitNames);
+          this._widget.setData(d3Profile.d3Json());
 
-        // Render widget
-        this.ChartRenderer.render.call(this._widget);
+          // Render widget
+          this.ChartRenderer.render.call(this._widget);
 
-        // Expand all sectors of the sunburst chart - sectors at each level can be hidden
-        this._widget.expandAll();
-      } else {
-        // Clear DOM element that will display the sunburst chart
-        this._widget.clear();
+          // Expand all sectors of the sunburst chart - sectors at each level can be hidden
+          this._widget.expandAll();
+        } else {
+          // Clear DOM element that will display the sunburst chart
+          this._widget.clear();
+        }
       }
     }
   }
