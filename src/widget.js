@@ -13,12 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/* global document */
-/**
-  * Renders the sunburst visualization. The parameter is the tree as returned
-  * from the Personality Insights JSON API.
-  */
-
+ 
 'use strict';
 
 const colors = require('./utilities/colors');
