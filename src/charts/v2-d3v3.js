@@ -22,11 +22,9 @@
 'use strict';
 
 const pick = require('lodash.pick');
-const ChartRendererV3 = require('./d3-renderers/v3/personality-chart-renderer');
-const ChartRendererV4 = require('./d3-renderers/v4/personality-chart-renderer');
-const D3PersonalityProfileV2 = require('./d3-profile-wrappers/v2/index');
-const D3PersonalityProfileV3 = require('./d3-profile-wrappers/v3/index');
-const PersonalitySunburstChartImpl = require('./personality-sunburst-chart');
+const ChartRendererV3 = require('../d3-renderers/v3/personality-chart-renderer');
+const D3PersonalityProfileV2 = require('../d3-profile-wrappers/v2/index');
+const PersonalitySunburstChartImpl = require('../personality-sunburst-chart');
 
 const DEFAULT_OPTIONS = {
   locale: 'en',
@@ -37,20 +35,8 @@ const DEFAULT_OPTIONS = {
 class PersonalitySunburstChart extends PersonalitySunburstChartImpl {
 
   constructor(options) {
-    const _options = Object.assign({}, DEFAULT_OPTIONS, pick(options, ['element', 'selector', 'version', 'd3version', 'locale']));
-    if (_options.version === 'v2') {
-      if (_options.d3version === 'v3') {
-        super(_options, D3PersonalityProfileV2, ChartRendererV3);
-      } else {
-        super(_options, D3PersonalityProfileV2, ChartRendererV4);
-      }
-    } else {
-      if (_options.d3version === 'v3') {
-        super(_options, D3PersonalityProfileV3, ChartRendererV3);
-      } else {
-        super(_options, D3PersonalityProfileV3, ChartRendererV4);
-      }
-    }
+    const _options = Object.assign({}, DEFAULT_OPTIONS, pick(options, ['element', 'selector', 'locale']));
+    super(_options, D3PersonalityProfileV2, ChartRendererV3);
   }
 
   defaultOptions() {

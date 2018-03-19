@@ -15,5 +15,9 @@ declare class PersonalitySunburstChart {
 
   setLocale(locale: Locale): void;
 
+  setImage(url: string): void;
+
+  setProfile(profile: any): void;
+
   show(profile: any, imageUrl?: string): void;
 }

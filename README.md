@@ -11,7 +11,7 @@ Obtain a sunburst chart visualization for a personality profile.  For use in an 
 
 
 ## Usage
-
+#### Importing through HTML
 Include the library index.js script from the /dist folder and D3 (**v3**) in your HTML page.
 ```html
 <script src="path/to/index.js"></script> <!-- This is the file in the /dist folder. -->
@@ -46,9 +46,34 @@ Also works with DOM element input
   chart.show('jsonObject', 'path/to/profile_photo.jpg');
 ```
 
-See the complete [example code](./examples/example-v3-d3v3-en.html).
+See the complete examples: [D3 Version 3](./examples/example-v3-d3v4-en.html) and [D3 Version 4](./examples/example-v3-d3v3-en.html)
 
-**Note:** This library doesn't work with D3 V4
+#### Importing through JavaScript
+Use one of the following based on your version of Watson Personality Insights and D3
+```javascript
+// Watson Personality Insights Version 2, D3 Version 3
+import PersonalitySunburstChart from 'personality-sunburst-chart/lib/charts/v2-d3v3';
+
+// Watson Personality Insights Version 2, D3 Version 4
+import PersonalitySunburstChart from 'personality-sunburst-chart/lib/charts/v2-d3v4';
+
+// Watson Personality Insights Version 3, D3 Version 3
+import PersonalitySunburstChart from 'personality-sunburst-chart/lib/charts/v3-d3v3';
+
+// Watson Personality Insights Version 3, D3 Version 4
+import PersonalitySunburstChart from 'personality-sunburst-chart/lib/charts/v3-d3v4';
+```
+
+## Development
+Test changes in the browser:
+```bash
+npm start
+```
+
+Run unit tests:
+```bash
+npm test
+```
 
 ## License
 
