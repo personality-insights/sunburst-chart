@@ -13,11 +13,13 @@ declare class PersonalitySunburstChart {
     d3version: D3Version
   };
 
-  setLocale(locale: Locale): void;
+  setLocale(locale: Locale, render?: boolean): void;
 
-  setImage(url: string): void;
+  setImage(url: string, render?: boolean): void;
 
-  setProfile(profile: any): void;
+  setProfile(profile: any, render?: boolean): void;
+
+  render(): void;
 
   show(profile: any, imageUrl?: string): void;
 }

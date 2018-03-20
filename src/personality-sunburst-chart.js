@@ -17,63 +17,82 @@
 /* global document */
 'use strict';
 
-const PersonalityTraitNames = require('personality-trait-names');
 const SunburstWidget = require('./widget');
 
 class PersonalitySunburstChartImpl {
 
-  constructor(options, D3PersonalityProfile, ChartRenderer) {
+  constructor(options, D3PersonalityProfile, ChartRenderer, PersonalityTraitNames) {
     this.D3PersonalityProfile = D3PersonalityProfile;
     this.ChartRenderer = ChartRenderer;
     this._options = options;
-    this._version = options.version;
-    this._d3version = options.d3version;
     this._selector = options.selector;
     this._element = options.element;
     this._locale = options.locale;
     this._imageUrl = '';
     this._profile = null;
     this._widget = null;
+    this._traitNames = new PersonalityTraitNames({ locale: this._locale });
   }
 
-  setLocale(locale) {
+  setLocale(locale, render = true) {
     if (this._locale !== locale) {
       this._locale = locale;
-      if (this._widget) {
-        this.render(this._profile);
+      this._traitNames.setLocale(locale);
+
+      if (this._profile && this._widget) {
+        const d3Profile = new this.D3PersonalityProfile(this._profile, this._traitNames);
+        this._widget.setData(d3Profile.d3Json());
+      }
+
+      if (render) {
+        this.render();
       }
     }
   }
 
-  setImage(url) {
+  setImage(url, render = true) {
     if (this._imageUrl !== url) {
       this._imageUrl = url;
-      if (this._widget) {
+
+      if (this._widget && render) {
         this._widget.changeImage(url);
       }
     }
   }
 
-  setProfile(profile) {
+  setProfile(profile, render = true) {
     if (this._profile !== profile) {
       this._profile = profile;
 
-      if (this._widget) {
-        if (this._profile) {
-          const traitNames = new PersonalityTraitNames({ locale: this._locale, version: this._version });
-          const d3Profile = new this.D3PersonalityProfile(this._profile, traitNames);
-          this._widget.setData(d3Profile.d3Json());
-
-          // Render widget
-          this.ChartRenderer.render.call(this._widget);
-
-          // Expand all sectors of the sunburst chart - sectors at each level can be hidden
-          this._widget.expandAll();
-        } else {
-          // Clear DOM element that will display the sunburst chart
-          this._widget.clear();
-        }
+      if (this._profile && this._widget) {
+        const d3Profile = new this.D3PersonalityProfile(this._profile, this._traitNames);
+        this._widget.setData(d3Profile.d3Json());
       }
+
+      if (render) {
+        this.render();
+      }
+    }
+  }
+
+  render() {
+    if (this._widget) {
+      // Clear DOM element that will display the sunburst chart
+      this._widget.clear();
+      this._widget.init();
+
+      // Render widget
+      this.ChartRenderer.render.call(this._widget);
+
+      // Expand all sectors of the sunburst chart - sectors at each level can be hidden
+      this._widget.expandAll();
+
+      // Add an image of the person for whom the profile was generated
+      if (this._imageUrl) {
+        this._widget.addImage(this._imageUrl);
+      }
+    } else {
+      this.show();
     }
   }
 
@@ -84,17 +103,18 @@ class PersonalitySunburstChartImpl {
    * declared on top of this script.
    */
   show(theProfile, personImageUrl) {
-    const element = this._element || document.querySelector(this._selector);
+    if (!this._widget) {
+      // Create widget
+      this._widget = new SunburstWidget(this._options, this.ChartRenderer.d3);
+      const element = this._element || document.querySelector(this._selector);
+      this._widget.setElement(element);
+    }
 
-    // Create widget
-    this._widget = new SunburstWidget(this._options, this.ChartRenderer.d3);
-    this._widget.setElement(element);
+    this.setProfile(theProfile || this._profile, false);
+    this.setImage(personImageUrl || this._imageUrl, false);
 
     // Render widget
-    this.setProfile(theProfile || this._profile);
-
-    // Add an image of the person for whom the profile was generated
-    this.setImage(personImageUrl || this._imageUrl);
+    this.render();
   }
 
 }

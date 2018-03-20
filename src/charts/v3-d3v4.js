@@ -13,12 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
- 
+
 'use strict';
 
 const pick = require('lodash.pick');
 const ChartRendererV4 = require('../d3-renderers/v4/personality-chart-renderer');
 const D3PersonalityProfileV3 = require('../d3-profile-wrappers/v3/index');
+const PersonalityTraitNamesV3 = require('personality-trait-names/lib/index-v3');
 const PersonalitySunburstChartImpl = require('../personality-sunburst-chart');
 
 const DEFAULT_OPTIONS = {
@@ -31,7 +32,7 @@ class PersonalitySunburstChart extends PersonalitySunburstChartImpl {
 
   constructor(options) {
     const _options = Object.assign({}, DEFAULT_OPTIONS, pick(options, ['element', 'selector', 'locale']));
-    super(_options, D3PersonalityProfileV3, ChartRendererV4);
+    super(_options, D3PersonalityProfileV3, ChartRendererV4, PersonalityTraitNamesV3);
   }
 
   defaultOptions() {

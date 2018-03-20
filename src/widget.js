@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
- 
+
 'use strict';
 
 const colors = require('./utilities/colors');
@@ -41,11 +41,6 @@ class SunburstWidget {
 
   setElement(element) {
     this._element = element;
-    this.d3vis = this.d3.select(element)
-      .append('svg:svg')
-      .attr('width', this.visualizationWidth)
-      .attr('height', this.visualizationHeight)
-      .attr('viewBox', '0 -30 ' + this.dimH + ', ' + this.dimW);
   }
 
   setData(data) {
@@ -57,6 +52,14 @@ class SunburstWidget {
   _layout() {}
 
   showTooltip() {}
+
+  init() {
+    this.d3vis = this.d3.select(this._element)
+      .append('svg:svg')
+      .attr('width', this.visualizationWidth)
+      .attr('height', this.visualizationHeight)
+      .attr('viewBox', '0 -30 ' + this.dimH + ', ' + this.dimW);
+  }
 
   clear() {
     this._element.innerHTML = null;
