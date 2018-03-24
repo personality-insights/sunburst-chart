@@ -3,10 +3,10 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
     <title>Personality Insights Sunburst Chart</title>
-    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-    <script type="text/javascript" src="./dist/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
     <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script type="text/javascript" src="./dist/index.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
@@ -22,14 +22,14 @@
 
     <div class="container">
       <div>
+        <h4>D3 Version</h4>
+        <button class="btn btn-primary" role="button">Version 3</button>
+        <a class="btn btn-default" role="button" href="index-d3v4-test.html">Version 4</a>
+      </div>
+      <div>
         <h4>Personality Insights Version</h4>
         <button id="personality-insights-v2" class="btn btn-primary" role="button">Version 2</button>
         <button id="personality-insights-v3" class="btn btn-default" role="button">Version 3</button>
-      </div>
-      <div>
-        <h4>D3 Version</h4>
-        <button id="d3-v3" class="btn btn-primary" role="button">Version 3</button>
-        <button id="d3-v4" class="btn btn-default" role="button">Version 4</button>
       </div>
       <div>
         <h4>Locale</h4>
@@ -69,20 +69,6 @@
         options.version = 'v3';
         $('#personality-insights-v2').removeClass('btn-primary').addClass('btn-default');
         $('#personality-insights-v3').removeClass('btn-default').addClass('btn-primary');
-        show();
-      });
-
-      $('#d3-v3').click(function() {
-        options.d3version = 'v3';
-        $('#d3-v3').removeClass('btn-default').addClass('btn-primary');
-        $('#d3-v4').removeClass('btn-primary').addClass('btn-default');
-        show();
-      });
-
-      $('#d3-v4').click(function() {
-        options.d3version = 'v4';
-        $('#d3-v3').removeClass('btn-primary').addClass('btn-default');
-        $('#d3-v4').removeClass('btn-default').addClass('btn-primary');
         show();
       });
 
