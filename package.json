@@ -7,7 +7,7 @@
   "scripts": {
     "prestart": "npm run compile-examples",
     "start": "npm run watch & npm run serve",
-    "serve": "autoreload-server -w \"**/**.{html,css,js}\" -d ./examples -b 'http://localhost:8080/example-v2-d3v3-en.html'",
+    "serve": "autoreload-server -w \"**/**.{html,css,js}\" -d ./examples -b 'http://localhost:8080/example.html'",
     "watch": "nodemon --watch src -x \"npm run compile-examples\"",
     "prepublish": "npm run compile && npm run build",
     "compile": "node_modules/.bin/webpack",

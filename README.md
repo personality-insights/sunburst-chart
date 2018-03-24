@@ -46,7 +46,7 @@ Also works with DOM element input
   chart.show('jsonObject', 'path/to/profile_photo.jpg');
 ```
 
-See the complete examples: [D3 Version 3](./examples/example-v3-d3v4-en.html) and [D3 Version 4](./examples/example-v3-d3v3-en.html)
+See the [complete example](./examples/example.html)
 
 #### Importing through JavaScript
 Use one of the following based on your version of Watson Personality Insights and D3
