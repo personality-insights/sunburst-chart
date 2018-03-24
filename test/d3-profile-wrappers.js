@@ -19,8 +19,8 @@ const expect = require('chai').expect;
 const PersonalityTraitNames = require('personality-trait-names');
 const D3PersonalityProfileWrapperV2 = require('../src/d3-profile-wrappers/v2/index');
 const D3PersonalityProfileWrapperV3 = require('../src/d3-profile-wrappers/v3/index');
-const v2Profile = require('../examples/profiles/en_v2');
-const v3Profile = require('../examples/profiles/en_v3');
+const v2Profile = require('../docs/profiles/en_v2');
+const v3Profile = require('../docs/profiles/en_v3');
 
 describe('D3 Profile Wrappers', () => {
   const traitNames = new PersonalityTraitNames();

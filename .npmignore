@@ -2,5 +2,4 @@ test
 .travis.yml
 .eslint*
 docs
-examples
 src

@@ -7,7 +7,7 @@
 
 Obtain a sunburst chart visualization for a personality profile.  For use in an HTML page.
 
-![Personality Sunburst Chart](./examples/personality-sunburst-chart-small.png)
+![Personality Sunburst Chart](./docs/personality-sunburst-chart-small.png)
 
 
 ## Usage
@@ -46,7 +46,7 @@ Also works with DOM element input
   chart.show('jsonObject', 'path/to/profile_photo.jpg');
 ```
 
-See the [complete example](./examples/example.html)
+See the [complete example](./docs/index.html)
 
 #### Importing through JavaScript
 Use one of the following based on your version of Watson Personality Insights and D3
