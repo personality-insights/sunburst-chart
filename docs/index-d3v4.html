@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <title>Personality Insights Sunburst Chart</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-hierarchy/1.1.5/d3-hierarchy.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-selection/1.2.0/d3-selection.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-shape/1.2.0/d3-shape.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-color/1.0.3/d3-color.min.js"></script>
+    <script src="https://unpkg.com/personality-sunburst-chart/lib/all.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      #profile pre {
+        max-height: 400px;
+      }
+      #sunburstChart svg {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="container">
+      <div>
+        <h4>D3 Version</h4>
+        <a class="btn btn-default" role="button" href="index.html">Version 3</a>
+        <button class="btn btn-primary" role="button">Version 4</button>
+      </div>
+      <div>
+        <h4>Personality Insights Version</h4>
+        <button id="personality-insights-v2" class="btn btn-primary" role="button">Version 2</button>
+        <button id="personality-insights-v3" class="btn btn-default" role="button">Version 3</button>
+      </div>
+      <div>
+        <h4>Locale</h4>
+        <button id="locale-en" class="btn btn-primary" role="button">English</button>
+        <button id="locale-es" class="btn btn-default" role="button">Spanish</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <h4>Personality Insights Sunburst Chart</h4>
+      <div class="row">
+        <div class="col-sm-6 col-xs-12">
+          <div id="profile"></div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+          <div id="sunburstChart"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var options = {
+        selector: '#sunburstChart',
+        version: 'v2',
+        d3version: 'v4',
+        locale: 'en'
+      };
+
+      $('#personality-insights-v2').click(function() {
+        options.version = 'v2';
+        $('#personality-insights-v2').removeClass('btn-default').addClass('btn-primary');
+        $('#personality-insights-v3').removeClass('btn-primary').addClass('btn-default');
+        show();
+      });
+
+      $('#personality-insights-v3').click(function() {
+        options.version = 'v3';
+        $('#personality-insights-v2').removeClass('btn-primary').addClass('btn-default');
+        $('#personality-insights-v3').removeClass('btn-default').addClass('btn-primary');
+        show();
+      });
+
+      $('#locale-en').click(function() {
+        options.locale = 'en';
+        $('#locale-en').removeClass('btn-default').addClass('btn-primary');
+        $('#locale-es').removeClass('btn-primary').addClass('btn-default');
+        show();
+      });
+
+      $('#locale-es').click(function() {
+        options.locale = 'es';
+        $('#locale-en').removeClass('btn-primary').addClass('btn-default');
+        $('#locale-es').removeClass('btn-default').addClass('btn-primary');
+        show();
+      });
+
+      function show() {
+        var file = './profiles/en_' + options.version + '.json';
+        $.getJSON(file, '', function ( profile ) {
+          $('#profile').empty();
+          $('#profile').append('<pre>' + JSON.stringify(profile, null, 2) + '</pre>');
+          var chart = new PersonalitySunburstChart(options);
+          chart.show(profile, './profile_photo.jpg');
+        });
+      }
+
+      // initial display
+      show();
+    </script>
+
+  </body>
+</html>
