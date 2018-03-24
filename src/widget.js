@@ -66,6 +66,10 @@ class SunburstWidget {
   }
 
   expandAll() {
+    if (!this.vis) {
+      return;
+    }
+    
     var self = this;
     this.vis.selectAll('g').each(function() {
       var g = self.d3.select(this);
@@ -78,6 +82,10 @@ class SunburstWidget {
   }
 
   collapseAll() {
+    if (!this.vis) {
+      return;
+    }
+
     var self = this;
     this.vis.selectAll('g').each(function() {
       var g = self.d3.select(this);
