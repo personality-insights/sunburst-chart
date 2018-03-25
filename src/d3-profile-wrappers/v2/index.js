@@ -60,7 +60,7 @@ class PersonalityProfile {
     const mostSignificantValue = this.mostSignificantChild(this._traits.children);
     return {
       name: self._traitNames.name(mostSignificantValue.id),
-      id: mostSignificantValue.id,
+      id: mostSignificantValue.id + '_parent',
       category: mostSignificantValue.category,
       score: mostSignificantValue.percentage,
       children: this._traits.children.map(function(t) {
@@ -87,7 +87,7 @@ class PersonalityProfile {
     const mostSignificantValue = this.mostSignificantChild(this._needs.children);
     return {
       name: self._traitNames.name(mostSignificantValue.id),
-      id: mostSignificantValue.id,
+      id: mostSignificantValue.id + '_parent',
       category: mostSignificantValue.category,
       score: mostSignificantValue.percentage,
       children: this._needs.children.map(function(n) {
@@ -106,7 +106,7 @@ class PersonalityProfile {
     const mostSignificantValue = this.mostSignificantChild(this._values.children);
     return {
       name: self._traitNames.name(mostSignificantValue.id),
-      id: mostSignificantValue.id,
+      id: mostSignificantValue.id + '_parent',
       category: mostSignificantValue.category,
       score: mostSignificantValue.percentage,
       children: this._values.children.map(function(v) {
