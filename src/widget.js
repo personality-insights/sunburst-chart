@@ -184,7 +184,7 @@ class SunburstWidget {
         var frac = position === 'center' ? 0.5 : position === 'outer' ? 2 / 3 : 1 / 3;
         var sector_length = self._d3version === 'v3' ?
           (d.y + d.dy * frac) * d.dx :
-          (d.y1 * frac) * (d.x1 - d.x0);
+          (d.y0 + (d.y1 - d.y0) * frac) * (d.x1 - d.x0);
         var text_length = curNd.getComputedTextLength();
         var cur_font_size = self.d3.select(this).attr('font-size');
         var new_font_size = cur_font_size * sector_length / text_length;
