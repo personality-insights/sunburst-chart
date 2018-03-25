@@ -72,20 +72,6 @@
         show();
       });
 
-      $('#d3-v3').click(function() {
-        options.d3version = 'v3';
-        $('#d3-v3').removeClass('btn-default').addClass('btn-primary');
-        $('#d3-v4').removeClass('btn-primary').addClass('btn-default');
-        show();
-      });
-
-      $('#d3-v4').click(function() {
-        options.d3version = 'v4';
-        $('#d3-v3').removeClass('btn-primary').addClass('btn-default');
-        $('#d3-v4').removeClass('btn-default').addClass('btn-primary');
-        show();
-      });
-
       $('#locale-en').click(function() {
         options.locale = 'en';
         $('#locale-en').removeClass('btn-default').addClass('btn-primary');
