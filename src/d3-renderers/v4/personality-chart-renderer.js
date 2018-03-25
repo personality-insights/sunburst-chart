@@ -356,10 +356,10 @@ function renderChart(widget) {
             lable_size = max_label_size;
           }
 
-          if (!widget._childElements.namelabels[widget.getUniqueId(d, 'sector_leaf_text')]) {
-            widget._childElements.namelabels[widget.getUniqueId(d, 'sector_leaf_text')] = g.append('text');
+          if (!widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')]) {
+            widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')] = g.append('text');
           }
-          widget._childElements.namelabels[widget.getUniqueId(d, 'sector_leaf_text')]
+          widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')]
             .attr('dy', dy_init)
             .attr('class', 'sector_leaf_text')
             .attr('font-size', lable_size)
@@ -404,10 +404,10 @@ function renderChart(widget) {
 
 
           //add label
-          if (!widget._childElements.namelabels[widget.getUniqueId(d, 'sector_label')]) {
-            widget._childElements.namelabels[widget.getUniqueId(d, 'sector_label')] = g.append('text');
+          if (!widget._childElements.texts[widget.getUniqueId(d, 'sector_label')]) {
+            widget._childElements.texts[widget.getUniqueId(d, 'sector_label')] = g.append('text');
           }
-          widget._childElements.namelabels[widget.getUniqueId(d, 'sector_label')]
+          widget._childElements.texts[widget.getUniqueId(d, 'sector_label')]
             .attr('class', 'sector_label')
             .attr('visibility', function(d) {
               return d.depth === 1 ? 'visible' : null;
@@ -441,10 +441,10 @@ function renderChart(widget) {
               .style('fill-opacity', 0);
 
             //add label
-            if (!widget._childElements.scorelabels[widget.getUniqueId(d, 'sector_label_number')]) {
-              widget._childElements.scorelabels[widget.getUniqueId(d, 'sector_label_number')] = g.append('text');
+            if (!widget._childElements.texts[widget.getUniqueId(d, 'sector_label_number')]) {
+              widget._childElements.texts[widget.getUniqueId(d, 'sector_label_number')] = g.append('text');
             }
-            widget._childElements.scorelabels[widget.getUniqueId(d, 'sector_label_number')]
+            widget._childElements.texts[widget.getUniqueId(d, 'sector_label_number')]
               .attr('class', 'sector_label_number ')
               .attr('visibility', function(d) {
                 return d.depth === 1 ? 'visible' : null;

@@ -40,8 +40,7 @@ class SunburstWidget {
       image: null,
       pattern: null,
       circle: null,
-      namelabels: {},
-      scorelabels: {},
+      texts: {},
       paths: {}
     };
   }
@@ -124,36 +123,36 @@ class SunburstWidget {
 
     var self = this;
     tree.children.forEach(function(child) {
-      if (self._childElements.namelabels[self.getUniqueId(child, 'sector_label_path')]) {
-        self._childElements.namelabels[self.getUniqueId(child, 'sector_label_path')].text(self.getNameLabelText(child));
+      if (self._childElements.texts[self.getUniqueId(child, 'sector_label_path')]) {
+        self._childElements.texts[self.getUniqueId(child, 'sector_label_path')].text(self.getNameLabelText(child));
       }
 
       child.children.forEach(function(category) {
-        if (self._childElements.namelabels[self.getUniqueId(category, 'sector_label_path')]) {
-          self._childElements.namelabels[self.getUniqueId(category, 'sector_label_path')].text(category.name);
+        if (self._childElements.texts[self.getUniqueId(category, 'sector_label_path')]) {
+          self._childElements.texts[self.getUniqueId(category, 'sector_label_path')].text(category.name);
         }
-        if (self._childElements.scorelabels[self.getUniqueId(category, 'sector_label_number_path')]) {
-          self._childElements.scorelabels[self.getUniqueId(category, 'sector_label_number_path')].text(self.getScoreLabelText(category));
+        if (self._childElements.texts[self.getUniqueId(category, 'sector_label_number_path')]) {
+          self._childElements.texts[self.getUniqueId(category, 'sector_label_number_path')].text(self.getScoreLabelText(category));
         }
 
         category.children.forEach(function(trait) {
           if (trait.category === 'personality') {
             // personality traits
-            if (self._childElements.namelabels[self.getUniqueId(trait, 'sector_label_path')]) {
-              self._childElements.namelabels[self.getUniqueId(trait, 'sector_label_path')].text(trait.name);
+            if (self._childElements.texts[self.getUniqueId(trait, 'sector_label_path')]) {
+              self._childElements.texts[self.getUniqueId(trait, 'sector_label_path')].text(trait.name);
             }
-            if (self._childElements.scorelabels[self.getUniqueId(trait, 'sector_label_number_path')]) {
-              self._childElements.scorelabels[self.getUniqueId(trait, 'sector_label_number_path')].text(self.getScoreLabelText(trait));
+            if (self._childElements.texts[self.getUniqueId(trait, 'sector_label_number_path')]) {
+              self._childElements.texts[self.getUniqueId(trait, 'sector_label_number_path')].text(self.getScoreLabelText(trait));
             }
 
             trait.children.forEach(function(facet) {
-              if (self._childElements.namelabels[self.getUniqueId(facet, 'sector_leaf_text')]) {
-                self._childElements.namelabels[self.getUniqueId(facet, 'sector_leaf_text')].text(self.getNameLabelText(facet));
+              if (self._childElements.texts[self.getUniqueId(facet, 'sector_leaf_text')]) {
+                self._childElements.texts[self.getUniqueId(facet, 'sector_leaf_text')].text(self.getNameLabelText(facet));
               }
             });
           } else {
-            if (self._childElements.namelabels[self.getUniqueId(trait, 'sector_leaf_text')]) {
-              self._childElements.namelabels[self.getUniqueId(trait, 'sector_leaf_text')].text(self.getNameLabelText(trait));
+            if (self._childElements.texts[self.getUniqueId(trait, 'sector_leaf_text')]) {
+              self._childElements.texts[self.getUniqueId(trait, 'sector_leaf_text')].text(self.getNameLabelText(trait));
             }
           }
         });

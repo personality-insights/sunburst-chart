@@ -352,10 +352,10 @@ function renderChart(widget) {
             lable_size = max_label_size;
           }
 
-          if (!widget._childElements.namelabels[widget.getUniqueId(d, 'sector_leaf_text')]) {
-            widget._childElements.namelabels[widget.getUniqueId(d, 'sector_leaf_text')] = g.append('text');
+          if (!widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')]) {
+            widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')] = g.append('text');
           }
-          widget._childElements.namelabels[widget.getUniqueId(d, 'sector_leaf_text')]
+          widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')]
             .attr('dy', dy_init)
             .attr('class', 'sector_leaf_text')
             .attr('font-size', lable_size)
@@ -398,8 +398,8 @@ function renderChart(widget) {
             .style('fill-opacity', 0);
 
           //add label
-          if (!widget._childElements.namelabels[widget.getUniqueId(d, 'sector_label_path')]) {
-            widget._childElements.namelabels[widget.getUniqueId(d, 'sector_label_path')] = g.append('text')
+          if (!widget._childElements.texts[widget.getUniqueId(d, 'sector_label_path')]) {
+            widget._childElements.texts[widget.getUniqueId(d, 'sector_label_path')] = g.append('text')
               .attr('class', 'sector_label')
               .attr('visibility', function(d) {
                 return d.depth === 1 ? 'visible' : null;
@@ -407,7 +407,7 @@ function renderChart(widget) {
               .attr('class', 'sector_nonleaf_text')
               .append('textPath');
           }
-          widget._childElements.namelabels[widget.getUniqueId(d, 'sector_label_path')]
+          widget._childElements.texts[widget.getUniqueId(d, 'sector_label_path')]
             .attr('class', 'sector_label_path')
             .attr('position-in-sector', d.depth <= 1 ? 'center' : (bottom ? 'inner' : 'outer')) // Since both text lines share the same 'd', this class annotation tells where is the text, helping to determine the real arc length
             .attr('font-size', function(d) {
@@ -435,8 +435,8 @@ function renderChart(widget) {
               .style('fill-opacity', 0);
 
             //add label
-            if (!widget._childElements.scorelabels[widget.getUniqueId(d, 'sector_label_number_path')]) {
-              widget._childElements.scorelabels[widget.getUniqueId(d, 'sector_label_number_path')] = g.append('text')
+            if (!widget._childElements.texts[widget.getUniqueId(d, 'sector_label_number_path')]) {
+              widget._childElements.texts[widget.getUniqueId(d, 'sector_label_number_path')] = g.append('text')
                 .attr('class', 'sector_label_number ')
                 .attr('visibility', function(d) {
                   return d.depth === 1 ? 'visible' : null;
@@ -446,7 +446,7 @@ function renderChart(widget) {
                 //.attr('fill', d3.rgb(arc1color).darker(2))
                 .append('textPath');
             }
-            widget._childElements.scorelabels[widget.getUniqueId(d, 'sector_label_number_path')]
+            widget._childElements.texts[widget.getUniqueId(d, 'sector_label_number_path')]
               .attr('class', 'sector_label_number_path')
               .attr('position-in-sector', bottom ? 'outer' : 'inner') // Since both text lines share the same 'd', this class annotation tells where is the text, helping to determine the real arc length
               .attr('font-size', function() {
