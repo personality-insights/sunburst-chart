@@ -34,6 +34,7 @@ class SunburstWidget {
     this.d3vis = null;
     this.vis = null;
     this.data = null;
+    this._d3version = options.d3version;
     this._element = null;
     this._childElements = {
       icondefs: null,
@@ -173,26 +174,28 @@ class SunburstWidget {
     }
 
     var max_font_size_base = 16;
-    var d3 = this.d3;
+    var self = this;
     this.d3vis.selectAll(_class).each(function(d) {
-      var d3this = d3.select(this);
+      var d3this = self.d3.select(this);
       var curNd = d3this.node();
       var text = d3this.text();
       if (text && text.length > 0) {
-        var position = d3.select(this).attr('position-in-sector'); // 'inner' or 'outer'
+        var position = self.d3.select(this).attr('position-in-sector'); // 'inner' or 'outer'
         var frac = position === 'center' ? 0.5 : position === 'outer' ? 2 / 3 : 1 / 3;
-        var sector_length = (d.y + d.dy * frac) * d.dx;
+        var sector_length = self._d3version === 'v3' ?
+          (d.y + d.dy * frac) * d.dx :
+          (d.y1 * frac) * (d.x1 - d.x0);
         var text_length = curNd.getComputedTextLength(); //+margin;
-        var cur_font_size = d3.select(this).attr('font-size');
+        var cur_font_size = self.d3.select(this).attr('font-size');
         var new_font_size = cur_font_size * sector_length / text_length;
 
         if (new_font_size > max_font_size_base / (0.4 * d.depth + 0.6)) {
           new_font_size = max_font_size_base / (0.4 * d.depth + 0.6);
         }
 
-        d3.select(this).attr('font-size', new_font_size);
+        self.d3.select(this).attr('font-size', new_font_size);
         //set new offset:
-        d3.select(this).attr('startOffset', (sector_length - curNd.getComputedTextLength()) / 2);
+        self.d3.select(this).attr('startOffset', (sector_length - curNd.getComputedTextLength()) / 2);
       }
     });
   }

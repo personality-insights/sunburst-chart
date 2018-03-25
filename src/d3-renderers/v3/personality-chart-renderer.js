@@ -20,81 +20,8 @@ Object.assign(d3,
   require('d3-color')
 );
 
-d3.svg.singleArc = function() {
-  var radius = d3_svg_singleArcRadius,
-    startAngle = d3_svg_singleArcStartAngle,
-    endAngle = d3_svg_singleArcEndAngle,
-    d3_svg_arcOffset = -Math.PI / 2;
-
-  function arc() {
-    var r0 = radius.apply(this, arguments),
-      a0 = startAngle.apply(this, arguments) + d3_svg_arcOffset,
-      a1 = endAngle.apply(this, arguments) + d3_svg_arcOffset,
-      da = (a1 < a0 && (da = a0, a0 = a1, a1 = da), a1 - a0),
-      df = da < Math.PI ? '0' : '1',
-      c0 = Math.cos(a0),
-      s0 = Math.sin(a0),
-      c1 = Math.cos(a1),
-      s1 = Math.sin(a1);
-    return 'M' + r0 * c0 + ',' + r0 * s0 + 'A' + r0 + ',' +
-      r0 + ' 0 ' + df + ',1 ' + r0 * c1 + ',' + r0 * s1;
-  }
-
-  arc.radius = function(v) {
-    if (!arguments.length) return radius;
-    radius = d3.functor(v);
-    return arc;
-  };
-
-  arc.startAngle = function(v) {
-    if (!arguments.length) return startAngle;
-    startAngle = d3.functor(v);
-    return arc;
-  };
-
-  arc.endAngle = function(v) {
-    if (!arguments.length) return endAngle;
-    endAngle = d3.functor(v);
-    return arc;
-  };
-
-  arc.centroid = function() {
-    var r = radius.apply(this, arguments),
-      a = (startAngle.apply(this, arguments) +
-        endAngle.apply(this, arguments)) / 2 + d3_svg_arcOffset;
-    return [Math.cos(a) * r, Math.sin(a) * r];
-  };
-
-  return arc;
-};
-
-function d3_svg_singleArcRadius(d) {
-  return d.radius;
-}
-
-function d3_svg_singleArcStartAngle(d) {
-  return d.startAngle;
-}
-
-function d3_svg_singleArcEndAngle(d) {
-  return d.endAngle;
-}
-
-var visutil = {
-  isLocatedBottom: function(d) {
-    // Before fixing #128: return (d.x>Math.PI/2&&(d.x+d.dx)<Math.PI*5/3);
-    var bottom = (d.x > Math.PI / 2 && (d.x + d.dx) < 5.0);
-    return bottom;
-  },
-
-  arc: function(start, end, r0) {
-    var c0 = Math.cos(start),
-      s0 = Math.sin(start),
-      c1 = Math.cos(end),
-      s1 = Math.sin(end);
-    return 'M' + r0 * c0 + ',' + r0 * s0 + 'A' + r0 + ',' + r0 + ' 0' + ' 0 , 0 ' + r0 * c1 + ',' + r0 * s1;
-  }
-};
+d3.svg.singleArc = require('../svg-single-arc');
+const visutil = require('../visutil');
 
 function renderChart(widget) {
   console.debug('personality-chart-renderer: defining renderChart');
@@ -127,41 +54,6 @@ function renderChart(widget) {
     } else {
       d.expand = 0;
     }
-  }
-
-  function expandOrFoldSector(d) {
-    if (d.expand !== null && d.depth > 1) {
-      //ignore root node and first level sectors
-      if (d.expand === 0) {
-        if (d.children) d3.select(this).attr('opacity', 1);
-        g.filter(function(a) {
-          if (a.parent)
-            return a.parent.id === d.id;
-        })
-          .attr('visibility', 'visible');
-        d.expand = 1;
-      } else {
-        //if the sector is expanded
-        if (d.children)
-          d3.select(this).attr('opacity', 1);
-        hideSector(d);
-
-      }
-    }
-  }
-
-  function hideSector(d) {
-    g.filter(function(a) {
-      if (a.parent)
-        return a.parent.id === d.id;
-    })
-      .attr('visibility', 'hidden')
-      .attr('opacity', 1)
-      .each(function(a) {
-        if (a.children)
-          hideSector(a);
-      });
-    d.expand = 0;
   }
 
   var sector_right_pad = dummyData ? 0.0001 : 0.04 * 2 * Math.PI,
@@ -502,7 +394,9 @@ function renderChart(widget) {
     }) // hide non-first level rings
     .call(sector)
     .each(stash)
-    .on('click', expandOrFoldSector)
+    .on('click', function(d) {
+      visutil.expandOrFoldSector(d3, g, d);
+    })
     .on('mouseover', function(d) {
       widget.showTooltip(d, this);
     })
