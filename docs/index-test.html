@@ -51,6 +51,7 @@
     </div>
 
     <script>
+      var chart = null;
       var options = {
         selector: '#sunburstChart',
         version: 'v2',
@@ -59,39 +60,80 @@
       };
 
       $('#personality-insights-v2').click(function() {
-        options.version = 'v2';
-        $('#personality-insights-v2').removeClass('btn-default').addClass('btn-primary');
-        $('#personality-insights-v3').removeClass('btn-primary').addClass('btn-default');
-        show();
+        if (!chart || options.version === 'v3') {
+          options.version = 'v2';
+          show();
+        } else {
+          options.version = 'v2';
+          $.getJSON(getFilePath(), '', function ( profile ) {
+            // TODO: randomize data in profile
+            chart.setProfile(profile);
+          });
+        }
+        updateButtonClasses();
       });
 
       $('#personality-insights-v3').click(function() {
-        options.version = 'v3';
-        $('#personality-insights-v2').removeClass('btn-primary').addClass('btn-default');
-        $('#personality-insights-v3').removeClass('btn-default').addClass('btn-primary');
-        show();
+        if (!chart || options.version === 'v2') {
+          options.version = 'v3';
+          show();
+        } else {
+          options.version = 'v3';
+          $.getJSON(getFilePath(), '', function ( profile ) {
+            // TODO: randomize data in profile
+            chart.setProfile(profile);
+          });
+        }
+        updateButtonClasses();
       });
 
       $('#locale-en').click(function() {
         options.locale = 'en';
-        $('#locale-en').removeClass('btn-default').addClass('btn-primary');
-        $('#locale-es').removeClass('btn-primary').addClass('btn-default');
-        show();
+        if (chart) {
+          chart.setLocale('en', true);
+        } else {
+          show();
+        }
+        updateButtonClasses();
       });
 
       $('#locale-es').click(function() {
         options.locale = 'es';
-        $('#locale-en').removeClass('btn-primary').addClass('btn-default');
-        $('#locale-es').removeClass('btn-default').addClass('btn-primary');
-        show();
+        if (chart) {
+          chart.setLocale('es', true);
+        } else {
+          show();
+        }
+        updateButtonClasses();
       });
 
+      function updateButtonClasses() {
+        if (options.locale === 'es') {
+          $('#locale-en').removeClass('btn-primary').addClass('btn-default');
+          $('#locale-es').removeClass('btn-default').addClass('btn-primary');
+        } else {
+          $('#locale-en').removeClass('btn-default').addClass('btn-primary');
+          $('#locale-es').removeClass('btn-primary').addClass('btn-default');
+        }
+
+        if (options.version === 'v2') {
+          $('#personality-insights-v2').removeClass('btn-default').addClass('btn-primary');
+          $('#personality-insights-v3').removeClass('btn-primary').addClass('btn-default');
+        } else {
+          $('#personality-insights-v2').removeClass('btn-primary').addClass('btn-default');
+          $('#personality-insights-v3').removeClass('btn-default').addClass('btn-primary');
+        }
+      }
+
+      function getFilePath() {
+        return './profiles/en_' + options.version + '.json';
+      }
+
       function show() {
-        var file = './profiles/en_' + options.version + '.json';
-        $.getJSON(file, '', function ( profile ) {
+        $.getJSON(getFilePath(), '', function ( profile ) {
           $('#profile').empty();
           $('#profile').append('<pre>' + JSON.stringify(profile, null, 2) + '</pre>');
-          var chart = new PersonalitySunburstChart(options);
+          chart = new PersonalitySunburstChart(options);
           chart.show(profile, './profile_photo.jpg');
         });
       }

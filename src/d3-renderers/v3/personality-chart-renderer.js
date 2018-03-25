@@ -96,32 +96,30 @@ var visutil = {
   }
 };
 
-var renderChart = function() {
+function renderChart(widget) {
   console.debug('personality-chart-renderer: defining renderChart');
-  if (!this.data) {
+  if (!widget.data) {
     console.debug('personality-chart-renderer: data not defined.');
     return;
   }
-  if (this.vis) {
-    console.error('Cannot render: Already rendered (this.vis)');
+  if (widget.vis) {
+    console.error('Cannot render: Already rendered (widget.vis)');
     return;
   }
 
-  var _this = this;
   var dummyData = false;
-  var tree = this.data ? (this.data.tree ? this.data.tree : this.data) : null;
+  var tree = widget.data ? (widget.data.tree ? widget.data.tree : widget.data) : null;
   if (!tree || !tree.children || !tree.children.length) {
     return;
   }
 
-  var _widget = this;
-  if (!this.loadingDiv) {
+  if (!widget.loadingDiv) {
     alert('Widget is not fully initialized, cannot render BarsWidget');
     return;
   }
 
-  this.switchState(1);
-  this._layout();
+  widget.switchState(1);
+  widget._layout();
 
   function stash(d) {
     d.x0 = d.x;
@@ -170,7 +168,6 @@ var renderChart = function() {
     d.expand = 0;
   }
 
-
   var sector_right_pad = dummyData ? 0.0001 : 0.04 * 2 * Math.PI,
     sector_bottom_pad = 5.0;
   //Render a sector with two adjcent arcs in a style of odometor
@@ -184,42 +181,8 @@ var renderChart = function() {
 
         var right_pad = d.depth > 0 ? sector_right_pad / (3 * d.depth) : sector_right_pad;
 
-        var score = d.score,
+        var score = widget.getScore(d),
           score2 = 1; //for score sentiment data. it is the score of positive+netural
-
-        //if score is null, then give 1
-        if (score === null) score = 1;
-        if (d.score_lbl === null) d.score_lbl = '';
-        var label, label_name = d.name,
-          label_score = (d.score === null || isNaN(d.score) ? '' : ' (' + (d.score * 100).toFixed(0) + '%)');
-
-        if (d.depth === 1) label = d.name;
-        if (d.depth > 1) {
-          if (d.id === 'sbh_dom' || d.id === 'sbh_parent'){
-            label = d.name;
-          } else if (d.category === 'values') {
-            label = d.name + ((score * 100).toFixed(0) === 'NaN' || isNaN(score) ? '' : ' (' + (score * 100).toFixed(0) + '%)');
-          } else {
-            if (score >= 1) {
-              score = 0.99;
-              console.debug('score is over 1!' + d.name);
-            } else if (score <= -1) {
-              score = -0.99;
-              console.debug('score is below -1!' + d.name);
-            }
-            label = d.name + ((score * 100).toFixed(0) === 'NaN' || isNaN(score) ? '' : ' (' + (score * 100).toFixed(0) + '%)');
-
-            if ((Math.round(parseFloat(score) * 100) / 100) === 0) {
-              label = d.name;
-            }
-          }
-        }
-
-        //for request without any result
-        if (d.name === '') {
-          score = 0;
-          label = '';
-        }
 
         //special render perception sector
         if (d.perc_neu !== null && ((d.score + d.perc_neu) * d.dx < d.dx - sector_right_pad / (3 * d.depth))) {
@@ -322,20 +285,20 @@ var renderChart = function() {
 
 
         if (d.coloridx === 'personality'){
-          innerRingDarkColor = _widget.COLOR_PALLETTE.traits_dark;
-          innerRingLightColor = _widget.COLOR_PALLETTE.traits_light;
-          outerRingColor = _widget.COLOR_PALLETTE.facet;
+          innerRingDarkColor = widget.COLOR_PALLETTE.traits_dark;
+          innerRingLightColor = widget.COLOR_PALLETTE.traits_light;
+          outerRingColor = widget.COLOR_PALLETTE.facet;
         }
 
         if (d.coloridx === 'needs') {
-          innerRingDarkColor = _widget.COLOR_PALLETTE.needs_dark;
-          innerRingLightColor = _widget.COLOR_PALLETTE.needs_light;
-          outerRingColor = _widget.COLOR_PALLETTE.need;
+          innerRingDarkColor = widget.COLOR_PALLETTE.needs_dark;
+          innerRingLightColor = widget.COLOR_PALLETTE.needs_light;
+          outerRingColor = widget.COLOR_PALLETTE.need;
         }
         if (d.coloridx === 'values') {
-          innerRingDarkColor = _widget.COLOR_PALLETTE.values_dark;
-          innerRingLightColor = _widget.COLOR_PALLETTE.values_light;
-          outerRingColor = _widget.COLOR_PALLETTE.value;
+          innerRingDarkColor = widget.COLOR_PALLETTE.values_dark;
+          innerRingLightColor = widget.COLOR_PALLETTE.values_light;
+          outerRingColor = widget.COLOR_PALLETTE.value;
         }
 
         arc1color = d.depth < 2 ? d3.color(innerRingLightColor) : d3.color(innerRingDarkColor);
@@ -343,12 +306,10 @@ var renderChart = function() {
 
         //if (!d.children && d.id !== 'srasrt' && d.id !== 'srclo' && d.id !== 'srdom') {
         if (!d.children) {
-          label = d.name;
-          score = d.score;
           var bar_length_factor = 10 / (d.depth - 2);
 
           //different bar_length factors
-          if (d.parent)
+          if (d.parent) {
             if (d.parent.parent) {
               if (d.parent.parent.id === 'needs' || d.parent.parent.id === 'values') {
                 bar_length_factor = 1;
@@ -358,12 +319,10 @@ var renderChart = function() {
             } else {
               console.debug(d.name + ': Parent is null!');
             }
-
-
+          }
 
           var inner_r = sector_bottom_pad + d.y;
           var out_r = sector_bottom_pad + d.y + bar_length_factor * Math.abs(score) * d.dy;
-          if (d.score_lbl === 'Low') out_r = sector_bottom_pad + d.y + bar_length_factor * 0.2 * d.dy;
 
           var _bar = d3.svg.arc()
             .startAngle(d.x)
@@ -379,15 +338,10 @@ var renderChart = function() {
               return d3.color(outerRingColor);
             });
 
-
-
           //add label;
-
           var rotate = 0,
             lbl_anchor = 'start',
             dy_init = 0;
-
-          label = d.name;
 
           if (d.x > Math.PI) {
             rotate = d.x * 180 / Math.PI + 90;
@@ -406,17 +360,12 @@ var renderChart = function() {
             lable_size = max_label_size;
           }
 
-          label = label + ((score * 100).toFixed(0) === 'NaN' || isNaN(score) ? '' : ' (' + (score * 100).toFixed(0) + '%)');
-
-
-          g.append('text')
+          widget._childElements.namelabels[d.id] = g.append('text')
             .attr('dy', dy_init)
             .attr('class', 'sector_leaf_text')
             .attr('font-size', lable_size)
             .attr('text-anchor', lbl_anchor)
-            .attr('transform', 'translate(' + (out_r + 5) * Math.sin(d.x) + ',' + (-(out_r + 5) * Math.cos(d.x)) + ') ' + 'rotate(' + rotate + ')')
-            .text(label);
-
+            .attr('transform', 'translate(' + (out_r + 5) * Math.sin(d.x) + ',' + (-(out_r + 5) * Math.cos(d.x)) + ') ' + 'rotate(' + rotate + ')');
         } else {
           //non-bar/non-leaf sector
           g.append('path')
@@ -424,7 +373,6 @@ var renderChart = function() {
             .attr('d', arc1)
             .style('stroke', strokecolor) // was: arc1color
             .style('fill', arc1color);
-
 
           g.append('path')
             .attr('class', 'arc2')
@@ -439,15 +387,14 @@ var renderChart = function() {
             .attr('class', 'arc_for_label')
             // NOTE HB: adding widget.id so we to avoid name clashing
             .attr('id', function(d) {
-              return _this.id + '_' + d.id + '.arc_for_label';
+              return widget.id + '_' + d.id + '.arc_for_label';
             })
             .attr('d', arc_for_label)
             .style('stroke-opacity', 0)
             .style('fill-opacity', 0);
 
-
           //add label
-          g.append('text')
+          widget._childElements.namelabels[d.id] = g.append('text')
             .attr('class', 'sector_label')
             .attr('visibility', function(d) {
               return d.depth === 1 ? 'visible' : null;
@@ -461,9 +408,8 @@ var renderChart = function() {
             })
             // NOTE HB: Why do we need this xlink:href? In any case, adding widget.id so we to avoid name clashing
             .attr('xlink:href', function(d) {
-              return '#' + _this.id + '_' + d.id + '.arc_for_label';
-            })
-            .text(label_name);
+              return '#' + widget.id + '_' + d.id + '.arc_for_label';
+            });
 
           //draw label number
           //path used for label number
@@ -472,15 +418,14 @@ var renderChart = function() {
               .attr('class', 'arc_for_label_number')
               // NOTE HB: adding widget.id so we to avoid name clashing
               .attr('id', function(d) {
-                return _this.id + '_' + d.id + '.arc_for_label_number';
+                return widget.id + '_' + d.id + '.arc_for_label_number';
               })
               .attr('d', arc_for_label_number)
               .style('stroke-opacity', 0)
               .style('fill-opacity', 0);
 
-
             //add label
-            g.append('text')
+            widget._childElements.scorelabels[d.id] = g.append('text')
               .attr('class', 'sector_label_number ')
               .attr('visibility', function(d) {
                 return d.depth === 1 ? 'visible' : null;
@@ -496,62 +441,26 @@ var renderChart = function() {
               })
               // NOTE HB: Why do we need this xlink:href? In any case, adding widget.id so we to avoid name clashing
               .attr('xlink:href', function(d) {
-                return '#' + _this.id + '_' + d.id + '.arc_for_label_number';
-              })
-              .text(label_score);
+                return '#' + widget.id + '_' + d.id + '.arc_for_label_number';
+              });
           }
-
-
         }
       });
-
     }
 
     return twoArcs;
   }
 
-  function updateLabelLayout() {
-    updateLabelLayoutWithClass('.sector_label_path');
-    updateLabelLayoutWithClass('.sector_label_number_path');
-  }
-
-  function updateLabelLayoutWithClass(_class) {
-    var max_font_size_base = 16;
-
-    _this.d3vis.selectAll(_class).each(function(d) {
-      var d3this = d3.select(this);
-      var curNd = d3this.node();
-      var text = d3this.text();
-      if (text && text.length > 0) {
-        var position = d3.select(this).attr('position-in-sector'); // 'inner' or 'outer'
-        var frac = position === 'center' ? 0.5 : position === 'outer' ? 2 / 3 : 1 / 3;
-        var sector_length = (d.y + d.dy * frac) * d.dx;
-        var text_length = curNd.getComputedTextLength(); //+margin;
-        var cur_font_size = d3.select(this).attr('font-size');
-        var new_font_size = cur_font_size * sector_length / text_length;
-
-        if (new_font_size > max_font_size_base / (0.4 * d.depth + 0.6)) {
-          new_font_size = max_font_size_base / (0.4 * d.depth + 0.6);
-        }
-
-        d3.select(this).attr('font-size', new_font_size);
-        //set new offset:
-        d3.select(this).attr('startOffset', (sector_length - curNd.getComputedTextLength()) / 2);
-      }
-    });
-  }
-
-  var width = this.dimW,
-    height = this.dimH;
+  var width = widget.dimW,
+    height = widget.dimH;
   // The flower had a radius of 640 / 1.9 = 336.84 in the original.
   var radius = Math.min(width, height) / 3.2;
   var sector = twoArcsRender(radius);
 
   // Center the graph of 'g'
-  var vis = this.d3vis.append('g')
+  widget.vis = widget.d3vis.append('g')
     .attr('transform', 'translate(' + (width / 2) + ',' + height / 2 + ')')
     .append('g');
-  this.vis = vis;
 
   var partition = d3.layout.partition()
     .sort(null)
@@ -566,12 +475,12 @@ var renderChart = function() {
   };
 
   // exclude specified sectors
-  var exclude = this.exclude;
+  var exclude = widget.exclude;
   profile.children = profile.children.filter(function (child) {
     return exclude.indexOf(child.id) === -1;
   });
 
-  var g = vis.data([profile]).selectAll('g')
+  var g = widget.vis.data([profile]).selectAll('g')
     .data(partition.nodes)
     .enter().append('g')
     .attr('class', 'sector')
@@ -582,23 +491,22 @@ var renderChart = function() {
     .each(stash)
     .on('click', expandOrFoldSector)
     .on('mouseover', function(d) {
-      _this.showTooltip(d, this);
+      widget.showTooltip(d, this);
     })
     .on('mouseout', function() {
-      _this.showTooltip();
+      widget.showTooltip();
     });
 
-  // Shift the text pieces clockwise (to somewhat center them).
-  updateLabelLayout();
+  widget.updateText();
 };
 
 function setupD3() {
   d3.svg.singleArc = d3SvgSingleArc;
 }
 
-function setupAndRender() {
+function setupAndRender(widget) {
   setupD3();
-  renderChart.call(this);
+  renderChart(widget);
 }
 
 module.exports = {

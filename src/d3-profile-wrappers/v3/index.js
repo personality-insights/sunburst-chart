@@ -135,7 +135,6 @@ class PersonalityProfile {
     }
     return childWithScoreFarthestFromThreshold;
   }
-
 }
 
 module.exports = PersonalityProfile;
