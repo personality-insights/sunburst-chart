@@ -21,7 +21,7 @@ Object.assign(d3,
 );
 
 const d3SvgSingleArc = require('../svg-single-arc');
-const visutil = require('../visutil');
+const utils = require('../utils');
 
 function renderChart(widget) {
   console.debug('personality-chart-renderer: defining renderChart');
@@ -63,11 +63,11 @@ function renderChart(widget) {
           //different bar_length factors
           if (d.parent) {
             if (d.parent.parent) {
-              if (d.parent.parent.id === 'needs' || d.parent.parent.id === 'values') {
+              if (utils.getValue(d.parent.parent, 'id') === 'needs' || utils.getValue(d.parent.parent, 'id') === 'values') {
                 bar_length_factor = 1;
               }
               if (d.parent.parent.parent)
-                if (d.parent.parent.parent.id === 'personality') bar_length_factor = 1;
+                if (utils.getValue(d.parent.parent.parent, 'id') === 'personality') bar_length_factor = 1;
             } else {
               console.debug(d.name + ': Parent is null!');
             }
@@ -148,7 +148,7 @@ function renderChart(widget) {
             .attr('d', arc2);
 
           //used for label path
-          var bottom = visutil.isLocatedBottom(d);
+          var bottom = utils.isLocatedBottom(d);
           var arc_for_label, arc_for_label_number;
           var arc_label_radius, arc_label_number_radius;
           if (d.depth === 1 && bottom) {
@@ -160,8 +160,8 @@ function renderChart(widget) {
           }
           if (bottom) {
             //special reversed label for bottom data
-            arc_for_label = visutil.arc(d.x + d.dx - right_pad - Math.PI / 2, d.x - Math.PI / 2, arc_label_radius);
-            arc_for_label_number = visutil.arc(d.x + d.dx - right_pad - Math.PI / 2, d.x - Math.PI / 2, arc_label_number_radius);
+            arc_for_label = utils.arc(d.x + d.dx - right_pad - Math.PI / 2, d.x - Math.PI / 2, arc_label_radius);
+            arc_for_label_number = utils.arc(d.x + d.dx - right_pad - Math.PI / 2, d.x - Math.PI / 2, arc_label_number_radius);
           } else {
             arc_for_label = d3SvgSingleArc()
               .startAngle(function(d) {
@@ -239,7 +239,7 @@ function renderChart(widget) {
       d.expand = 1;
     })
     .on('click', function(d) {
-      visutil.expandOrFoldSector(g, d, d3.select(this));
+      utils.expandOrFoldSector(g, d, d3.select(this));
     })
     .on('mouseover', function(d) {
       widget.showTooltip(d, this);

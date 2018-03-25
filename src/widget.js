@@ -17,7 +17,7 @@
 'use strict';
 
 const colors = require('./utilities/colors');
-const visutil = require('./d3-renderers/visutil');
+const utils = require('./d3-renderers/utils');
 
 class SunburstWidget {
 
@@ -273,8 +273,8 @@ class SunburstWidget {
   }
 
   getScore(d) {
-    var score = visutil.getValue(d, 'score');
-    var name = visutil.getValue(d, 'name');
+    var score = utils.getValue(d, 'score');
+    var name = utils.getValue(d, 'name');
     if (typeof score === 'undefined' || typeof name === 'undefined') {
       score = 0;
     } else {
@@ -291,19 +291,19 @@ class SunburstWidget {
   }
 
   getScoreLabelText(d) {
-    var score = visutil.getValue(d, 'score');
+    var score = utils.getValue(d, 'score');
     return score === null || isNaN(score) ? '' : ' (' + (this.getScore(d) * 100).toFixed(0) + '%)';
   }
 
   getNameLabelText(d) {
-    var name = visutil.getValue(d, 'name');
+    var name = utils.getValue(d, 'name');
     if (!name) {
       return '';
     }
 
     var score = this.getScore(d);
-    var id = visutil.getValue(d, 'id');
-    var category = visutil.getValue(d, 'category');
+    var id = utils.getValue(d, 'id');
+    var category = utils.getValue(d, 'category');
     var label = name;
 
     if (id === 'sbh_dom' || id === 'sbh_parent'){
@@ -322,7 +322,7 @@ class SunburstWidget {
   }
 
   getUniqueId(d, _class) {
-    var uid = this.id + '_' + visutil.getValue(d, 'id');
+    var uid = this.id + '_' + utils.getValue(d, 'id');
     if (_class) {
       uid += '.' + _class;
     }
@@ -330,7 +330,7 @@ class SunburstWidget {
   }
 
   getColors(d) {
-    d.coloridx = (d.depth === 1 || d.depth === 0) ? visutil.getValue(d, 'id') : d.parent.coloridx;
+    d.coloridx = (d.depth === 1 || d.depth === 0) ? utils.getValue(d, 'id') : d.parent.coloridx;
 
     if (d.coloridx === 'personality') {
       return {
@@ -365,7 +365,7 @@ class SunburstWidget {
     var colors = this.getColors(d);
     var arc1color = d.depth < 2 ? this.d3.color(colors.innerRingLightColor) : this.d3.color(colors.innerRingDarkColor);
     var strokecolor = arc1color;
-    var bottom = visutil.isLocatedBottom(d);
+    var bottom = utils.isLocatedBottom(d);
 
     if (!d.children) {
       uid = this.getUniqueId(d, 'bar');
