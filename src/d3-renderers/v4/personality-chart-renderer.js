@@ -96,7 +96,7 @@ function renderChart(widget) {
                 }
               }
             } else {
-              console.debug(d.name + ': Parent is null!');
+              console.debug(d.data.name + ': Parent is null!');
             }
           }
 

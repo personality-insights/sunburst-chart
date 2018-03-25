@@ -273,8 +273,9 @@ class SunburstWidget {
   }
 
   getScore(d) {
-    var score = d.data ? d.data.score : d.score;
-    if (!d.name) {
+    var score = visutil.getValue(d, 'score');
+    var name = visutil.getValue(d, 'name');
+    if (!name) {
       score = 0;
     } else {
       if (score === null) {
@@ -290,25 +291,29 @@ class SunburstWidget {
   }
 
   getScoreLabelText(d) {
-    var score = d.data ? d.data.score : d.score;
+    var score = visutil.getValue(d, 'score');
     return score === null || isNaN(score) ? '' : ' (' + (this.getScore(d) * 100).toFixed(0) + '%)';
   }
 
   getNameLabelText(d) {
-    if (!d.name) {
+    var name = visutil.getValue(d, 'name');
+    if (!name) {
       return '';
     }
-    var label = d.name, score = this.getScore(d);
 
-    if (d.id === 'sbh_dom' || d.id === 'sbh_parent'){
-      label = d.name;
+    var score = this.getScore(d);
+    var id = visutil.getValue(d, 'id');
+    var label = name;
+
+    if (id === 'sbh_dom' || id === 'sbh_parent'){
+      label = name;
     } else if (d.category === 'values') {
-      label = d.name + ((score * 100).toFixed(0) === 'NaN' || isNaN(score) ? '' : ' (' + (score * 100).toFixed(0) + '%)');
+      label = name + ((score * 100).toFixed(0) === 'NaN' || isNaN(score) ? '' : ' (' + (score * 100).toFixed(0) + '%)');
     } else {
-      label = d.name + ((score * 100).toFixed(0) === 'NaN' || isNaN(score) ? '' : ' (' + (score * 100).toFixed(0) + '%)');
+      label = name + ((score * 100).toFixed(0) === 'NaN' || isNaN(score) ? '' : ' (' + (score * 100).toFixed(0) + '%)');
 
       if ((Math.round(parseFloat(score) * 100) / 100) === 0) {
-        label = d.name;
+        label = name;
       }
     }
 
@@ -316,7 +321,7 @@ class SunburstWidget {
   }
 
   getUniqueId(d, _class) {
-    var uid = this.id + '_' + (d.data ? d.data.id : d.id);
+    var uid = this.id + '_' + visutil.getValue(d, 'id');
     if (_class) {
       uid += '.' + _class;
     }
@@ -324,7 +329,7 @@ class SunburstWidget {
   }
 
   getColors(d) {
-    d.coloridx = (d.depth === 1 || d.depth === 0) ? (d.data ? d.data.id : d.id) : d.parent.coloridx;
+    d.coloridx = (d.depth === 1 || d.depth === 0) ? visutil.getValue(d, 'id') : d.parent.coloridx;
 
     if (d.coloridx === 'personality') {
       return {
