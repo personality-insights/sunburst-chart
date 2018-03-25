@@ -51,9 +51,30 @@ function getValue(d, prop) {
   return d.data ? d.data[prop] : d[prop];
 }
 
+function getBarLengthFactor(d) {
+  var bar_length_factor = 10 / (d.depth - 2);
+
+  //different bar_length factors
+  if (d.parent) {
+    if (d.parent.parent) {
+      if (getValue(d.parent.parent, 'id') === 'needs' || getValue(d.parent.parent, 'id') === 'values') {
+        bar_length_factor = 1;
+      }
+      if (d.parent.parent.parent) {
+        if (getValue(d.parent.parent.parent, 'id') === 'personality') {
+          bar_length_factor = 1;
+        }
+      }
+    }
+  }
+
+  return bar_length_factor;
+}
+
 module.exports = {
   isLocatedBottom: isLocatedBottom,
   arc: arc,
   expandOrFoldSector: expandOrFoldSector,
-  getValue: getValue
+  getValue: getValue,
+  getBarLengthFactor: getBarLengthFactor
 };

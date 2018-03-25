@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* global alert */
 'use strict';
 const d3 = require('d3');
 Object.assign(d3,
@@ -24,20 +23,13 @@ const d3SvgSingleArc = require('../svg-single-arc');
 const utils = require('../utils');
 
 function renderChart(widget) {
-  console.debug('personality-chart-renderer: defining renderChart');
-  if (!widget.data) {
-    console.debug('personality-chart-renderer: data not defined.');
+  if (!widget.data || !widget.loadingDiv) {
     return;
   }
 
   var dummyData = false;
   var tree = widget.data ? (widget.data.tree ? widget.data.tree : widget.data) : null;
   if (!tree || !tree.children || !tree.children.length) {
-    return;
-  }
-
-  if (!widget.loadingDiv) {
-    alert('Widget is not fully initialized, cannot render BarsWidget');
     return;
   }
 
@@ -58,23 +50,8 @@ function renderChart(widget) {
         var score = widget.getScore(d);
 
         if (!d.children) {
-          var bar_length_factor = 10 / (d.depth - 2);
-
-          //different bar_length factors
-          if (d.parent) {
-            if (d.parent.parent) {
-              if (utils.getValue(d.parent.parent, 'id') === 'needs' || utils.getValue(d.parent.parent, 'id') === 'values') {
-                bar_length_factor = 1;
-              }
-              if (d.parent.parent.parent)
-                if (utils.getValue(d.parent.parent.parent, 'id') === 'personality') bar_length_factor = 1;
-            } else {
-              console.debug(d.name + ': Parent is null!');
-            }
-          }
-
           var inner_r = sector_bottom_pad + d.y;
-          var out_r = sector_bottom_pad + d.y + bar_length_factor * Math.abs(score) * d.dy;
+          var out_r = sector_bottom_pad + d.y + utils.getBarLengthFactor(d) * Math.abs(score) * d.dy;
 
           var _bar = d3.svg.arc()
             .startAngle(d.x)
@@ -100,16 +77,8 @@ function renderChart(widget) {
             dy_init = 5 + d.dx * 20 * Math.PI;
           }
 
-          var max_label_size = 13,
-            lable_size = 10;
-
-          if ((7.5 + 15 * Math.PI * d.dx) > max_label_size) {
-            lable_size = max_label_size;
-          }
-
           widget._childElements.parts[widget.getUniqueId(d, 'sector_leaf_text')]
             .attr('dy', dy_init)
-            .attr('font-size', lable_size)
             .attr('text-anchor', lbl_anchor)
             .attr('transform', 'translate(' + (out_r + 5) * Math.sin(d.x) + ',' + (-(out_r + 5) * Math.cos(d.x)) + ') ' + 'rotate(' + rotate + ')');
         } else {
@@ -202,15 +171,13 @@ function renderChart(widget) {
     return twoArcs;
   }
 
-  var width = widget.dimW,
-    height = widget.dimH;
   // The flower had a radius of 640 / 1.9 = 336.84 in the original.
-  var radius = Math.min(width, height) / 3.2;
+  var radius = Math.min(widget.dimW, widget.dimH) / 3.2;
   var sector = twoArcsRender(radius);
 
   // Center the graph of 'g'
   widget.vis = widget.d3vis.append('g')
-    .attr('transform', 'translate(' + (width / 2) + ',' + height / 2 + ')')
+    .attr('transform', 'translate(' + (widget.dimW / 2) + ',' + widget.dimH / 2 + ')')
     .append('g');
 
   var profile = {
