@@ -511,7 +511,7 @@ function renderChart(widget) {
     });
 
   widget.updateText();
-};
+}
 
 module.exports = {
   render: renderChart,

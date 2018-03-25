@@ -461,45 +461,11 @@ function renderChart(widget) {
                 return '#' + widget.id + '_' + d.id + '.arc_for_label_number';
               });
           }
-
-
         }
       });
-
     }
 
     return twoArcs;
-  }
-
-  function updateLabelLayout() {
-    updateLabelLayoutWithClass('.sector_label_path');
-    updateLabelLayoutWithClass('.sector_label_number_path');
-  }
-
-  function updateLabelLayoutWithClass(_class) {
-    var max_font_size_base = 16;
-
-    widget.d3vis.selectAll(_class).each(function(d) {
-      var d3this = d3.select(this);
-      var curNd = d3this.node();
-      var text = d3this.text();
-      if (text && text.length > 0) {
-        var position = d3.select(this).attr('position-in-sector'); // 'inner' or 'outer'
-        var frac = position === 'center' ? 0.5 : position === 'outer' ? 2 / 3 : 1 / 3;
-        var sector_length = (d.y0 + (d.y1 - d.y0) * frac) * (d.x1 - d.x0);
-        var text_length = curNd.getComputedTextLength(); //+margin;
-        var cur_font_size = d3.select(this).attr('font-size');
-        var new_font_size = cur_font_size * sector_length / text_length;
-
-        if (new_font_size > max_font_size_base / (0.4 * d.depth + 0.6)) {
-          new_font_size = max_font_size_base / (0.4 * d.depth + 0.6);
-        }
-
-        d3.select(this).attr('font-size', new_font_size);
-        //set new offset:
-        d3.select(this).attr('startOffset', (sector_length - curNd.getComputedTextLength()) / 2);
-      }
-    });
   }
 
   var width = widget.dimW,
@@ -551,7 +517,7 @@ function renderChart(widget) {
     });
 
   widget.updateText();
-};
+}
 
 module.exports = {
   render: renderChart,
