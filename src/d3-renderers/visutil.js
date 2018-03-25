@@ -1,8 +1,8 @@
-function expandOrFoldSector(d3, g, d, self) {
+function expandOrFoldSector(g, d, d3elem) {
   if (d.expand !== null && d.depth > 1) {
     //ignore root node and first level sectors
     if (d.expand === 0) {
-      if (d.children) d3.select(self).attr('opacity', 1);
+      if (d.children) d3elem.attr('opacity', 1);
       g.filter(function(a) {
         if (a.parent)
           return a.parent.id === getValue(d, 'id');
@@ -12,7 +12,7 @@ function expandOrFoldSector(d3, g, d, self) {
     } else {
       //if the sector is expanded
       if (d.children)
-        d3.select(self).attr('opacity', 1);
+        d3elem.attr('opacity', 1);
       hideSector(d, g);
     }
   }

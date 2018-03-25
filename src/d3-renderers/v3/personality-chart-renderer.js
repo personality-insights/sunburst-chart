@@ -239,7 +239,7 @@ function renderChart(widget) {
       d.expand = 1;
     })
     .on('click', function(d) {
-      visutil.expandOrFoldSector(d3, g, d, this);
+      visutil.expandOrFoldSector(g, d, d3.select(this));
     })
     .on('mouseover', function(d) {
       widget.showTooltip(d, this);

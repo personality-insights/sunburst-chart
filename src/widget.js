@@ -275,7 +275,7 @@ class SunburstWidget {
   getScore(d) {
     var score = visutil.getValue(d, 'score');
     var name = visutil.getValue(d, 'name');
-    if (!name) {
+    if (typeof score === 'undefined' || typeof name === 'undefined') {
       score = 0;
     } else {
       if (score === null) {
@@ -303,11 +303,12 @@ class SunburstWidget {
 
     var score = this.getScore(d);
     var id = visutil.getValue(d, 'id');
+    var category = visutil.getValue(d, 'category');
     var label = name;
 
     if (id === 'sbh_dom' || id === 'sbh_parent'){
       label = name;
-    } else if (d.category === 'values') {
+    } else if (category === 'values') {
       label = name + ((score * 100).toFixed(0) === 'NaN' || isNaN(score) ? '' : ' (' + (score * 100).toFixed(0) + '%)');
     } else {
       label = name + ((score * 100).toFixed(0) === 'NaN' || isNaN(score) ? '' : ' (' + (score * 100).toFixed(0) + '%)');
