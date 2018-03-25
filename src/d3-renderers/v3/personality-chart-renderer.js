@@ -55,30 +55,7 @@ function renderChart(widget) {
         widget.createParts(g, d);
 
         var right_pad = d.depth > 0 ? sector_right_pad / (3 * d.depth) : sector_right_pad;
-
-        var score = widget.getScore(d),
-          score2 = 1; //for score sentiment data. it is the score of positive+netural
-
-        //special render perception sector
-        if (d.perc_neu !== null && ((d.score + d.perc_neu) * d.dx < d.dx - sector_right_pad / (3 * d.depth))) {
-          score2 = d.score + d.perc_neu;
-
-          d3.svg.arc()
-            .startAngle(function(d) {
-              return d.x + Math.abs(score2) * d.dx;
-            }) //x:startangle,
-            .endAngle(function(d) {
-              return d.x + d.dx - sector_right_pad / (3 * d.depth);
-            }) //dx: endangle,
-            .innerRadius(function(d) {
-              return sector_bottom_pad + d.y;
-            })
-            .outerRadius(function(d) {
-              return d.y + d.dy;
-            });
-
-          right_pad = 0;
-        }
+        var score = widget.getScore(d);
 
         if (!d.children) {
           var bar_length_factor = 10 / (d.depth - 2);
@@ -159,7 +136,7 @@ function renderChart(widget) {
               return d.x + arc1_extend;
             }) //x:startangle,
             .endAngle(function(d) {
-              return d.x + Math.abs(score2) * d.dx - right_pad;
+              return d.x + d.dx - right_pad;
             }) //dx: endangle,
             .innerRadius(function(d) {
               return sector_bottom_pad + d.y;
