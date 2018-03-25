@@ -60,6 +60,6 @@ function singleArc() {
   };
 
   return arc;
-};
+}
 
 module.exports = singleArc;
