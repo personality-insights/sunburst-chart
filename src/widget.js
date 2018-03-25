@@ -180,12 +180,12 @@ class SunburstWidget {
       var curNd = d3this.node();
       var text = d3this.text();
       if (text && text.length > 0) {
-        var position = self.d3.select(this).attr('position-in-sector'); // 'inner' or 'outer'
+        var position = self.d3.select(this).attr('position-in-sector');
         var frac = position === 'center' ? 0.5 : position === 'outer' ? 2 / 3 : 1 / 3;
         var sector_length = self._d3version === 'v3' ?
           (d.y + d.dy * frac) * d.dx :
           (d.y1 * frac) * (d.x1 - d.x0);
-        var text_length = curNd.getComputedTextLength(); //+margin;
+        var text_length = curNd.getComputedTextLength();
         var cur_font_size = self.d3.select(this).attr('font-size');
         var new_font_size = cur_font_size * sector_length / text_length;
 
@@ -273,7 +273,7 @@ class SunburstWidget {
   }
 
   getScore(d) {
-    var score = d.score;
+    var score = d.data ? d.data.score : d.score;
     if (!d.name) {
       score = 0;
     } else {
@@ -290,7 +290,8 @@ class SunburstWidget {
   }
 
   getScoreLabelText(d) {
-    return d.score === null || isNaN(d.score) ? '' : ' (' + (this.getScore(d) * 100).toFixed(0) + '%)';
+    var score = d.data ? d.data.score : d.score;
+    return score === null || isNaN(score) ? '' : ' (' + (this.getScore(d) * 100).toFixed(0) + '%)';
   }
 
   getNameLabelText(d) {
@@ -323,7 +324,7 @@ class SunburstWidget {
   }
 
   getColors(d) {
-    d.coloridx = (d.depth === 1 || d.depth === 0) ? d.id : d.parent.coloridx;
+    d.coloridx = (d.depth === 1 || d.depth === 0) ? (d.data ? d.data.id : d.id) : d.parent.coloridx;
 
     if (d.coloridx === 'personality') {
       return {
@@ -352,9 +353,9 @@ class SunburstWidget {
     }
   }
 
-  createPaths(g, d) {
+  createParts(g, d) {
     var self = this;
-    var uid, innerRingDarkColor, innerRingLightColor, outerRingColor;
+    var uid;
     var colors = this.getColors(d);
     var arc1color = d.depth < 2 ? this.d3.color(colors.innerRingLightColor) : this.d3.color(colors.innerRingDarkColor);
     var strokecolor = arc1color;

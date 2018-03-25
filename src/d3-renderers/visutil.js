@@ -5,7 +5,7 @@ function expandOrFoldSector(d3, g, d, self) {
       if (d.children) d3.select(self).attr('opacity', 1);
       g.filter(function(a) {
         if (a.parent)
-          return a.parent.id === d.id;
+          return a.parent.id === (d.data ? d.data.id : d.id);
       })
         .attr('visibility', 'visible');
       d.expand = 1;
@@ -21,7 +21,7 @@ function expandOrFoldSector(d3, g, d, self) {
 function hideSector(d, g) {
   g.filter(function(a) {
     if (a.parent)
-      return a.parent.id === d.id;
+      return a.parent.id === (d.data ? d.data.id : d.id);
   })
     .attr('visibility', 'hidden')
     .attr('opacity', 1)

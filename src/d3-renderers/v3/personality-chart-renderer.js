@@ -52,7 +52,7 @@ function renderChart(widget) {
     function twoArcs(g) {
       g.each(function(d) {
         g = d3.select(this);
-        widget.createPaths(g, d);
+        widget.createParts(g, d);
 
         var right_pad = d.depth > 0 ? sector_right_pad / (3 * d.depth) : sector_right_pad;
 
@@ -80,7 +80,6 @@ function renderChart(widget) {
           right_pad = 0;
         }
 
-        //if (!d.children && d.id !== 'srasrt' && d.id !== 'srclo' && d.id !== 'srdom') {
         if (!d.children) {
           var bar_length_factor = 10 / (d.depth - 2);
 

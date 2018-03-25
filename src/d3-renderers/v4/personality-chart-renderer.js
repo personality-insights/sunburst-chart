@@ -53,7 +53,7 @@ function renderChart(widget) {
     function twoArcs(g) {
       g.each(function(d) {
         g = d3.select(this);
-        widget.createPaths(g, d);
+        widget.createParts(g, d);
 
         var right_pad = d.depth > 0 ? sector_right_pad / (3 * d.depth) : sector_right_pad;
 
@@ -61,8 +61,8 @@ function renderChart(widget) {
           score2 = 1; //for score sentiment data. it is the score of positive+netural
 
         //special render perception sector
-        if (d.perc_neu !== null && (((d.score + d.perc_neu) * (d.x1 - d.x0)) < ((d.x1 - d.x0) - sector_right_pad / (3 * d.depth)))) {
-          score2 = d.score + d.perc_neu;
+        if (d.perc_neu !== null && (((d.data.score + d.perc_neu) * (d.x1 - d.x0)) < ((d.x1 - d.x0) - sector_right_pad / (3 * d.depth)))) {
+          score2 = d.data.score + d.perc_neu;
 
           d3.arc()
             .startAngle(function(d) {
@@ -160,18 +160,18 @@ function renderChart(widget) {
             .attr('d', arc1);
 
           var arc2 = d3.arc()
-          .startAngle(function(d) {
-            return d.x0 + arc1_extend;
-          }) //x:startangle,
-          .endAngle(function(d) {
-            return d.x0 + Math.abs(score2) * (d.x1 - d.x0) - right_pad;
-          }) //dx: endangle,
-          .innerRadius(function(d) {
-            return sector_bottom_pad + d.y0;
-          })
-          .outerRadius(function(d) {
-            return d.y1;
-          });
+            .startAngle(function(d) {
+              return d.x0 + arc1_extend;
+            }) //x:startangle,
+            .endAngle(function(d) {
+              return d.x0 + Math.abs(score2) * (d.x1 - d.x0) - right_pad;
+            }) //dx: endangle,
+            .innerRadius(function(d) {
+              return sector_bottom_pad + d.y0;
+            })
+            .outerRadius(function(d) {
+              return d.y1;
+            });
           widget._childElements.parts[widget.getUniqueId(d, 'arc2')]
             .attr('d', arc2);
 
@@ -188,8 +188,8 @@ function renderChart(widget) {
 
           if (bottom) {
             //special reversed label for bottom data
-            arc_for_label = visutil.arc(d.x1 - right_pad - Math.PI / 2, d.x0- Math.PI / 2, arc_label_radius);
-            arc_for_label_number = visutil.arc(d.x1 - right_pad - Math.PI / 2, d.x0- Math.PI / 2, arc_label_number_radius);
+            arc_for_label = visutil.arc(d.x1 - right_pad - Math.PI / 2, d.x0 - Math.PI / 2, arc_label_radius);
+            arc_for_label_number = visutil.arc(d.x1 - right_pad - Math.PI / 2, d.x0 - Math.PI / 2, arc_label_number_radius);
           } else {
             arc_for_label = d3SvgSingleArc()
               .startAngle(function(d) {
