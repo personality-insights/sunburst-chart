@@ -237,7 +237,7 @@ function renderChart(widget) {
 
           if (!widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')]) {
             widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')] = g.append('text')
-            .attr('class', 'sector_leaf_text');
+              .attr('class', 'sector_leaf_text');
           }
           widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')]
             .attr('dy', dy_init)

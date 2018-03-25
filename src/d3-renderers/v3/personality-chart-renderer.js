@@ -234,7 +234,7 @@ function renderChart(widget) {
 
           if (!widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')]) {
             widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')] = g.append('text')
-            .attr('class', 'sector_leaf_text');
+              .attr('class', 'sector_leaf_text');
           }
           widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')]
             .attr('dy', dy_init)
@@ -330,7 +330,7 @@ function renderChart(widget) {
                 // NOTE HB: Why do we need this xlink:href? In any case, adding widget.id so we to avoid name clashing
                 .attr('xlink:href', function(d) {
                   return '#' + widget.getUniqueId(d, 'arc_for_label_number');
-                });;
+                });
             }
           }
         }
