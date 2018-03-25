@@ -17,6 +17,7 @@
 'use strict';
 
 const colors = require('./utilities/colors');
+const visutil = require('./d3-renderers/visutil');
 
 class SunburstWidget {
 
@@ -41,8 +42,7 @@ class SunburstWidget {
       image: null,
       pattern: null,
       circle: null,
-      texts: {},
-      paths: {}
+      parts: {}
     };
   }
 
@@ -124,36 +124,36 @@ class SunburstWidget {
 
     var self = this;
     tree.children.forEach(function(child) {
-      if (self._childElements.texts[self.getUniqueId(child, 'sector_label_path')]) {
-        self._childElements.texts[self.getUniqueId(child, 'sector_label_path')].text(self.getNameLabelText(child));
+      if (self._childElements.parts[self.getUniqueId(child, 'sector_label_path')]) {
+        self._childElements.parts[self.getUniqueId(child, 'sector_label_path')].text(self.getNameLabelText(child));
       }
 
       child.children.forEach(function(category) {
-        if (self._childElements.texts[self.getUniqueId(category, 'sector_label_path')]) {
-          self._childElements.texts[self.getUniqueId(category, 'sector_label_path')].text(category.name);
+        if (self._childElements.parts[self.getUniqueId(category, 'sector_label_path')]) {
+          self._childElements.parts[self.getUniqueId(category, 'sector_label_path')].text(category.name);
         }
-        if (self._childElements.texts[self.getUniqueId(category, 'sector_label_number_path')]) {
-          self._childElements.texts[self.getUniqueId(category, 'sector_label_number_path')].text(self.getScoreLabelText(category));
+        if (self._childElements.parts[self.getUniqueId(category, 'sector_label_number_path')]) {
+          self._childElements.parts[self.getUniqueId(category, 'sector_label_number_path')].text(self.getScoreLabelText(category));
         }
 
         category.children.forEach(function(trait) {
           if (trait.category === 'personality') {
             // personality traits
-            if (self._childElements.texts[self.getUniqueId(trait, 'sector_label_path')]) {
-              self._childElements.texts[self.getUniqueId(trait, 'sector_label_path')].text(trait.name);
+            if (self._childElements.parts[self.getUniqueId(trait, 'sector_label_path')]) {
+              self._childElements.parts[self.getUniqueId(trait, 'sector_label_path')].text(trait.name);
             }
-            if (self._childElements.texts[self.getUniqueId(trait, 'sector_label_number_path')]) {
-              self._childElements.texts[self.getUniqueId(trait, 'sector_label_number_path')].text(self.getScoreLabelText(trait));
+            if (self._childElements.parts[self.getUniqueId(trait, 'sector_label_number_path')]) {
+              self._childElements.parts[self.getUniqueId(trait, 'sector_label_number_path')].text(self.getScoreLabelText(trait));
             }
 
             trait.children.forEach(function(facet) {
-              if (self._childElements.texts[self.getUniqueId(facet, 'sector_leaf_text')]) {
-                self._childElements.texts[self.getUniqueId(facet, 'sector_leaf_text')].text(self.getNameLabelText(facet));
+              if (self._childElements.parts[self.getUniqueId(facet, 'sector_leaf_text')]) {
+                self._childElements.parts[self.getUniqueId(facet, 'sector_leaf_text')].text(self.getNameLabelText(facet));
               }
             });
           } else {
-            if (self._childElements.texts[self.getUniqueId(trait, 'sector_leaf_text')]) {
-              self._childElements.texts[self.getUniqueId(trait, 'sector_leaf_text')].text(self.getNameLabelText(trait));
+            if (self._childElements.parts[self.getUniqueId(trait, 'sector_leaf_text')]) {
+              self._childElements.parts[self.getUniqueId(trait, 'sector_leaf_text')].text(self.getNameLabelText(trait));
             }
           }
         });
@@ -274,16 +274,16 @@ class SunburstWidget {
 
   getScore(d) {
     var score = d.score;
-    if (score === null) score = 1;
-    if (score >= 1) {
-      score = 0.99;
-    } else if (score <= -1) {
-      score = -0.99;
-    }
-
-    //for request without any result
-    if (d.name === '') {
+    if (!d.name) {
       score = 0;
+    } else {
+      if (score === null) {
+        score = 0.99;
+      } else if (score >= 1) {
+        score = 0.99;
+      } else if (score <= -1) {
+        score = -0.99;
+      }
     }
 
     return score;
@@ -315,11 +315,145 @@ class SunburstWidget {
   }
 
   getUniqueId(d, _class) {
-    var uid = this.id + '_' + d.id;
+    var uid = this.id + '_' + (d.data ? d.data.id : d.id);
     if (_class) {
       uid += '.' + _class;
     }
     return uid;
+  }
+
+  getColors(d) {
+    d.coloridx = (d.depth === 1 || d.depth === 0) ? d.id : d.parent.coloridx;
+
+    if (d.coloridx === 'personality') {
+      return {
+        innerRingDarkColor: this.COLOR_PALLETTE.traits_dark,
+        innerRingLightColor: this.COLOR_PALLETTE.traits_light,
+        outerRingColor: this.COLOR_PALLETTE.facet
+      };
+    } else if (d.coloridx === 'needs') {
+      return {
+        innerRingDarkColor: this.COLOR_PALLETTE.needs_dark,
+        innerRingLightColor: this.COLOR_PALLETTE.needs_light,
+        outerRingColor: this.COLOR_PALLETTE.need
+      };
+    } else if (d.coloridx === 'values') {
+      return {
+        innerRingDarkColor: this.COLOR_PALLETTE.values_dark,
+        innerRingLightColor: this.COLOR_PALLETTE.values_light,
+        outerRingColor: this.COLOR_PALLETTE.value
+      };
+    } else {
+      return {
+        innerRingDarkColor: this.COLOR_PALLETTE.traits_dark,
+        innerRingLightColor: this.COLOR_PALLETTE.traits_light,
+        outerRingColor: this.COLOR_PALLETTE.facet
+      };
+    }
+  }
+
+  createPaths(g, d) {
+    var self = this;
+    var uid, innerRingDarkColor, innerRingLightColor, outerRingColor;
+    var colors = this.getColors(d);
+    var arc1color = d.depth < 2 ? this.d3.color(colors.innerRingLightColor) : this.d3.color(colors.innerRingDarkColor);
+    var strokecolor = arc1color;
+    var bottom = visutil.isLocatedBottom(d);
+
+    if (!d.children) {
+      uid = this.getUniqueId(d, 'bar');
+      if (!this._childElements.parts[uid]) {
+        this._childElements.parts[uid] = g.append('path')
+          .attr('class', '_bar')
+          .style('stroke', '#EEE')
+          .style('fill', this.d3.color(colors.outerRingColor));
+      }
+
+      uid = this.getUniqueId(d, 'sector_leaf_text');
+      if (!this._childElements.parts[uid]) {
+        this._childElements.parts[uid] = g.append('text')
+          .attr('class', 'sector_leaf_text');
+      }
+    } else {
+      uid = this.getUniqueId(d, 'arc1');
+      if (!this._childElements.parts[uid]) {
+        this._childElements.parts[uid] = g.append('path')
+          .attr('class', 'arc1')
+          .style('stroke', strokecolor)
+          .style('fill', arc1color);
+      }
+
+      uid = this.getUniqueId(d, 'arc2');
+      if (!this._childElements.parts[uid]) {
+        this._childElements.parts[uid] = g.append('path')
+          .attr('class', 'arc2')
+          .style('stroke', strokecolor)
+          .style('fill', arc1color)
+          .style('fill-opacity', 0.15);
+      }
+
+      uid = this.getUniqueId(d, 'arc_for_label');
+      if (!this._childElements.parts[uid]) {
+        this._childElements.parts[uid] = g.append('path')
+          .attr('class', 'arc_for_label')
+          .attr('id', function(d) {
+            return self.getUniqueId(d, 'arc_for_label');
+          })
+          .style('stroke-opacity', 0)
+          .style('fill-opacity', 0);
+      }
+
+      uid = this.getUniqueId(d, 'sector_label_path');
+      if (!this._childElements.parts[uid]) {
+        this._childElements.parts[uid] = g.append('text')
+          .attr('class', 'sector_label')
+          .attr('visibility', function(d) {
+            return d.depth === 1 ? 'visible' : null;
+          })
+          .attr('class', 'sector_nonleaf_text')
+          .append('textPath')
+          .attr('class', 'sector_label_path')
+          .attr('position-in-sector', d.depth <= 1 ? 'center' : (bottom ? 'inner' : 'outer')) // Since both text lines share the same 'd', this class annotation tells where is the text, helping to determine the real arc length
+          .attr('font-size', function(d) {
+            return 30 / Math.sqrt(d.depth + 1);
+          })
+          .attr('xlink:href', function(d) {
+            return '#' + self.getUniqueId(d, 'arc_for_label');
+          });
+      }
+
+      if (d.depth > 1) {
+        uid = this.getUniqueId(d, 'arc_for_label_number');
+        if (!this._childElements.parts[uid]) {
+          this._childElements.parts[uid] = g.append('path')
+            .attr('class', 'arc_for_label_number')
+            .attr('id', function(d) {
+              return self.getUniqueId(d, 'arc_for_label_number');
+            })
+            .style('stroke-opacity', 0)
+            .style('fill-opacity', 0);
+        }
+
+        uid = this.getUniqueId(d, 'sector_label_number_path');
+        if (!this._childElements.parts[uid]) {
+          this._childElements.parts[uid] = g.append('text')
+            .attr('class', 'sector_label_number ')
+            .attr('visibility', function(d) {
+              return d.depth === 1 ? 'visible' : null;
+            })
+            .attr('class', 'sector_nonleaf_text')
+            .append('textPath')
+            .attr('class', 'sector_label_number_path')
+            .attr('position-in-sector', bottom ? 'outer' : 'inner') // Since both text lines share the same 'd', this class annotation tells where is the text, helping to determine the real arc length
+            .attr('font-size', function() {
+              return 10;
+            })
+            .attr('xlink:href', function(d) {
+              return '#' + self.getUniqueId(d, 'arc_for_label_number');
+            });
+        }
+      }
+    }
   }
 }
 

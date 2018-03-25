@@ -52,6 +52,8 @@ function renderChart(widget) {
     function twoArcs(g) {
       g.each(function(d) {
         g = d3.select(this);
+        widget.createPaths(g, d);
+
         var right_pad = d.depth > 0 ? sector_right_pad / (3 * d.depth) : sector_right_pad;
 
         var score = widget.getScore(d),
@@ -77,101 +79,6 @@ function renderChart(widget) {
 
           right_pad = 0;
         }
-
-        var arc1_extend = (Math.abs(score) * d.dx - right_pad) > 0 ? (Math.abs(score) * d.dx - right_pad) : 0;
-        //Regular renders
-        var arc1 = d3.svg.arc()
-          .startAngle(function(d) {
-            return d.x;
-          }) //x:startangle,
-          .endAngle(function(d) {
-            return d.x + arc1_extend;
-          }) //dx: endangle,
-          .innerRadius(function(d) {
-            return sector_bottom_pad + d.y;
-          })
-          .outerRadius(function(d) {
-            return d.y + d.dy;
-          });
-
-        var arc2 = d3.svg.arc()
-          .startAngle(function(d) {
-            return d.x + arc1_extend;
-          }) //x:startangle,
-          .endAngle(function(d) {
-            return d.x + Math.abs(score2) * d.dx - right_pad;
-          }) //dx: endangle,
-          .innerRadius(function(d) {
-            return sector_bottom_pad + d.y;
-          })
-          .outerRadius(function(d) {
-            return d.y + d.dy;
-          });
-
-        //used for label path
-        var arc_for_label, arc_for_label_number;
-        var arc_label_radius, arc_label_number_radius;
-        if (d.depth === 1 && visutil.isLocatedBottom(d)) {
-          arc_label_radius = d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 6;
-          arc_label_number_radius = d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 8;
-        } else {
-          arc_label_radius = sector_bottom_pad + d.y + (d.y + d.dy - sector_bottom_pad - d.y) * 5 / 12;
-          arc_label_number_radius = d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 7;
-        }
-
-        var bottom = visutil.isLocatedBottom(d);
-        if (bottom) {
-          //special reversed label for bottom data
-          arc_for_label = visutil.arc(d.x + d.dx - right_pad - Math.PI / 2, d.x - Math.PI / 2, arc_label_radius);
-          arc_for_label_number = visutil.arc(d.x + d.dx - right_pad - Math.PI / 2, d.x - Math.PI / 2, arc_label_number_radius);
-        } else {
-
-          arc_for_label = d3SvgSingleArc()
-            .startAngle(function(d) {
-              return d.x;
-            })
-            .endAngle(function(d) {
-              return d.x + d.dx - right_pad;
-            })
-            .radius(function(d) {
-              return d.depth === 1 ? d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 3 : sector_bottom_pad + d.y + (d.y + d.dy - sector_bottom_pad - d.y) * 3 / 5;
-            });
-
-          arc_for_label_number = d3SvgSingleArc()
-            .startAngle(function(d) {
-              return d.x;
-            })
-            .endAngle(function(d) {
-              return d.x + d.dx - right_pad;
-            })
-            .radius(function(d) {
-              return d.depth === 1 ? d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 3 : sector_bottom_pad + d.y + (d.y + d.dy - sector_bottom_pad - d.y) / 5;
-            });
-        }
-
-        d.coloridx = (d.depth === 1 || d.depth === 0) ? d.id : d.parent.coloridx;
-        var arc1color;
-        var outerRingColor, innerRingLightColor, innerRingDarkColor;
-
-        if (d.coloridx === 'personality'){
-          innerRingDarkColor = widget.COLOR_PALLETTE.traits_dark;
-          innerRingLightColor = widget.COLOR_PALLETTE.traits_light;
-          outerRingColor = widget.COLOR_PALLETTE.facet;
-        }
-
-        if (d.coloridx === 'needs') {
-          innerRingDarkColor = widget.COLOR_PALLETTE.needs_dark;
-          innerRingLightColor = widget.COLOR_PALLETTE.needs_light;
-          outerRingColor = widget.COLOR_PALLETTE.need;
-        }
-        if (d.coloridx === 'values') {
-          innerRingDarkColor = widget.COLOR_PALLETTE.values_dark;
-          innerRingLightColor = widget.COLOR_PALLETTE.values_light;
-          outerRingColor = widget.COLOR_PALLETTE.value;
-        }
-
-        arc1color = d.depth < 2 ? d3.color(innerRingLightColor) : d3.color(innerRingDarkColor);
-        var strokecolor = arc1color;
 
         //if (!d.children && d.id !== 'srasrt' && d.id !== 'srclo' && d.id !== 'srdom') {
         if (!d.children) {
@@ -199,15 +106,7 @@ function renderChart(widget) {
             .innerRadius(inner_r)
             .outerRadius(out_r); // Draw leaf arcs
 
-          if (!widget._childElements.paths[widget.getUniqueId(d, 'bar')]) {
-            widget._childElements.paths[widget.getUniqueId(d, 'bar')] = g.append('path')
-              .attr('class', '_bar')
-              .style('stroke', '#EEE')
-              .style('fill', function() {
-                return d3.color(outerRingColor);
-              });
-          }
-          widget._childElements.paths[widget.getUniqueId(d, 'bar')]
+          widget._childElements.parts[widget.getUniqueId(d, 'bar')]
             .attr('d', _bar);
 
           //add label;
@@ -232,106 +131,93 @@ function renderChart(widget) {
             lable_size = max_label_size;
           }
 
-          if (!widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')]) {
-            widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')] = g.append('text')
-              .attr('class', 'sector_leaf_text');
-          }
-          widget._childElements.texts[widget.getUniqueId(d, 'sector_leaf_text')]
+          widget._childElements.parts[widget.getUniqueId(d, 'sector_leaf_text')]
             .attr('dy', dy_init)
             .attr('font-size', lable_size)
             .attr('text-anchor', lbl_anchor)
             .attr('transform', 'translate(' + (out_r + 5) * Math.sin(d.x) + ',' + (-(out_r + 5) * Math.cos(d.x)) + ') ' + 'rotate(' + rotate + ')');
         } else {
-          //non-bar/non-leaf sector
-          if (!widget._childElements.paths[widget.getUniqueId(d, 'arc1')]) {
-            widget._childElements.paths[widget.getUniqueId(d, 'arc1')] = g.append('path')
-              .attr('class', 'arc1')
-              .style('stroke', strokecolor) // was: arc1color
-              .style('fill', arc1color);
-          }
-          widget._childElements.paths[widget.getUniqueId(d, 'arc1')]
+          var arc1_extend = (Math.abs(score) * d.dx - right_pad) > 0 ? (Math.abs(score) * d.dx - right_pad) : 0;
+          //Regular renders
+          var arc1 = d3.svg.arc()
+            .startAngle(function(d) {
+              return d.x;
+            }) //x:startangle,
+            .endAngle(function(d) {
+              return d.x + arc1_extend;
+            }) //dx: endangle,
+            .innerRadius(function(d) {
+              return sector_bottom_pad + d.y;
+            })
+            .outerRadius(function(d) {
+              return d.y + d.dy;
+            });
+          widget._childElements.parts[widget.getUniqueId(d, 'arc1')]
             .attr('d', arc1);
 
-          if (!widget._childElements.paths[widget.getUniqueId(d, 'arc2')]) {
-            widget._childElements.paths[widget.getUniqueId(d, 'arc2')] = g.append('path')
-              .attr('class', 'arc2')
-              .style('stroke', strokecolor) // was: arc1color
-              .style('fill', arc1color)
-              .style('fill-opacity', 0.15);
-          }
-          widget._childElements.paths[widget.getUniqueId(d, 'arc2')]
+          var arc2 = d3.svg.arc()
+            .startAngle(function(d) {
+              return d.x + arc1_extend;
+            }) //x:startangle,
+            .endAngle(function(d) {
+              return d.x + Math.abs(score2) * d.dx - right_pad;
+            }) //dx: endangle,
+            .innerRadius(function(d) {
+              return sector_bottom_pad + d.y;
+            })
+            .outerRadius(function(d) {
+              return d.y + d.dy;
+            });
+          widget._childElements.parts[widget.getUniqueId(d, 'arc2')]
             .attr('d', arc2);
 
-          //draw label:
-          //path used for label
-          if (!widget._childElements.paths[widget.getUniqueId(d, 'arc_for_label')]) {
-            widget._childElements.paths[widget.getUniqueId(d, 'arc_for_label')] = g.append('path')
-              .attr('class', 'arc_for_label')
-              .attr('id', function(d) {
-                return widget.getUniqueId(d, 'arc_for_label');
-              })
-              .style('stroke-opacity', 0)
-              .style('fill-opacity', 0);
+          //used for label path
+          var bottom = visutil.isLocatedBottom(d);
+          var arc_for_label, arc_for_label_number;
+          var arc_label_radius, arc_label_number_radius;
+          if (d.depth === 1 && bottom) {
+            arc_label_radius = d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 6;
+            arc_label_number_radius = d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 8;
+          } else {
+            arc_label_radius = sector_bottom_pad + d.y + (d.y + d.dy - sector_bottom_pad - d.y) * 5 / 12;
+            arc_label_number_radius = d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 7;
           }
-          widget._childElements.paths[widget.getUniqueId(d, 'arc_for_label')]
-            .attr('d', arc_for_label);
+          if (bottom) {
+            //special reversed label for bottom data
+            arc_for_label = visutil.arc(d.x + d.dx - right_pad - Math.PI / 2, d.x - Math.PI / 2, arc_label_radius);
+            arc_for_label_number = visutil.arc(d.x + d.dx - right_pad - Math.PI / 2, d.x - Math.PI / 2, arc_label_number_radius);
+          } else {
+            arc_for_label = d3SvgSingleArc()
+              .startAngle(function(d) {
+                return d.x;
+              })
+              .endAngle(function(d) {
+                return d.x + d.dx - right_pad;
+              })
+              .radius(function(d) {
+                return d.depth === 1 ? d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 3 : sector_bottom_pad + d.y + (d.y + d.dy - sector_bottom_pad - d.y) * 3 / 5;
+              });
 
-          //add label
-          if (!widget._childElements.texts[widget.getUniqueId(d, 'sector_label_path')]) {
-            widget._childElements.texts[widget.getUniqueId(d, 'sector_label_path')] = g.append('text')
-              .attr('class', 'sector_label')
-              .attr('visibility', function(d) {
-                return d.depth === 1 ? 'visible' : null;
+            arc_for_label_number = d3SvgSingleArc()
+              .startAngle(function(d) {
+                return d.x;
               })
-              .attr('class', 'sector_nonleaf_text')
-              .append('textPath')
-              .attr('class', 'sector_label_path')
-              .attr('position-in-sector', d.depth <= 1 ? 'center' : (bottom ? 'inner' : 'outer')) // Since both text lines share the same 'd', this class annotation tells where is the text, helping to determine the real arc length
-              .attr('font-size', function(d) {
-                return 30 / Math.sqrt(d.depth + 1);
+              .endAngle(function(d) {
+                return d.x + d.dx - right_pad;
               })
-              .attr('xlink:href', function(d) {
-                return '#' + widget.getUniqueId(d, 'arc_for_label');
+              .radius(function(d) {
+                return d.depth === 1 ? d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 3 : sector_bottom_pad + d.y + (d.y + d.dy - sector_bottom_pad - d.y) / 5;
               });
           }
+
+          widget._childElements.parts[widget.getUniqueId(d, 'arc_for_label')]
+            .attr('d', arc_for_label);
 
           //draw label number
           //path used for label number
           if (d.depth > 1) {
-            if (!widget._childElements.paths[widget.getUniqueId(d, 'arc_for_label_number')]) {
-              widget._childElements.paths[widget.getUniqueId(d, 'arc_for_label_number')] = g.append('path')
-                .attr('class', 'arc_for_label_number')
-                // NOTE HB: adding widget.id so we to avoid name clashing
-                .attr('id', function(d) {
-                  return widget.getUniqueId(d, 'arc_for_label_number');
-                })
-                .style('stroke-opacity', 0)
-                .style('fill-opacity', 0);
-            }
-            widget._childElements.paths[widget.getUniqueId(d, 'arc_for_label_number')]
+            widget._childElements.parts[widget.getUniqueId(d, 'arc_for_label_number')]
               .attr('d', arc_for_label_number);
-
-            //add label
-            if (!widget._childElements.texts[widget.getUniqueId(d, 'sector_label_number_path')]) {
-              widget._childElements.texts[widget.getUniqueId(d, 'sector_label_number_path')] = g.append('text')
-                .attr('class', 'sector_label_number ')
-                .attr('visibility', function(d) {
-                  return d.depth === 1 ? 'visible' : null;
-                })
-                //.attr('font-family','sans-serif')
-                .attr('class', 'sector_nonleaf_text')
-                //.attr('fill', d3.rgb(arc1color).darker(2))
-                .append('textPath')
-                .attr('class', 'sector_label_number_path')
-                .attr('position-in-sector', bottom ? 'outer' : 'inner') // Since both text lines share the same 'd', this class annotation tells where is the text, helping to determine the real arc length
-                .attr('font-size', function() {
-                  return 10;
-                })
-                // NOTE HB: Why do we need this xlink:href? In any case, adding widget.id so we to avoid name clashing
-                .attr('xlink:href', function(d) {
-                  return '#' + widget.getUniqueId(d, 'arc_for_label_number');
-                });
-            }
           }
         }
       });
@@ -351,6 +237,12 @@ function renderChart(widget) {
     .attr('transform', 'translate(' + (width / 2) + ',' + height / 2 + ')')
     .append('g');
 
+  var profile = {
+    children: tree.children.filter(function (child) {
+      return widget.exclude.indexOf(child.id) === -1;
+    })
+  };
+
   var partition = d3.layout.partition()
     .sort(null)
     .size([2 * Math.PI, radius])
@@ -358,16 +250,6 @@ function renderChart(widget) {
       if (!d.hasOwnProperty('size') && !d.hasOwnProperty('children')) return 1;
       return d.size;
     });
-
-  var profile = {
-    children: tree.children
-  };
-
-  // exclude specified sectors
-  var exclude = widget.exclude;
-  profile.children = profile.children.filter(function (child) {
-    return exclude.indexOf(child.id) === -1;
-  });
 
   var g = widget.vis.data([profile]).selectAll('g')
     .data(partition.nodes)
