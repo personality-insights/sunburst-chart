@@ -66,7 +66,6 @@
         } else {
           options.version = 'v2';
           $.getJSON(getFilePath(), '', function ( profile ) {
-            // TODO: randomize data in profile
             chart.setProfile(profile);
           });
         }
@@ -80,7 +79,6 @@
         } else {
           options.version = 'v3';
           $.getJSON(getFilePath(), '', function ( profile ) {
-            // TODO: randomize data in profile
             chart.setProfile(profile);
           });
         }
@@ -126,7 +124,8 @@
       }
 
       function getFilePath() {
-        return './profiles/en_' + options.version + '.json';
+        var suffix = Math.random() > 0.5 ? '_2' : '';
+        return './profiles/en_' + options.version + suffix + '.json';
       }
 
       function show() {

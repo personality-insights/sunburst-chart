@@ -20,7 +20,7 @@ Object.assign(d3,
   require('d3-color')
 );
 
-var d3SvgSingleArc = function() {
+d3.svg.singleArc = function() {
   var radius = d3_svg_singleArcRadius,
     startAngle = d3_svg_singleArcStartAngle,
     endAngle = d3_svg_singleArcEndAngle,
@@ -102,10 +102,6 @@ function renderChart(widget) {
     console.debug('personality-chart-renderer: data not defined.');
     return;
   }
-  if (widget.vis) {
-    console.error('Cannot render: Already rendered (widget.vis)');
-    return;
-  }
 
   var dummyData = false;
   var tree = widget.data ? (widget.data.tree ? widget.data.tree : widget.data) : null;
@@ -176,9 +172,6 @@ function renderChart(widget) {
     function twoArcs(g) {
       g.each(function(d) {
         g = d3.select(this);
-        g.selectAll('path').remove();
-        g.selectAll('text').remove();
-
         var right_pad = d.depth > 0 ? sector_right_pad / (3 * d.depth) : sector_right_pad;
 
         var score = widget.getScore(d),
@@ -204,7 +197,6 @@ function renderChart(widget) {
 
           right_pad = 0;
         }
-
 
         var arc1_extend = (Math.abs(score) * d.dx - right_pad) > 0 ? (Math.abs(score) * d.dx - right_pad) : 0;
         //Regular renders
@@ -247,7 +239,6 @@ function renderChart(widget) {
           arc_label_number_radius = d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 7;
         }
 
-
         var bottom = visutil.isLocatedBottom(d);
         if (bottom) {
           //special reversed label for bottom data
@@ -276,13 +267,11 @@ function renderChart(widget) {
             .radius(function(d) {
               return d.depth === 1 ? d.y + d.dy - (d.y + d.dy - sector_bottom_pad - d.y) / 3 : sector_bottom_pad + d.y + (d.y + d.dy - sector_bottom_pad - d.y) / 5;
             });
-
         }
 
         d.coloridx = (d.depth === 1 || d.depth === 0) ? d.id : d.parent.coloridx;
         var arc1color;
         var outerRingColor, innerRingLightColor, innerRingDarkColor;
-
 
         if (d.coloridx === 'personality'){
           innerRingDarkColor = widget.COLOR_PALLETTE.traits_dark;
@@ -330,7 +319,10 @@ function renderChart(widget) {
             .innerRadius(inner_r)
             .outerRadius(out_r); // Draw leaf arcs
 
-          g.append('path')
+          if (!widget._childElements.paths[widget.getUniqueId(d, 'bar')]) {
+            widget._childElements.paths[widget.getUniqueId(d, 'bar')] = g.append('path');
+          }
+          widget._childElements.paths[widget.getUniqueId(d, 'bar')]
             .attr('class', '_bar')
             .attr('d', _bar)
             .style('stroke', '#EEE')
@@ -360,7 +352,10 @@ function renderChart(widget) {
             lable_size = max_label_size;
           }
 
-          widget._childElements.namelabels[d.id] = g.append('text')
+          if (!widget._childElements.namelabels[widget.getUniqueId(d, 'sector_leaf_text')]) {
+            widget._childElements.namelabels[widget.getUniqueId(d, 'sector_leaf_text')] = g.append('text');
+          }
+          widget._childElements.namelabels[widget.getUniqueId(d, 'sector_leaf_text')]
             .attr('dy', dy_init)
             .attr('class', 'sector_leaf_text')
             .attr('font-size', lable_size)
@@ -368,13 +363,19 @@ function renderChart(widget) {
             .attr('transform', 'translate(' + (out_r + 5) * Math.sin(d.x) + ',' + (-(out_r + 5) * Math.cos(d.x)) + ') ' + 'rotate(' + rotate + ')');
         } else {
           //non-bar/non-leaf sector
-          g.append('path')
+          if (!widget._childElements.paths[widget.getUniqueId(d, 'arc1')]) {
+            widget._childElements.paths[widget.getUniqueId(d, 'arc1')] = g.append('path');
+          }
+          widget._childElements.paths[widget.getUniqueId(d, 'arc1')]
             .attr('class', 'arc1')
             .attr('d', arc1)
             .style('stroke', strokecolor) // was: arc1color
             .style('fill', arc1color);
 
-          g.append('path')
+          if (!widget._childElements.paths[widget.getUniqueId(d, 'arc2')]) {
+            widget._childElements.paths[widget.getUniqueId(d, 'arc2')] = g.append('path');
+          }
+          widget._childElements.paths[widget.getUniqueId(d, 'arc2')]
             .attr('class', 'arc2')
             .attr('d', arc2)
             .style('stroke', strokecolor) // was: arc1color
@@ -383,24 +384,30 @@ function renderChart(widget) {
 
           //draw label:
           //path used for label
-          g.append('path')
+          if (!widget._childElements.paths[widget.getUniqueId(d, 'arc_for_label')]) {
+            widget._childElements.paths[widget.getUniqueId(d, 'arc_for_label')] = g.append('path');
+          }
+          widget._childElements.paths[widget.getUniqueId(d, 'arc_for_label')]
             .attr('class', 'arc_for_label')
             // NOTE HB: adding widget.id so we to avoid name clashing
             .attr('id', function(d) {
-              return widget.id + '_' + d.id + '.arc_for_label';
+              return widget.getUniqueId(d, 'arc_for_label');
             })
             .attr('d', arc_for_label)
             .style('stroke-opacity', 0)
             .style('fill-opacity', 0);
 
           //add label
-          widget._childElements.namelabels[d.id] = g.append('text')
-            .attr('class', 'sector_label')
-            .attr('visibility', function(d) {
-              return d.depth === 1 ? 'visible' : null;
-            })
-            .attr('class', 'sector_nonleaf_text')
-            .append('textPath')
+          if (!widget._childElements.namelabels[widget.getUniqueId(d, 'sector_label_path')]) {
+            widget._childElements.namelabels[widget.getUniqueId(d, 'sector_label_path')] = g.append('text')
+              .attr('class', 'sector_label')
+              .attr('visibility', function(d) {
+                return d.depth === 1 ? 'visible' : null;
+              })
+              .attr('class', 'sector_nonleaf_text')
+              .append('textPath');
+          }
+          widget._childElements.namelabels[widget.getUniqueId(d, 'sector_label_path')]
             .attr('class', 'sector_label_path')
             .attr('position-in-sector', d.depth <= 1 ? 'center' : (bottom ? 'inner' : 'outer')) // Since both text lines share the same 'd', this class annotation tells where is the text, helping to determine the real arc length
             .attr('font-size', function(d) {
@@ -408,32 +415,38 @@ function renderChart(widget) {
             })
             // NOTE HB: Why do we need this xlink:href? In any case, adding widget.id so we to avoid name clashing
             .attr('xlink:href', function(d) {
-              return '#' + widget.id + '_' + d.id + '.arc_for_label';
+              return '#' + widget.getUniqueId(d, 'arc_for_label');
             });
 
           //draw label number
           //path used for label number
           if (d.depth > 1) {
-            g.append('path')
+            if (!widget._childElements.paths[widget.getUniqueId(d, 'arc_for_label_number')]) {
+              widget._childElements.paths[widget.getUniqueId(d, 'arc_for_label_number')] = g.append('path');
+            }
+            widget._childElements.paths[widget.getUniqueId(d, 'arc_for_label_number')]
               .attr('class', 'arc_for_label_number')
               // NOTE HB: adding widget.id so we to avoid name clashing
               .attr('id', function(d) {
-                return widget.id + '_' + d.id + '.arc_for_label_number';
+                return widget.getUniqueId(d, 'arc_for_label_number');
               })
               .attr('d', arc_for_label_number)
               .style('stroke-opacity', 0)
               .style('fill-opacity', 0);
 
             //add label
-            widget._childElements.scorelabels[d.id] = g.append('text')
-              .attr('class', 'sector_label_number ')
-              .attr('visibility', function(d) {
-                return d.depth === 1 ? 'visible' : null;
-              })
-              //.attr('font-family','sans-serif')
-              .attr('class', 'sector_nonleaf_text')
-              //.attr('fill', d3.rgb(arc1color).darker(2))
-              .append('textPath')
+            if (!widget._childElements.scorelabels[widget.getUniqueId(d, 'sector_label_number_path')]) {
+              widget._childElements.scorelabels[widget.getUniqueId(d, 'sector_label_number_path')] = g.append('text')
+                .attr('class', 'sector_label_number ')
+                .attr('visibility', function(d) {
+                  return d.depth === 1 ? 'visible' : null;
+                })
+                //.attr('font-family','sans-serif')
+                .attr('class', 'sector_nonleaf_text')
+                //.attr('fill', d3.rgb(arc1color).darker(2))
+                .append('textPath');
+            }
+            widget._childElements.scorelabels[widget.getUniqueId(d, 'sector_label_number_path')]
               .attr('class', 'sector_label_number_path')
               .attr('position-in-sector', bottom ? 'outer' : 'inner') // Since both text lines share the same 'd', this class annotation tells where is the text, helping to determine the real arc length
               .attr('font-size', function() {
@@ -441,7 +454,7 @@ function renderChart(widget) {
               })
               // NOTE HB: Why do we need this xlink:href? In any case, adding widget.id so we to avoid name clashing
               .attr('xlink:href', function(d) {
-                return '#' + widget.id + '_' + d.id + '.arc_for_label_number';
+                return '#' + widget.getUniqueId(d, 'arc_for_label_number');
               });
           }
         }
@@ -500,16 +513,7 @@ function renderChart(widget) {
   widget.updateText();
 };
 
-function setupD3() {
-  d3.svg.singleArc = d3SvgSingleArc;
-}
-
-function setupAndRender(widget) {
-  setupD3();
-  renderChart(widget);
-}
-
 module.exports = {
-  render: setupAndRender,
+  render: renderChart,
   d3: d3
 };

@@ -41,7 +41,8 @@ class SunburstWidget {
       pattern: null,
       circle: null,
       namelabels: {},
-      scorelabels: {}
+      scorelabels: {},
+      paths: {}
     };
   }
 
@@ -60,8 +61,11 @@ class SunburstWidget {
   showTooltip() {}
 
   init() {
-    this.d3vis = this.d3.select(this._element)
-      .append('svg:svg')
+    if (!this.d3vis) {
+      this.d3vis = this.d3.select(this._element).append('svg:svg');
+    }
+
+    this.d3vis
       .attr('width', this.visualizationWidth)
       .attr('height', this.visualizationHeight)
       .attr('viewBox', '0 -30 ' + this.dimH + ', ' + this.dimW);
@@ -120,36 +124,36 @@ class SunburstWidget {
 
     var self = this;
     tree.children.forEach(function(child) {
-      if (self._childElements.namelabels[child.id]) {
-        self._childElements.namelabels[child.id].text(self.getNameLabelText(child));
+      if (self._childElements.namelabels[self.getUniqueId(child, 'sector_label_path')]) {
+        self._childElements.namelabels[self.getUniqueId(child, 'sector_label_path')].text(self.getNameLabelText(child));
       }
 
       child.children.forEach(function(category) {
-        if (self._childElements.namelabels[category.id]) {
-          self._childElements.namelabels[category.id].text(category.name);
+        if (self._childElements.namelabels[self.getUniqueId(category, 'sector_label_path')]) {
+          self._childElements.namelabels[self.getUniqueId(category, 'sector_label_path')].text(category.name);
         }
-        if (self._childElements.scorelabels[category.id]) {
-          self._childElements.scorelabels[category.id].text(self.getScoreLabelText(category));
+        if (self._childElements.scorelabels[self.getUniqueId(category, 'sector_label_number_path')]) {
+          self._childElements.scorelabels[self.getUniqueId(category, 'sector_label_number_path')].text(self.getScoreLabelText(category));
         }
 
         category.children.forEach(function(trait) {
           if (trait.category === 'personality') {
             // personality traits
-            if (self._childElements.namelabels[trait.id]) {
-              self._childElements.namelabels[trait.id].text(trait.name);
+            if (self._childElements.namelabels[self.getUniqueId(trait, 'sector_label_path')]) {
+              self._childElements.namelabels[self.getUniqueId(trait, 'sector_label_path')].text(trait.name);
             }
-            if (self._childElements.scorelabels[trait.id]) {
-              self._childElements.scorelabels[trait.id].text(self.getScoreLabelText(trait));
+            if (self._childElements.scorelabels[self.getUniqueId(trait, 'sector_label_number_path')]) {
+              self._childElements.scorelabels[self.getUniqueId(trait, 'sector_label_number_path')].text(self.getScoreLabelText(trait));
             }
 
             trait.children.forEach(function(facet) {
-              if (self._childElements.namelabels[facet.id]) {
-                self._childElements.namelabels[facet.id].text(self.getNameLabelText(facet));
+              if (self._childElements.namelabels[self.getUniqueId(facet, 'sector_leaf_text')]) {
+                self._childElements.namelabels[self.getUniqueId(facet, 'sector_leaf_text')].text(self.getNameLabelText(facet));
               }
             });
           } else {
-            if (self._childElements.namelabels[trait.id]) {
-              self._childElements.namelabels[trait.id].text(self.getNameLabelText(trait));
+            if (self._childElements.namelabels[self.getUniqueId(trait, 'sector_leaf_text')]) {
+              self._childElements.namelabels[self.getUniqueId(trait, 'sector_leaf_text')].text(self.getNameLabelText(trait));
             }
           }
         });
@@ -306,6 +310,14 @@ class SunburstWidget {
     }
 
     return label;
+  }
+
+  getUniqueId(d, _class) {
+    var uid = this.id + '_' + d.id;
+    if (_class) {
+      uid += '.' + _class;
+    }
+    return uid;
   }
 }
 

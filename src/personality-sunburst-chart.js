@@ -77,12 +77,11 @@ class PersonalitySunburstChartImpl {
 
   render() {
     if (this._widget) {
-      // Clear DOM element that will display the sunburst chart
-      this._widget.clear();
       this._widget.init();
 
       // Render widget
       this._widget.render();
+      this._widget.updateText();
 
       // Expand all sectors of the sunburst chart - sectors at each level can be hidden
       this._widget.expandAll();
@@ -109,6 +108,9 @@ class PersonalitySunburstChartImpl {
       const element = this._element || document.querySelector(this._selector);
       this._widget.setElement(element);
     }
+    
+    // Clear DOM element that will display the sunburst chart
+    this._widget.clear();
 
     this.setProfile(theProfile || this._profile, false);
     this.setImage(personImageUrl || this._imageUrl, false);
