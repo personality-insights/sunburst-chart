@@ -42,10 +42,10 @@ class PersonalitySunburstChartImpl {
       if (this._profile && this._widget) {
         const d3Profile = new this.D3PersonalityProfile(this._profile, this._traitNames);
         this._widget.setData(d3Profile.d3Json());
-      }
 
-      if (render) {
-        this.render();
+        if (render) {
+          this._widget.updateText();
+        }
       }
     }
   }
@@ -77,12 +77,11 @@ class PersonalitySunburstChartImpl {
 
   render() {
     if (this._widget) {
-      // Clear DOM element that will display the sunburst chart
-      this._widget.clear();
       this._widget.init();
 
       // Render widget
-      this.ChartRenderer.render.call(this._widget);
+      this._widget.render();
+      this._widget.updateText();
 
       // Expand all sectors of the sunburst chart - sectors at each level can be hidden
       this._widget.expandAll();
@@ -105,10 +104,13 @@ class PersonalitySunburstChartImpl {
   show(theProfile, personImageUrl) {
     if (!this._widget) {
       // Create widget
-      this._widget = new SunburstWidget(this._options, this.ChartRenderer.d3);
+      this._widget = new SunburstWidget(this._options, this.ChartRenderer);
       const element = this._element || document.querySelector(this._selector);
       this._widget.setElement(element);
     }
+    
+    // Clear DOM element that will display the sunburst chart
+    this._widget.clear();
 
     this.setProfile(theProfile || this._profile, false);
     this.setImage(personImageUrl || this._imageUrl, false);
