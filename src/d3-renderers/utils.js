@@ -1,18 +1,18 @@
-function expandOrFoldSector(d3, g, d, self) {
+function expandOrFoldSector(g, d, d3elem) {
   if (d.expand !== null && d.depth > 1) {
     //ignore root node and first level sectors
     if (d.expand === 0) {
-      if (d.children) d3.select(self).attr('opacity', 1);
+      if (d.children) d3elem.attr('opacity', 1);
       g.filter(function(a) {
         if (a.parent)
-          return a.parent.id === d.id;
+          return getValue(a.parent, 'id') === getValue(d, 'id');
       })
         .attr('visibility', 'visible');
       d.expand = 1;
     } else {
       //if the sector is expanded
       if (d.children)
-        d3.select(self).attr('opacity', 1);
+        d3elem.attr('opacity', 1);
       hideSector(d, g);
     }
   }
@@ -21,7 +21,7 @@ function expandOrFoldSector(d3, g, d, self) {
 function hideSector(d, g) {
   g.filter(function(a) {
     if (a.parent)
-      return a.parent.id === d.id;
+      return getValue(a.parent, 'id') === getValue(d, 'id');
   })
     .attr('visibility', 'hidden')
     .attr('opacity', 1)
@@ -47,8 +47,34 @@ function isLocatedBottom(d) {
   return bottom;
 }
 
+function getValue(d, prop) {
+  return d.data ? d.data[prop] : d[prop];
+}
+
+function getBarLengthFactor(d) {
+  var bar_length_factor = 10 / (d.depth - 2);
+
+  //different bar_length factors
+  if (d.parent) {
+    if (d.parent.parent) {
+      if (getValue(d.parent.parent, 'id') === 'needs' || getValue(d.parent.parent, 'id') === 'values') {
+        bar_length_factor = 1;
+      }
+      if (d.parent.parent.parent) {
+        if (getValue(d.parent.parent.parent, 'id') === 'personality') {
+          bar_length_factor = 1;
+        }
+      }
+    }
+  }
+
+  return bar_length_factor;
+}
+
 module.exports = {
   isLocatedBottom: isLocatedBottom,
   arc: arc,
-  expandOrFoldSector: expandOrFoldSector
+  expandOrFoldSector: expandOrFoldSector,
+  getValue: getValue,
+  getBarLengthFactor: getBarLengthFactor
 };
