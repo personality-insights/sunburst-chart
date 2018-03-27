@@ -28,6 +28,7 @@ class PersonalitySunburstChartImpl {
     this._selector = options.selector;
     this._element = options.element;
     this._locale = options.locale;
+    this._colors = options.colors;
     this._imageUrl = '';
     this._profile = null;
     this._widget = null;
@@ -83,6 +84,20 @@ class PersonalitySunburstChartImpl {
     }
   }
 
+  setColors(colors, render = true) {
+    if (!colors) {
+      return;
+    }
+    this._colors = colors;
+    if (this._widget) {
+      this._widget.setColors(this._colors);
+
+      if (render) {
+        this._widget.updateColors();
+      }
+    }
+  }
+
   render() {
     if (this._widget) {
       this._widget.init();
@@ -90,6 +105,7 @@ class PersonalitySunburstChartImpl {
       // Render widget
       this._widget.render();
       this._widget.updateText();
+      this._widget.updateColors();
 
       // Expand all sectors of the sunburst chart - sectors at each level can be hidden
       this._widget.expandAll();
@@ -109,7 +125,7 @@ class PersonalitySunburstChartImpl {
    * It uses the arguments widgetId, widgetWidth, widgetHeight and personImageUrl
    * declared on top of this script.
    */
-  show(theProfile, personImageUrl) {
+  show(theProfile, personImageUrl, colors) {
     if (!this._widget) {
       // Create widget
       this._widget = new SunburstWidget(this._options, this.ChartRenderer);
@@ -122,6 +138,7 @@ class PersonalitySunburstChartImpl {
 
     this.setProfile(theProfile || this._profile, false);
     this.setImage(personImageUrl || this._imageUrl, false);
+    this.setColors(colors || this._colors, false);
 
     // Render widget
     this.render();
