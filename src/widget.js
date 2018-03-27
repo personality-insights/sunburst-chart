@@ -16,7 +16,6 @@
 
 'use strict';
 
-const colors = require('./utilities/colors');
 const utils = require('./d3-renderers/utils');
 
 class SunburstWidget {
@@ -30,11 +29,11 @@ class SunburstWidget {
     this.dimH = ((1/options.scale || 1) * 45) * 16.58;
     this.id = 'SystemUWidget_' + Math.random().toString().replace('0.','');
     this.exclude = options.exclude || [];
-    this.COLOR_PALLETTE = colors;
     this.loadingDiv = 'dummy';
     this.d3vis = null;
     this.vis = null;
     this.data = null;
+    this._colors = options.colors;
     this._d3version = options.d3version;
     this._element = null;
     this._childElements = {
@@ -62,6 +61,12 @@ class SunburstWidget {
     return this.data !== null;
   }
 
+  setColors(colors) {
+    if (colors) {
+      this._colors = colors;
+    }
+  }
+
   switchState() {}
 
   _layout() {}
@@ -76,7 +81,7 @@ class SunburstWidget {
     this.d3vis
       .attr('width', this.visualizationWidth)
       .attr('height', this.visualizationHeight)
-      .attr('viewBox', '0 -30 ' + this.dimH + ', ' + this.dimW);
+      .attr('viewBox', '0 0 ' + this.dimH + ', ' + this.dimW);
   }
 
   clear() {
@@ -206,6 +211,40 @@ class SunburstWidget {
         self.d3.select(this).attr('startOffset', (sector_length - curNd.getComputedTextLength()) / 2);
       }
     });
+  }
+
+  updateColors() {
+    var self = this;
+    this.d3vis.selectAll('._bar').each(function(d) {
+      self.updatePartColor(d);
+    });
+    this.d3vis.selectAll('.arc1').each(function(d) {
+      self.updatePartColor(d);
+    });
+    this.d3vis.selectAll('.arc2').each(function(d) {
+      self.updatePartColor(d);
+    });
+  }
+
+  updatePartColor(d) {
+    var colors = this.getColors(d);
+    var arc1color = d.depth < 2 ? this.d3.color(colors.innerRingLightColor) : this.d3.color(colors.innerRingDarkColor);
+    var strokecolor = arc1color;
+
+    if (!d.children) {
+      this._childElements.parts[this.getUniqueId(d, 'bar')]
+        .style('stroke', '#EEE')
+        .style('fill', this.d3.color(colors.outerRingColor));
+    } else {
+      this._childElements.parts[this.getUniqueId(d, 'arc1')]
+        .style('stroke', strokecolor)
+        .style('fill', arc1color);
+
+      this._childElements.parts[this.getUniqueId(d, 'arc2')]
+        .style('stroke', strokecolor)
+        .style('fill', arc1color)
+        .style('fill-opacity', 0.15);
+    }
   }
 
   addImage(url) {
@@ -339,30 +378,29 @@ class SunburstWidget {
 
   getColors(d) {
     d.coloridx = (d.depth === 1 || d.depth === 0) ? utils.getValue(d, 'id') : d.parent.coloridx;
-
     if (d.coloridx === 'personality') {
       return {
-        innerRingDarkColor: this.COLOR_PALLETTE.traits_dark,
-        innerRingLightColor: this.COLOR_PALLETTE.traits_light,
-        outerRingColor: this.COLOR_PALLETTE.facet
+        innerRingDarkColor: this._colors.traits_dark,
+        innerRingLightColor: this._colors.traits_light,
+        outerRingColor: this._colors.facet
       };
     } else if (d.coloridx === 'needs') {
       return {
-        innerRingDarkColor: this.COLOR_PALLETTE.needs_dark,
-        innerRingLightColor: this.COLOR_PALLETTE.needs_light,
-        outerRingColor: this.COLOR_PALLETTE.need
+        innerRingDarkColor: this._colors.needs_dark,
+        innerRingLightColor: this._colors.needs_light,
+        outerRingColor: this._colors.need
       };
     } else if (d.coloridx === 'values') {
       return {
-        innerRingDarkColor: this.COLOR_PALLETTE.values_dark,
-        innerRingLightColor: this.COLOR_PALLETTE.values_light,
-        outerRingColor: this.COLOR_PALLETTE.value
+        innerRingDarkColor: this._colors.values_dark,
+        innerRingLightColor: this._colors.values_light,
+        outerRingColor: this._colors.value
       };
     } else {
       return {
-        innerRingDarkColor: this.COLOR_PALLETTE.traits_dark,
-        innerRingLightColor: this.COLOR_PALLETTE.traits_light,
-        outerRingColor: this.COLOR_PALLETTE.facet
+        innerRingDarkColor: this._colors.traits_dark,
+        innerRingLightColor: this._colors.traits_light,
+        outerRingColor: this._colors.facet
       };
     }
   }
@@ -370,18 +408,13 @@ class SunburstWidget {
   createParts(g, d) {
     var self = this;
     var uid;
-    var colors = this.getColors(d);
-    var arc1color = d.depth < 2 ? this.d3.color(colors.innerRingLightColor) : this.d3.color(colors.innerRingDarkColor);
-    var strokecolor = arc1color;
     var bottom = utils.isLocatedBottom(d);
 
     if (!d.children) {
       uid = this.getUniqueId(d, 'bar');
       if (!this._childElements.parts[uid]) {
         this._childElements.parts[uid] = g.append('path')
-          .attr('class', '_bar')
-          .style('stroke', '#EEE')
-          .style('fill', this.d3.color(colors.outerRingColor));
+          .attr('class', '_bar');
       }
 
       uid = this.getUniqueId(d, 'sector_leaf_text');
@@ -393,18 +426,13 @@ class SunburstWidget {
       uid = this.getUniqueId(d, 'arc1');
       if (!this._childElements.parts[uid]) {
         this._childElements.parts[uid] = g.append('path')
-          .attr('class', 'arc1')
-          .style('stroke', strokecolor)
-          .style('fill', arc1color);
+          .attr('class', 'arc1');
       }
 
       uid = this.getUniqueId(d, 'arc2');
       if (!this._childElements.parts[uid]) {
         this._childElements.parts[uid] = g.append('path')
-          .attr('class', 'arc2')
-          .style('stroke', strokecolor)
-          .style('fill', arc1color)
-          .style('fill-opacity', 0.15);
+          .attr('class', 'arc2');
       }
 
       uid = this.getUniqueId(d, 'arc_for_label');

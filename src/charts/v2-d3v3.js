@@ -17,6 +17,7 @@
 'use strict';
 
 const pick = require('lodash.pick');
+const colors = require('../utilities/colors');
 const ChartRendererV3 = require('../d3-renderers/v3/personality-chart-renderer');
 const D3PersonalityProfileV2 = require('../d3-profile-wrappers/v2/index');
 const PersonalityTraitNamesV2 = require('personality-trait-names/lib/index-v2');
@@ -25,13 +26,14 @@ const PersonalitySunburstChartImpl = require('../personality-sunburst-chart');
 const DEFAULT_OPTIONS = {
   locale: 'en',
   version: 'v2',
-  d3version: 'v3'
+  d3version: 'v3',
+  colors: colors
 };
 
 class PersonalitySunburstChart extends PersonalitySunburstChartImpl {
 
   constructor(options) {
-    const _options = Object.assign({}, DEFAULT_OPTIONS, pick(options, ['element', 'selector', 'locale']));
+    const _options = Object.assign({}, DEFAULT_OPTIONS, pick(options, ['element', 'selector', 'locale', 'colors']));
     super(_options, D3PersonalityProfileV2, ChartRendererV3, PersonalityTraitNamesV2);
   }
 

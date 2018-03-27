@@ -25,8 +25,8 @@
     <div class="container">
       <div>
         <h4>D3 Version</h4>
-        <a class="btn btn-default" role="button" href="index-test.html">Version 3</a>
-        <button class="btn btn-primary" role="button">Version 4</button>
+        <a class="btn btn-primary" role="button" href="index-d3v3-test.html">Version 3</a>
+        <a class="btn btn-default" role="button" href="">Version 4</a>
       </div>
       <div>
         <h4>Personality Insights Version</h4>
@@ -37,6 +37,11 @@
         <h4>Locale</h4>
         <button id="locale-en" class="btn btn-primary" role="button">English</button>
         <button id="locale-es" class="btn btn-default" role="button">Spanish</button>
+      </div>
+      <div>
+        <h4>Colors</h4>
+        <button id="colors-default" class="btn btn-default" role="button">Default</button>
+        <button id="colors-random" class="btn btn-default" role="button">Random</button>
       </div>
     </div>
 
@@ -54,11 +59,23 @@
 
     <script>
       var chart = null;
+      var defaultColors = {
+        traits_dark: '#5aaafa',
+        traits_light: '#c0e6ff',
+        facet: '#4178be',
+        needs_dark: '#41d6c3',
+        needs_light: '#a7fae6',
+        need: '#008571',
+        values_dark: '#ba8ff7',
+        values_light: '#eed2ff',
+        value: '#9855d4'
+      };
       var options = {
         selector: '#sunburstChart',
         version: 'v2',
         d3version: 'v4',
-        locale: 'en'
+        locale: 'en',
+        colors: defaultColors
       };
 
       $('#personality-insights-v2').click(function() {
@@ -68,7 +85,6 @@
         } else {
           options.version = 'v2';
           $.getJSON(getFilePath(), '', function ( profile ) {
-            // TODO: randomize data in profile
             chart.setProfile(profile);
           });
         }
@@ -82,7 +98,6 @@
         } else {
           options.version = 'v3';
           $.getJSON(getFilePath(), '', function ( profile ) {
-            // TODO: randomize data in profile
             chart.setProfile(profile);
           });
         }
@@ -108,6 +123,38 @@
         }
         updateButtonClasses();
       });
+
+      $('#colors-default').click(function() {
+        options.colors = defaultColors;
+        if (chart) {
+          chart.setColors(options.colors, true);
+        } else {
+          show();
+        }
+      });
+
+      $('#colors-random').click(function() {
+        options.colors = {
+          traits_dark: randomColor(),
+          traits_light: randomColor(),
+          facet: randomColor(),
+          needs_dark: randomColor(),
+          needs_light: randomColor(),
+          need: randomColor(),
+          values_dark: randomColor(),
+          values_light: randomColor(),
+          value: randomColor()
+        };
+        if (chart) {
+          chart.setColors(options.colors, true);
+        } else {
+          show();
+        }
+      });
+
+      function randomColor() {
+        return '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+      }
 
       function updateButtonClasses() {
         if (options.locale === 'es') {
