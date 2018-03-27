@@ -64,14 +64,22 @@ class PersonalitySunburstChartImpl {
     if (this._profile !== profile) {
       this._profile = profile;
 
-      if (this._profile && this._widget) {
-        const d3Profile = new this.D3PersonalityProfile(this._profile, this._traitNames);
-        this._widget.setData(d3Profile.d3Json());
+      if (this._widget) {
+        if (this._profile) {
+          const d3Profile = new this.D3PersonalityProfile(this._profile, this._traitNames);
+          this._widget.setData(d3Profile.d3Json());
+        } else {
+          this._widget.clearData();
+        }
       }
+    } else if (this._widget && !this._widget.hasData()) {
+      // initilize data
+      const d3Profile = new this.D3PersonalityProfile(this._profile, this._traitNames);
+      this._widget.setData(d3Profile.d3Json());
+    }
 
-      if (render) {
-        this.render();
-      }
+    if (render) {
+      this.render();
     }
   }
 
@@ -108,7 +116,7 @@ class PersonalitySunburstChartImpl {
       const element = this._element || document.querySelector(this._selector);
       this._widget.setElement(element);
     }
-    
+
     // Clear DOM element that will display the sunburst chart
     this._widget.clear();
 

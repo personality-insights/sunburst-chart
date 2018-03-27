@@ -54,6 +54,14 @@ class SunburstWidget {
     this.data = data;
   }
 
+  clearData() {
+    this.data = null;
+  }
+
+  hasData() {
+    return this.data !== null;
+  }
+
   switchState() {}
 
   _layout() {}
