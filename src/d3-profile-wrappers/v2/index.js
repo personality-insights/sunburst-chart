@@ -19,7 +19,8 @@
 
 class PersonalityProfile {
 
-  constructor(profile) {
+  constructor(profile, traitNames) {
+    this._traitNames = traitNames;
     this._traits = profile.tree.children[0].children[0];
     this._needs = profile.tree.children[1].children[0];
     this._values = profile.tree.children[2].children[0];
@@ -55,20 +56,22 @@ class PersonalityProfile {
   }
 
   traitsTree(){
+    var self = this;
+    const mostSignificantValue = this.mostSignificantChild(this._traits.children);
     return {
-      name: this.traitWithHighestScore().name,
-      id: this.traitWithHighestScore().id,
-      category: this.traitWithHighestScore().category,
-      score: this.traitWithHighestScore().percentage,
+      name: self._traitNames.name(mostSignificantValue.id),
+      id: mostSignificantValue.id + '_parent',
+      category: mostSignificantValue.category,
+      score: mostSignificantValue.percentage,
       children: this._traits.children.map(function(t) {
         return {
-          name: t.name,
+          name: self._traitNames.name(t.id),
           id: t.id,
           category: t.category,
           score: t.percentage,
           children: t.children.map(function(f) {
             return {
-              name: f.name,
+              name: self._traitNames.name(f.id),
               id: f.id,
               category: f.category,
               score: f.percentage
@@ -80,14 +83,16 @@ class PersonalityProfile {
   }
 
   needsTree(){
+    var self = this;
+    const mostSignificantValue = this.mostSignificantChild(this._needs.children);
     return {
-      name: this.needWithHighestScore().name,
-      id: this.needWithHighestScore().id,
-      category: this.needWithHighestScore().category,
-      score: this.needWithHighestScore().percentage,
+      name: self._traitNames.name(mostSignificantValue.id),
+      id: mostSignificantValue.id + '_parent',
+      category: mostSignificantValue.category,
+      score: mostSignificantValue.percentage,
       children: this._needs.children.map(function(n) {
         return {
-          name: n.name,
+          name: self._traitNames.name(n.id),
           id: n.id,
           category: n.category,
           score: n.percentage
@@ -97,14 +102,16 @@ class PersonalityProfile {
   }
 
   valuesTree(){
+    var self = this;
+    const mostSignificantValue = this.mostSignificantChild(this._values.children);
     return {
-      name: this.valueWithHighestScore().name,
-      id: this.valueWithHighestScore().id,
-      category: this.valueWithHighestScore().category,
-      score: this.valueWithHighestScore().percentage,
+      name: self._traitNames.name(mostSignificantValue.id),
+      id: mostSignificantValue.id + '_parent',
+      category: mostSignificantValue.category,
+      score: mostSignificantValue.percentage,
       children: this._values.children.map(function(v) {
         return {
-          name: v.name,
+          name: self._traitNames.name(v.id),
           id: v.id,
           category: v.category,
           score: v.percentage
@@ -113,18 +120,20 @@ class PersonalityProfile {
     };
   }
 
-  traitWithHighestScore(){
-    return this._traits;
-  }
+  mostSignificantChild(children){
+    const threshold = 0.5;
+    let farthestDistance = 0;
+    let childWithScoreFarthestFromThreshold = null;
 
-  needWithHighestScore(){
-    return this._needs;
+    for (let i = 0; i < children.length; i++) {
+      const distance = Math.abs(children[i].percentage - threshold);
+      if(distance >= farthestDistance){
+        childWithScoreFarthestFromThreshold = children[i];
+        farthestDistance = distance;
+      }
+    }
+    return childWithScoreFarthestFromThreshold;
   }
-
-  valueWithHighestScore(){
-    return this._values;
-  }
-
 }
 
 module.exports = PersonalityProfile;
