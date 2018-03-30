@@ -258,9 +258,8 @@ class SunburstWidget {
     if (!this.hasImage()) {
       this._childElements.icondefs = this.vis.append('defs');
 
-      // The flower had a radius of 640 / 1.9 = 336.84 in the original, now is 3.2.
-      var radius = Math.min(this.dimW, this.dimH) / 16.58; // For 640 / 1.9 -> r = 65
-      var scaled_w = radius * 2.46; // r = 65 -> w = 160
+      var radius = Math.min(this.dimW, this.dimH) / 16.58;
+      var scaled_w = radius * 2;
 
       var id = 'user_icon_' + this.id;
       const pattern = this._childElements.icondefs.append('pattern');
@@ -275,8 +274,8 @@ class SunburstWidget {
       this._childElements.image
         .attr('width', scaled_w)
         .attr('height', scaled_w)
-        .attr('x', radius - scaled_w / 2) // r = 65 -> x = -25
-        .attr('y', radius - scaled_w / 2)
+        .attr('x', 0)
+        .attr('y', 0)
         .attr('opacity', 1.0)
         .on('dblclick.zoom', null);
 
