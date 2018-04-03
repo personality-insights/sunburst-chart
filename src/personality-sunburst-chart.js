@@ -73,7 +73,7 @@ class PersonalitySunburstChartImpl {
           this._widget.clearData();
         }
       }
-    } else if (this._widget && !this._widget.hasData()) {
+    } else if (this._widget && this._profile && !this._widget.hasData()) {
       // initilize data
       const d3Profile = new this.D3PersonalityProfile(this._profile, this._traitNames);
       this._widget.setData(d3Profile.d3Json());

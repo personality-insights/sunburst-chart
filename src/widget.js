@@ -215,13 +215,13 @@ class SunburstWidget {
 
   updateColors() {
     var self = this;
-    this.d3vis.selectAll('._bar').each(function(d) {
+    this.d3vis.selectAll('.arc2').each(function(d) {
       self.updatePartColor(d);
     });
     this.d3vis.selectAll('.arc1').each(function(d) {
       self.updatePartColor(d);
     });
-    this.d3vis.selectAll('.arc2').each(function(d) {
+    this.d3vis.selectAll('._bar').each(function(d) {
       self.updatePartColor(d);
     });
   }
