@@ -1,5 +1,6 @@
 export = PersonalitySunburstChart;
 
+declare type Exclude = 'personality' | 'needs' | 'values';
 declare type Locale = 'ar' | 'de' | 'en' | 'es' | 'fr' | 'it' | 'ja' | 'ko' | 'pt-br' | 'zh-tw' | 'zh';
 declare type Version = 'v2' | 'v3';
 declare type D3Version = 'v3' | 'v4';
@@ -10,7 +11,8 @@ declare type SunburstChartOptions = {
   d3version?: D3Version,
   locale?: Locale,
   scale?: number,
-  colors?: SunburstChartColors
+  colors?: SunburstChartColors,
+  exclude?: Exclude[]
 };
 declare type SunburstChartColors = {
   traits_dark: string,
