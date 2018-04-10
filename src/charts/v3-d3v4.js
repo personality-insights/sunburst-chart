@@ -33,7 +33,7 @@ const DEFAULT_OPTIONS = {
 class PersonalitySunburstChart extends PersonalitySunburstChartImpl {
 
   constructor(options) {
-    const _options = Object.assign({}, DEFAULT_OPTIONS, pick(options, ['element', 'selector', 'locale', 'colors']));
+    const _options = Object.assign({}, DEFAULT_OPTIONS, pick(options, ['element', 'selector', 'locale', 'colors', 'exclude']));
     super(_options, D3PersonalityProfileV3, ChartRendererV4, PersonalityTraitNamesV3);
   }
 

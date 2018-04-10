@@ -36,7 +36,7 @@ const DEFAULT_OPTIONS = {
 class PersonalitySunburstChart extends PersonalitySunburstChartImpl {
 
   constructor(options) {
-    const _options = Object.assign({}, DEFAULT_OPTIONS, pick(options, ['element', 'selector', 'version', 'd3version', 'locale', 'colors']));
+    const _options = Object.assign({}, DEFAULT_OPTIONS, pick(options, ['element', 'selector', 'version', 'd3version', 'locale', 'colors', 'exclude']));
     super(_options, _options.version === 'v2' ? D3PersonalityProfileV2 : D3PersonalityProfileV3, _options.d3version === 'v3' ? ChartRendererV3 : ChartRendererV4, _options.version === 'v2' ? PersonalityTraitNamesV2 : PersonalityTraitNamesV3);
   }
 
