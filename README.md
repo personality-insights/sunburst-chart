@@ -7,7 +7,7 @@
 
 Obtain a sunburst chart visualization for a personality profile.  For use in an HTML page.
 
-![Personality Sunburst Chart](./docs/personality-sunburst-chart-small.png)
+![Personality Sunburst Chart](./docs/screanshot.png)
 
 
 ## Usage
